@@ -1,0 +1,72 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;c++;cppm;ixx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;h++;hm;inl;inc;ipp;xsd</Extensions>
+    </Filter>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="Header Files\ECS">
+      <UniqueIdentifier>{62b4340f-25cd-4df8-9acb-2f2cf0f19d1d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\ECS\Components">
+      <UniqueIdentifier>{f159678b-70f6-4fba-a927-1243730aa34a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\ECS">
+      <UniqueIdentifier>{fc3b46d9-c71b-4200-b1f9-ce55161433f2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\ECS\Components">
+      <UniqueIdentifier>{cab74734-a11a-46ef-b23d-ad03fc64061e}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\src\main.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\game.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\texture_loader.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\ECS\entity.cpp">
+      <Filter>Source Files\ECS</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\ECS\entity_manager.cpp">
+      <Filter>Source Files\ECS</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\ECS\Components\sprite.cpp">
+      <Filter>Source Files\ECS\Components</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\src\game.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\texture_loader.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\ECS\entity_manager.h">
+      <Filter>Header Files\ECS</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\ECS\entity.h">
+      <Filter>Header Files\ECS</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\ECS\Components\component.h">
+      <Filter>Header Files\ECS\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\ECS\Components\transform.h">
+      <Filter>Header Files\ECS\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\ECS\Components\sprite.h">
+      <Filter>Header Files\ECS\Components</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>
