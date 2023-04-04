@@ -23,3 +23,11 @@ void EntityManager::Render()
     }
 }
 
+EntityManager::~EntityManager()
+{
+    for (auto& entity : entities)
+    {
+        delete entity;
+    }
+}
+

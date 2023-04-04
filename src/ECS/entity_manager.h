@@ -8,6 +8,7 @@ class EntityManager
 private:
     std::vector<Entity*> entities;
 public:
+    ~EntityManager();
     void Update(float delta_time);
     void Render();
     void AddEntity(Entity* entity);

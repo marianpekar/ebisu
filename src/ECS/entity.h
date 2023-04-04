@@ -3,6 +3,7 @@
 #include <vector>
 #include <unordered_map>
 #include <typeindex>
+#include <stdexcept>
 
 #include "Components/transform.h"
 
@@ -16,20 +17,20 @@ private:
     const char* name;
 public:
     Entity(const char* name, EntityManager* entityManager);
+    ~Entity();
     void Update(float delta_time);
     void Render();
-    void Destroy();
     const bool& IsActive() const { return is_active; }
     const char* GetName() const { return name; }
 
-    template <typename T, typename... TArgs>
-    T& AddComponent(TArgs&&... args) 
+    template <typename T>
+    T* AddComponent() 
     {
-        T* component = new T(std::forward<TArgs>(args)...);
+        T* component = new T();
         component->owner = this;
         components.emplace_back(component);
         component_map[typeid(T)] = component;
-        return *component;
+        return component;
     }
 
     template <typename T>
@@ -41,6 +42,6 @@ public:
             return dynamic_cast<T*>(component);
         }
 
-        throw std::exception("[Entity] Component not found");
+        throw std::runtime_error("[Entity] Entity " + std::string(name) + " has no component of type " + typeid(T).name());
     }
 };

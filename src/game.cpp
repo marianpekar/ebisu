@@ -33,7 +33,7 @@ int Game::Initialize(const char* title, int width, int height, bool fullscreen)
 	this->entity_manager = new EntityManager();
 
 	Entity* player = new Entity("Player", entity_manager);
-	Sprite* sprite = &player->AddComponent<Sprite>();
+	Sprite* sprite = player->AddComponent<Sprite>();
 	sprite->Setup("./../assets/test_square_64x64.png", renderer);
 	
 	Transform* transform = player->GetComponent<Transform>();
@@ -80,6 +80,6 @@ Game::~Game()
 	SDL_DestroyWindow(window);
 	SDL_DestroyRenderer(renderer);
 	SDL_Quit();
-	std::cout << "[Game] Quitting..." << std::endl;
+	delete entity_manager;
 }
 

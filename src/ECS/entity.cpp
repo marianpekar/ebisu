@@ -25,7 +25,10 @@ void Entity::Render()
     }
 }
 
-void Entity::Destroy() 
+Entity::~Entity() 
 {
-    this->is_active = false;
+    for (auto& component : components)
+    {
+        delete component;
+    }
 }
