@@ -13,8 +13,9 @@ int main(int argc, char* args[])
 
 	game.Setup();
 
-	Uint32 target_fps = 60;
-	Uint32 max_frame_time = (1000 / target_fps);
+	const Uint32 target_fps = 60;
+	const Uint32 max_frame_time = (1000 / target_fps);
+	const float max_delta_time = 0.05f;
 	Uint32 ticks = 0;
 	while (game.IsRunning())
 	{
@@ -25,9 +26,9 @@ int main(int argc, char* args[])
 
 		float delta_time = (SDL_GetTicks() - ticks) * 0.001f;
 
-		if (delta_time > 0.05f)
+		if (delta_time > max_delta_time)
 		{
-			delta_time = 0.05f;
+			delta_time = max_delta_time;
 		}
 
 		game.Update(delta_time);
