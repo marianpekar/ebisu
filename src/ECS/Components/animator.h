@@ -6,13 +6,18 @@
 
 struct Animation 
 {
-	Animation(int row, int frames, float frame_time, bool is_loop) : row(row), frames(frames), frame_time(frame_time), is_loop(is_loop) {};
+	Animation(int row, int start_frame, int end_frame, float frame_time, bool is_loop) : 
+		row(row), frame_time(frame_time), is_loop(is_loop), start_frame(start_frame),
+		frames(end_frame - start_frame + 1), current_frame(start_frame), 
+		end_frame(start_frame + (end_frame - start_frame + 1)) {};
 	int id = 0;
 	int row;
 	int frames;
 	int frame_time;
-	int current_frame = 0;
-	bool is_loop = false;
+	int start_frame;
+	int current_frame;
+	int end_frame;
+	bool is_loop;
 	bool is_running = false;
 };
 
@@ -28,7 +33,7 @@ public:
 	virtual ~Animator() = default;
 	void Setup() override;
 	void Update(float deltaTime) override;
-	int AddAnimation(const int row, const int frames, const float speed, const bool is_loop);
+	int AddAnimation(const int row, const int start_frame, const int end_frame, const float frame_time, const bool is_loop);
 	void Play(const int id);
 	void Stop();
 	void StopImmediately();

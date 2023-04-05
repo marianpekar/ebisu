@@ -22,10 +22,10 @@ void Animator::Update(float deltaTime)
 
 		++animations[active_anim_id]->current_frame;
 			
-		bool is_current_out_of_bounds = animations[active_anim_id]->current_frame == animations[active_anim_id]->frames;
+		bool is_current_out_of_bounds = animations[active_anim_id]->current_frame == animations[active_anim_id]->end_frame;
 		if (is_current_out_of_bounds)
 		{
-			animations[active_anim_id]->current_frame = 0;
+			animations[active_anim_id]->current_frame = animations[active_anim_id]->start_frame;
 		}
 
 		sprite_sheet->SelectSprite(animations[active_anim_id]->row, animations[active_anim_id]->current_frame);
@@ -39,11 +39,11 @@ void Animator::Update(float deltaTime)
 	
 }
 
-int Animator::AddAnimation(int row, int frames, float speed, bool is_loop)
+int Animator::AddAnimation(int row, int start_frame, int end_frame, float frame_time, bool is_loop)
 {
-	Animation* animation = new Animation(row, frames, speed, is_loop);
+	Animation* animation = new Animation(row, start_frame, end_frame, frame_time, is_loop);
+	animation->id = animations.size();
 	animations.emplace_back(animation);
-	animation->id = animations.size() - 1;
 	return animation->id;
 }
 
@@ -55,10 +55,11 @@ void Animator::Play(int id)
 	if (active_anim_id != -1)
 	{
 		animations[active_anim_id]->is_running = false;
-		animations[active_anim_id]->current_frame = 0;
+		animations[active_anim_id]->current_frame = animations[active_anim_id]->start_frame;
 	}
 
 	active_anim_id = id;
+	sprite_sheet->SelectSprite(animations[active_anim_id]->row, animations[active_anim_id]->start_frame);
 	animations[active_anim_id]->is_running = true;
 }
 
@@ -76,7 +77,7 @@ void Animator::StopImmediately()
 		return;
 
 	animations[active_anim_id]->is_running = false;
-	animations[active_anim_id]->current_frame = 0;
-	sprite_sheet->SelectSprite(animations[active_anim_id]->row, 0);
+	animations[active_anim_id]->current_frame = animations[active_anim_id]->start_frame;
+	sprite_sheet->SelectSprite(animations[active_anim_id]->row, animations[active_anim_id]->start_frame);
 	active_anim_id = -1;
 }
