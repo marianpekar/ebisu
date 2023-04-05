@@ -99,7 +99,7 @@ void PlayerController::Update(float delta_time)
 			}
 			else if (x == 0 && y == 0)
 			{
-				animator->Stop();
+				animator->StopImmediately();
 			}
 
 			transform->Move(x * move_speed * delta_time, y * move_speed * delta_time);

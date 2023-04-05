@@ -18,7 +18,7 @@ private:
 	int down_left_anim_id = 0;
 	int left_anim_id = 0;
 	int up_left_anim_id = 0;
-	int anim_frame_time = 100;
+	int anim_frame_time = 200;
 public:
 	PlayerController(bool& is_game_running) : is_game_running(is_game_running), x(0), y(0) {}
 	virtual ~PlayerController() = default;

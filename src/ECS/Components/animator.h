@@ -31,4 +31,5 @@ public:
 	int AddAnimation(const int row, const int frames, const float speed, const bool is_loop);
 	void Play(const int id);
 	void Stop();
+	void StopImmediately();
 };

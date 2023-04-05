@@ -55,6 +55,7 @@ void Animator::Play(int id)
 	if (active_anim_id != -1)
 	{
 		animations[active_anim_id]->is_running = false;
+		animations[active_anim_id]->current_frame = 0;
 	}
 
 	active_anim_id = id;
@@ -67,4 +68,15 @@ void Animator::Stop()
 		return;
 
 	animations[active_anim_id]->is_running = false;
+}
+
+void Animator::StopImmediately()
+{
+	if (active_anim_id == -1)
+		return;
+
+	animations[active_anim_id]->is_running = false;
+	animations[active_anim_id]->current_frame = 0;
+	sprite_sheet->SelectSprite(animations[active_anim_id]->row, 0);
+	active_anim_id = -1;
 }
