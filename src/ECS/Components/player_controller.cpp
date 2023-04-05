@@ -2,12 +2,21 @@
 #include "../entity.h"
 #include "player_controller.h"
 #include "transform.h"
-#include "sprite_sheet.h"
+#include "animator.h"
 
 void PlayerController::Setup()
 {
 	transform = owner->GetComponent<Transform>();
-	sprite_sheet = owner->GetComponent<SpriteSheet>();
+	animator = owner->GetComponent<Animator>();
+
+	up_anim_id = animator->AddAnimation(0, 5, anim_frame_time, true);
+	up_right_anim_id = animator->AddAnimation(1, 5, anim_frame_time, true);
+	right_anim_id = animator->AddAnimation(2, 5, anim_frame_time, true);
+	down_right_anim_id = animator->AddAnimation(3, 5, anim_frame_time, true);
+	down_anim_id = animator->AddAnimation(4, 5, anim_frame_time, true);
+	down_left_anim_id = animator->AddAnimation(5, 5, anim_frame_time, true);
+	left_anim_id = animator->AddAnimation(6, 5, anim_frame_time, true);
+	up_left_anim_id = animator->AddAnimation(7, 5, anim_frame_time, true);
 }
 
 void PlayerController::Update(float delta_time)
@@ -25,36 +34,78 @@ void PlayerController::Update(float delta_time)
 		case SDL_KEYUP:
 			if (keys[SDL_SCANCODE_W])
 			{
-				y = -move_speed * delta_time;
+				y = -1;
 			}
 			if (keys[SDL_SCANCODE_S])
 			{
-				y = move_speed * delta_time;
+				y = 1;
 			}
 			if (keys[SDL_SCANCODE_A])
 			{
-				x = -move_speed * delta_time;
+				x = -1;
 			}
 			if (keys[SDL_SCANCODE_D])
 			{
-				x = move_speed * delta_time;
+				x = 1;
 			}
 
-			if (x == 1 && y == 1)
+			// up
+			if (x == 0 && y < 0)
 			{
-				x = y = 0.5;
+				animator->Play(up_anim_id);
 			}
-
-			if (x == -1 && y == -1)
+			// down
+			else if (x == 0 && y > 0)
 			{
-				x = y = -0.5;
+				animator->Play(down_anim_id);
+			}
+			// left
+			else if (x < 0 && y == 0)
+			{
+				animator->Play(left_anim_id);
+			}
+			// right
+			else if (x > 0 && y == 0)
+			{
+				animator->Play(right_anim_id);
+			}
+			// up left
+			else if (x < 0 && y < 0)
+			{
+				x = -0.707f;
+				y = -0.707f;
+				animator->Play(up_left_anim_id);
+			}
+			// up right
+			else if (x > 0 && y < 0)
+			{
+				x = 0.707f;
+				y = -0.707f;
+				animator->Play(up_right_anim_id);
+			}
+			// down left
+			else if (x < 0 && y > 0)
+			{
+				x = -0.707f;
+				y = 0.707f;
+				animator->Play(down_left_anim_id);
+			}
+			// down right
+			else if (x > 0 && y > 0)
+			{
+				x = 0.707f;
+				y = 0.707f;
+				animator->Play(down_right_anim_id);
+			}
+			else if (x == 0 && y == 0)
+			{
+				animator->Stop();
 			}
 
-			//TODO: This is temporary, once you'll have physics, use forces for movement
-			transform->Move(x, y);
-
-			x = y = 0;
+			transform->Move(x * move_speed * delta_time, y * move_speed * delta_time);
 			
+			x = y = 0;
+
 			break;
 		default:
 			break;

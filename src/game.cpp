@@ -7,6 +7,7 @@
 #include "ECS/Components/sprite_sheet.h"
 #include "ECS/Components/player_controller.h"
 #include "ECS/Components/transform.h"
+#include "ECS/Components/animator.h"
 
 int Game::Initialize(const char* title, int width, int height, bool fullscreen)
 {
@@ -35,8 +36,10 @@ int Game::Initialize(const char* title, int width, int height, bool fullscreen)
 	this->entity_manager = new EntityManager();
 
 	Entity* player = new Entity("Player", entity_manager);
-	player->AddComponent<Transform>();
-	SpriteSheet* sprite = player->AddComponent<SpriteSheet>("./../assets/test_8dir_movement_spritesheet_192x192.png", renderer, 64, 64);
+	Transform* transform = player->AddComponent<Transform>();
+	SpriteSheet* sprite = player->AddComponent<SpriteSheet>("./../assets/test_8dir_movement_animation_spritesheet_512x512.png", renderer, 64, 64);
+	Animator* animator = player->AddComponent<Animator>();
+
 	player->AddComponent<PlayerController>(is_running);
 
 	is_running = true;

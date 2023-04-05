@@ -6,6 +6,7 @@
 #include <stdexcept>
 
 #include "Components/component.h"
+#include "Components/sprite_sheet.h"
 
 class EntityManager;
 class Entity 
