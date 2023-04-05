@@ -36,17 +36,26 @@ void PlayerController::Update(float delta_time)
 			{
 				y = -1;
 			}
-			if (keys[SDL_SCANCODE_S])
+			else if (keys[SDL_SCANCODE_S])
 			{
 				y = 1;
 			}
+			else
+			{
+				y = 0;
+			}
+
 			if (keys[SDL_SCANCODE_A])
 			{
 				x = -1;
 			}
-			if (keys[SDL_SCANCODE_D])
+			else if (keys[SDL_SCANCODE_D])
 			{
 				x = 1;
+			}
+			else
+			{
+				x = 0;
 			}
 
 			// up
@@ -100,14 +109,12 @@ void PlayerController::Update(float delta_time)
 			else if (x == 0 && y == 0)
 			{
 				animator->StopImmediately();
-			}
-
-			transform->Move(x * move_speed * delta_time, y * move_speed * delta_time);
+			}	
 			
-			x = y = 0;
-
 			break;
 		default:
 			break;
 	}
+
+	transform->Move(x * move_speed * delta_time, y * move_speed * delta_time);
 }
