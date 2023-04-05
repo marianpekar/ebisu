@@ -7,12 +7,9 @@
 
 void Sprite::Setup(const char* filepath, SDL_Renderer* renderer)
 {
-	transform = owner->GetComponent<Transform>();
 	this->renderer = renderer;
 	sprite = TextureLoader::LoadTexture(filepath, renderer, width, height);
 }
-
-void Sprite::Update(float delta_time) {}
 
 void Sprite::Render()
 {

@@ -23,11 +23,12 @@ public:
     const bool& IsActive() const { return is_active; }
     const char* GetName() const { return name; }
 
-    template <typename T>
-    T* AddComponent() 
+    template <typename T, typename... TArgs>
+    T* AddComponent(TArgs&&... args)
     {
-        T* component = new T();
+        T* component = new T(std::forward<TArgs>(args)...);
         component->owner = this;
+        component->transform = GetComponent<Transform>();
         components.emplace_back(component);
         component_map[typeid(T)] = component;
         return component;
@@ -42,6 +43,6 @@ public:
             return dynamic_cast<T*>(component);
         }
 
-        throw std::runtime_error("[Entity] Entity " + std::string(name) + " has no component of type " + typeid(T).name());
+        return nullptr;
     }
 };

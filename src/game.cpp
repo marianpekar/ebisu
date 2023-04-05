@@ -5,6 +5,7 @@
 #include "ECS/entity_manager.h"
 #include "ECS/entity.h"
 #include "ECS/Components/sprite.h"
+#include "ECS/Components/player_controller.h"
 
 int Game::Initialize(const char* title, int width, int height, bool fullscreen)
 {
@@ -33,39 +34,21 @@ int Game::Initialize(const char* title, int width, int height, bool fullscreen)
 	this->entity_manager = new EntityManager();
 
 	Entity* player = new Entity("Player", entity_manager);
+	player->AddComponent<PlayerController>(is_running);
 	Sprite* sprite = player->AddComponent<Sprite>();
 	sprite->Setup("./../assets/test_square_64x64.png", renderer);
 	
 	Transform* transform = player->GetComponent<Transform>();
 	transform->SetPosition(20,20);
 
-	// TODO: Add controller component
-
 	is_running = true;
 
 	return 0;
 }
 
-void Game::HandleEvents()
+void Game::Update(float delta_time)
 {
-	SDL_Event event;
-	SDL_PollEvent(&event);
-	switch (event.type)
-	{
-		case SDL_QUIT:
-			is_running = false;
-			break;
-		default:
-			break;
-	}
-}
-
-void Game::Update()
-{
-	Uint32 current_time = SDL_GetTicks();
-	float delta_time = (current_time - last_update_time) * 0.001f;
 	entity_manager->Update(delta_time);
-	last_update_time = current_time;
 }
 
 void Game::Render()

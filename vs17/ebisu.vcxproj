@@ -147,6 +147,7 @@ xcopy /y $(ProjectDir)..\libs\SDL2_image\lib\x64\SDL2_image.dll $(TargetDir)</Co
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="..\src\ECS\Components\player_controller.cpp" />
     <ClCompile Include="..\src\ECS\Components\sprite.cpp" />
     <ClCompile Include="..\src\ECS\entity.cpp" />
     <ClCompile Include="..\src\ECS\entity_manager.cpp" />
@@ -156,6 +157,7 @@ xcopy /y $(ProjectDir)..\libs\SDL2_image\lib\x64\SDL2_image.dll $(TargetDir)</Co
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\src\ECS\Components\component.h" />
+    <ClInclude Include="..\src\ECS\Components\player_controller.h" />
     <ClInclude Include="..\src\ECS\Components\sprite.h" />
     <ClInclude Include="..\src\ECS\Components\transform.h" />
     <ClInclude Include="..\src\ECS\entity.h" />
