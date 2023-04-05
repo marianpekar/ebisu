@@ -22,7 +22,7 @@ void Animator::Update(float deltaTime)
 
 		++animations[active_anim_id]->current_frame;
 			
-		bool is_current_out_of_bounds = animations[active_anim_id]->current_frame == animations[active_anim_id]->end_frame;
+		bool is_current_out_of_bounds = animations[active_anim_id]->current_frame > animations[active_anim_id]->end_frame;
 		if (is_current_out_of_bounds)
 		{
 			animations[active_anim_id]->current_frame = animations[active_anim_id]->start_frame;
