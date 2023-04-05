@@ -19,7 +19,7 @@ private:
 	int down_left_anim_id = 0;
 	int left_anim_id = 0;
 	int up_left_anim_id = 0;
-	int move_anim_frame_time = 200;
+	int move_anim_frame_time = 300;
 
 	int idle_up_anim_id = 0;
 	int idle_up_right_anim_id = 0;
