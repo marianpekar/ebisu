@@ -49,6 +49,9 @@ int Animator::AddAnimation(int row, int frames, float speed, bool is_loop)
 
 void Animator::Play(int id)
 {
+	if (active_anim_id == id)
+		return;
+
 	if (active_anim_id != -1)
 	{
 		animations[active_anim_id]->is_running = false;
@@ -60,5 +63,8 @@ void Animator::Play(int id)
 
 void Animator::Stop()
 {
+	if (active_anim_id == -1)
+		return;
+
 	animations[active_anim_id]->is_running = false;
 }
