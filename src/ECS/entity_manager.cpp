@@ -7,6 +7,15 @@ void EntityManager::AddEntity(Entity* entity)
     entities.emplace_back(entity);
 }
 
+void EntityManager::Setup()
+{
+    for (auto& entity : entities)
+    {
+        entity->Setup();
+    }
+}
+
+
 void EntityManager::Update(float deltaTime) 
 {
     for (auto& entity : entities) 
@@ -30,4 +39,3 @@ EntityManager::~EntityManager()
         delete entity;
     }
 }
-

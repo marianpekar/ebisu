@@ -5,7 +5,7 @@
 #include <typeindex>
 #include <stdexcept>
 
-#include "Components/transform.h"
+#include "Components/component.h"
 
 class EntityManager;
 class Entity 
@@ -18,6 +18,7 @@ private:
 public:
     Entity(const char* name, EntityManager* entityManager);
     ~Entity();
+    void Setup();
     void Update(float delta_time);
     void Render();
     const bool& IsActive() const { return is_active; }
@@ -28,7 +29,6 @@ public:
     {
         T* component = new T(std::forward<TArgs>(args)...);
         component->owner = this;
-        component->transform = GetComponent<Transform>();
         components.emplace_back(component);
         component_map[typeid(T)] = component;
         return component;

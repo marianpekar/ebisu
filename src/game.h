@@ -6,6 +6,7 @@ public:
 	Game() = default;
 	~Game();
 	int Initialize(const char* title, int width, int height, bool fullscreen);
+	void Setup();
 	void Update(float delta_time);
 	void Render();
 	const bool& IsRunning() { return is_running; }

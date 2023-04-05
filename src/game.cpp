@@ -4,8 +4,9 @@
 #include "game.h"
 #include "ECS/entity_manager.h"
 #include "ECS/entity.h"
-#include "ECS/Components/sprite.h"
+#include "ECS/Components/sprite_sheet.h"
 #include "ECS/Components/player_controller.h"
+#include "ECS/Components/transform.h"
 
 int Game::Initialize(const char* title, int width, int height, bool fullscreen)
 {
@@ -34,16 +35,18 @@ int Game::Initialize(const char* title, int width, int height, bool fullscreen)
 	this->entity_manager = new EntityManager();
 
 	Entity* player = new Entity("Player", entity_manager);
+	player->AddComponent<Transform>();
+	SpriteSheet* sprite = player->AddComponent<SpriteSheet>("./../assets/test_8dir_movement_spritesheet_192x192.png", renderer, 64, 64);
 	player->AddComponent<PlayerController>(is_running);
-	Sprite* sprite = player->AddComponent<Sprite>();
-	sprite->Setup("./../assets/test_square_64x64.png", renderer);
-	
-	Transform* transform = player->GetComponent<Transform>();
-	transform->SetPosition(20,20);
 
 	is_running = true;
 
 	return 0;
+}
+
+void Game::Setup()
+{
+	entity_manager->Setup();
 }
 
 void Game::Update(float delta_time)

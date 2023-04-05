@@ -11,9 +11,11 @@ int main(int argc, char* args[])
 	if (game.Initialize("Ebisu", 1024, 768, false) != 0)
 		return -1;
 
-	int target_fps = 60;
-	int max_frame_time = (1000 / target_fps);
-	int ticks = 0;
+	game.Setup();
+
+	Uint32 target_fps = 60;
+	Uint32 max_frame_time = (1000 / target_fps);
+	Uint32 ticks = 0;
 	while (game.IsRunning())
 	{
 		while (SDL_GetTicks() < ticks + max_frame_time)

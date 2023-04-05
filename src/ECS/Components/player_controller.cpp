@@ -1,6 +1,14 @@
+#include <SDL.h>
+#include "../entity.h"
 #include "player_controller.h"
 #include "transform.h"
-#include <SDL.h>
+#include "sprite_sheet.h"
+
+void PlayerController::Setup()
+{
+	transform = owner->GetComponent<Transform>();
+	sprite_sheet = owner->GetComponent<SpriteSheet>();
+}
 
 void PlayerController::Update(float delta_time)
 {

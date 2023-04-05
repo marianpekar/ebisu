@@ -149,6 +149,7 @@ xcopy /y $(ProjectDir)..\libs\SDL2_image\lib\x64\SDL2_image.dll $(TargetDir)</Co
   <ItemGroup>
     <ClCompile Include="..\src\ECS\Components\player_controller.cpp" />
     <ClCompile Include="..\src\ECS\Components\sprite.cpp" />
+    <ClCompile Include="..\src\ECS\Components\sprite_sheet.cpp" />
     <ClCompile Include="..\src\ECS\entity.cpp" />
     <ClCompile Include="..\src\ECS\entity_manager.cpp" />
     <ClCompile Include="..\src\game.cpp" />
@@ -159,6 +160,7 @@ xcopy /y $(ProjectDir)..\libs\SDL2_image\lib\x64\SDL2_image.dll $(TargetDir)</Co
     <ClInclude Include="..\src\ECS\Components\component.h" />
     <ClInclude Include="..\src\ECS\Components\player_controller.h" />
     <ClInclude Include="..\src\ECS\Components\sprite.h" />
+    <ClInclude Include="..\src\ECS\Components\sprite_sheet.h" />
     <ClInclude Include="..\src\ECS\Components\transform.h" />
     <ClInclude Include="..\src\ECS\entity.h" />
     <ClInclude Include="..\src\ECS\entity_manager.h" />
