@@ -2,6 +2,7 @@
 #include <SDL.h>
 #include <SDL_image.h>
 #include "game.h"
+#include "map.h"
 #include "ECS/entity_manager.h"
 #include "ECS/entity.h"
 #include "ECS/Components/sprite_sheet.h"
@@ -33,7 +34,21 @@ int Game::Initialize(const char* title, int width, int height, bool fullscreen)
 
 	SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
 	
-	this->entity_manager = new EntityManager();
+	std::vector<int> tilemap { 
+		2, 2, 2, 2, 2, 2, 2, 2, 
+		2, 0, 0, 0, 0, 0, 0, 2, 
+		2, 0, 3, 1, 3, 1, 0, 2, 
+		2, 0, 1, 3, 1, 3, 0, 2, 
+		2, 0, 3, 1, 3, 1, 0, 2, 
+		2, 0, 1, 3, 1, 3, 0, 2, 
+		2, 0, 0, 0, 0, 0, 0, 2, 
+		2, 2, 2, 2, 2, 2, 2, 2,
+	};
+
+	map = new Map(renderer, 64, 512);
+	map->AddLayer("./../assets/test_tilemap_4_tiles_256x64.png", tilemap);
+	
+	entity_manager = new EntityManager();
 
 	Entity* player = new Entity("Player", entity_manager);
 	Transform* transform = player->AddComponent<Transform>();
@@ -60,6 +75,7 @@ void Game::Update(float delta_time)
 void Game::Render()
 {
 	SDL_RenderClear(renderer);
+	map->Render();
 	entity_manager->Render();
 	SDL_RenderPresent(renderer);
 }

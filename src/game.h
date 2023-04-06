@@ -13,6 +13,7 @@ public:
 private:
 	bool is_running = false;
 	class EntityManager* entity_manager = nullptr;
+	class Map* map = nullptr;
 	struct SDL_Window* window = nullptr;
 	struct SDL_Renderer* renderer = nullptr;
 };
