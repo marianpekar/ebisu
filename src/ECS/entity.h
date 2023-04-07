@@ -7,19 +7,18 @@
 
 #include "component_manager.h"
 #include "Components/component.h"
-#include "Components/sprite_sheet.h"
 
 class Entity 
 {
 private:
     bool is_active;
     std::unordered_map<std::type_index, Component*> component_map;
-    ComponentManager* entity_manager;
+    ComponentManager* component_manager;
     const char* name;
 public:
-    Entity(const char* name, ComponentManager* entity_manager) : 
-        name(name), entity_manager(entity_manager), is_active(true) {}
-    ~Entity();
+    Entity(const char* name, ComponentManager* component_manager) :
+        name(name), component_manager(component_manager), is_active(true) {}
+    ~Entity() = default;
     const bool& IsActive() const { return is_active; }
     const char* GetName() const { return name; }
 
@@ -29,7 +28,7 @@ public:
         T* component = new T(std::forward<TArgs>(args)...);
         component->owner = this;
         component_map[typeid(T)] = component;
-        entity_manager->AddComponent(component);
+        component_manager->AddComponent(component);
         return component;
     }
 
