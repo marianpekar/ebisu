@@ -36,12 +36,6 @@
     <ClCompile Include="..\src\texture_loader.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\ECS\entity.cpp">
-      <Filter>Source Files\ECS</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\ECS\entity_manager.cpp">
-      <Filter>Source Files\ECS</Filter>
-    </ClCompile>
     <ClCompile Include="..\src\ECS\Components\sprite.cpp">
       <Filter>Source Files\ECS\Components</Filter>
     </ClCompile>
@@ -57,6 +51,9 @@
     <ClCompile Include="..\src\map.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\src\ECS\component_manager.cpp">
+      <Filter>Source Files\ECS</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\src\game.h">
@@ -65,7 +62,7 @@
     <ClInclude Include="..\src\texture_loader.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\src\ECS\entity_manager.h">
+    <ClInclude Include="..\src\ECS\component_manager.h">
       <Filter>Header Files\ECS</Filter>
     </ClInclude>
     <ClInclude Include="..\src\ECS\entity.h">

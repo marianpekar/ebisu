@@ -3,7 +3,7 @@
 #include <SDL_image.h>
 #include "game.h"
 #include "map.h"
-#include "ECS/entity_manager.h"
+#include "ECS/component_manager.h"
 #include "ECS/entity.h"
 #include "ECS/Components/sprite_sheet.h"
 #include "ECS/Components/player_controller.h"
@@ -48,9 +48,9 @@ int Game::Initialize(const char* title, int width, int height, bool fullscreen)
 	map = new Map(renderer, 64, 512);
 	map->AddLayer("./../assets/test_tilemap_4_tiles_256x64.png", tilemap);
 	
-	entity_manager = new EntityManager();
+	component_manager = new ComponentManager();
 
-	Entity* player = new Entity("Player", entity_manager);
+	Entity* player = new Entity("Player", component_manager);
 	Transform* transform = player->AddComponent<Transform>();
 	SpriteSheet* sprite = player->AddComponent<SpriteSheet>("./../assets/test_8dir_movement_animation_spritesheet_512x512.png", renderer, 64, 64);
 	Animator* animator = player->AddComponent<Animator>();
@@ -64,19 +64,19 @@ int Game::Initialize(const char* title, int width, int height, bool fullscreen)
 
 void Game::Setup()
 {
-	entity_manager->Setup();
+	component_manager->Setup();
 }
 
 void Game::Update(float delta_time)
 {
-	entity_manager->Update(delta_time);
+	component_manager->Update(delta_time);
 }
 
 void Game::Render()
 {
 	SDL_RenderClear(renderer);
 	map->Render();
-	entity_manager->Render();
+	component_manager->Render();
 	SDL_RenderPresent(renderer);
 }
 
@@ -85,6 +85,6 @@ Game::~Game()
 	SDL_DestroyWindow(window);
 	SDL_DestroyRenderer(renderer);
 	SDL_Quit();
-	delete entity_manager;
+	delete component_manager;
 }
 

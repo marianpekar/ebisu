@@ -1,8 +1,4 @@
 #include "game.h"
-#include "ECS/entity_manager.h"
-#include "ECS/entity.h"
-#include "ECS/Components/transform.h"
-#include "ECS/Components/sprite.h"
 #include <SDL.h>
 
 int main(int argc, char* args[])

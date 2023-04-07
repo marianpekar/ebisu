@@ -5,23 +5,21 @@
 #include <typeindex>
 #include <stdexcept>
 
+#include "component_manager.h"
 #include "Components/component.h"
 #include "Components/sprite_sheet.h"
 
-class EntityManager;
 class Entity 
 {
 private:
     bool is_active;
-    std::vector<Component*> components;
     std::unordered_map<std::type_index, Component*> component_map;
+    ComponentManager* entity_manager;
     const char* name;
 public:
-    Entity(const char* name, EntityManager* entityManager);
+    Entity(const char* name, ComponentManager* entity_manager) : 
+        name(name), entity_manager(entity_manager), is_active(true) {}
     ~Entity();
-    void Setup();
-    void Update(float delta_time);
-    void Render();
     const bool& IsActive() const { return is_active; }
     const char* GetName() const { return name; }
 
@@ -30,8 +28,8 @@ public:
     {
         T* component = new T(std::forward<TArgs>(args)...);
         component->owner = this;
-        components.emplace_back(component);
         component_map[typeid(T)] = component;
+        entity_manager->AddComponent(component);
         return component;
     }
 
