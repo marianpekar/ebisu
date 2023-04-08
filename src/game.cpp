@@ -10,6 +10,7 @@
 #include "ECS/Components/player_controller.h"
 #include "ECS/Components/transform.h"
 #include "ECS/Components/animator.h"
+#include "ECS/Components/map_collider.h"
 
 int Game::Initialize(const char* title, int width, int height, bool fullscreen)
 {
@@ -45,9 +46,7 @@ int Game::Initialize(const char* title, int width, int height, bool fullscreen)
 	SpriteSheet* sprite = player->AddComponent<SpriteSheet>("./../assets/test_8dir_movement_animation_spritesheet_512x512.png", renderer, 64, 64, camera);
 	Animator* animator = player->AddComponent<Animator>();
 
-	player->AddComponent<PlayerController>(is_running);
-
-	std::vector<int> tilemap{
+	std::vector<int> tile_map {
 		2, 2, 2, 2, 2, 2, 2, 2,
 		2, 0, 0, 0, 0, 0, 0, 2,
 		2, 0, 3, 1, 3, 1, 0, 2,
@@ -58,8 +57,22 @@ int Game::Initialize(const char* title, int width, int height, bool fullscreen)
 		2, 2, 2, 2, 2, 2, 2, 2,
 	};
 
-	map = new Map(renderer, 64, 512, camera);
-	map->AddLayer("./../assets/test_tilemap_4_tiles_256x64.png", tilemap);
+	std::vector<int> collision_map {
+		0, 0, 0, 0, 0, 0, 0, 0,
+		0, 0, 0, 0, 0, 0, 0, 0,
+		0, 0, 1, 1, 1, 1, 0, 0,
+		0, 0, 1, 1, 1, 1, 0, 0,
+		0, 0, 1, 1, 1, 1, 0, 0,
+		0, 0, 1, 1, 1, 1, 0, 0,
+		0, 0, 0, 0, 0, 0, 0, 0,
+		0, 0, 0, 0, 0, 0, 0, 0,
+	};
+
+	map = new Map(renderer, 64, 512, camera, collision_map);
+	map->AddLayer("./../assets/test_tilemap_4_tiles_256x64.png", tile_map);
+
+	player->AddComponent<MapCollider>(64, 64, map);
+	player->AddComponent<PlayerController>(is_running);
 
 	is_running = true;
 

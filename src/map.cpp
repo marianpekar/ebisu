@@ -5,18 +5,19 @@
 #include "camera.h"
 #include <SDL.h>
 
-Map::Map(SDL_Renderer* renderer, const int tile_size, const int map_size, Camera* camera) :
-	renderer(renderer), tile_size(tile_size), map_size(map_size), tiles_in_row(map_size / tile_size), camera(camera)
+Map::Map(SDL_Renderer* renderer, const int tile_size, const int map_size, Camera* camera, std::vector<int> collision_map) :
+	renderer(renderer), tile_size(tile_size), map_size(map_size), tiles_in_row(map_size / tile_size),
+	camera(camera), collision_map(collision_map)
 	
 {
 	src_rect = new SDL_Rect();
 	dst_rect = new SDL_Rect();
 }
 
-void Map::AddLayer(const char* sprite_filepath, std::vector<int> tilemap)
+void Map::AddLayer(const char* sprite_filepath, std::vector<int> tile_map)
 {
 	SDL_Texture* sprite = TextureLoader::LoadTexture(sprite_filepath, renderer);
-	Layer* layer = new Layer(sprite, tilemap);
+	Layer* layer = new Layer(sprite, tile_map, tiles_in_row);
 	layers.emplace_back(layer);
 }
 
@@ -24,17 +25,17 @@ void Map::Render()
 {
 	for (auto& layer : layers)
 	{
-		for (size_t y = 0; y < tiles_in_row; y++)
+		for (size_t j = 0; j < tiles_in_row; j++)
 		{
-			for (size_t x = 0; x < tiles_in_row; x++)
+			for (size_t i = 0; i < tiles_in_row; i++)
 			{
-				src_rect->x = layer->tilemap[y * tiles_in_row + x] * tile_size;
+				src_rect->x = layer->tile_map[j * tiles_in_row + i] * tile_size;
 				src_rect->y = 0;
 				src_rect->w = tile_size;
 				src_rect->h = tile_size;
 
-				dst_rect->x = x * tile_size - camera->GetX();
-				dst_rect->y = y * tile_size - camera->GetY();
+				dst_rect->x = i * tile_size - camera->GetX();
+				dst_rect->y = j * tile_size - camera->GetY();
 				dst_rect->w = tile_size;
 				dst_rect->h = tile_size;
 
@@ -42,6 +43,16 @@ void Map::Render()
 			}
 		}
 	}
+}
+
+const int& Map::GetCollisionAt(const int& i, const int& j)
+{
+	size_t index = j * tiles_in_row + i;
+
+	if (index < 0 || index >= collision_map.size())
+		return 0;
+
+	return collision_map[index];
 }
 
 Map::~Map()

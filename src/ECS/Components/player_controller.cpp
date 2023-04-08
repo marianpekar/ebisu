@@ -3,11 +3,13 @@
 #include "player_controller.h"
 #include "transform.h"
 #include "animator.h"
+#include "map_collider.h"
 
 void PlayerController::Setup()
 {
 	transform = owner->GetComponent<Transform>();
 	animator = owner->GetComponent<Animator>();
+	map_collider = owner->GetComponent<MapCollider>();
 
 	const int move_start_anim_frame = 2;
 	const int move_end_anim_frame = 5;
@@ -142,5 +144,11 @@ void PlayerController::Update(float delta_time)
 			break;
 	}
 
-	transform->Move(x * move_speed * delta_time, y * move_speed * delta_time);
+	float target_x = transform->GetX() + x * move_speed * delta_time;
+	float target_y = transform->GetY() + y * move_speed * delta_time;
+
+	if (map_collider->HasCollisionAt(target_x, target_y))
+		return;
+
+	transform->SetPosition(target_x, target_y);
 }
