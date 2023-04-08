@@ -2,10 +2,12 @@
 
 #include "map.h"
 #include "texture_loader.h"
+#include "camera.h"
 #include <SDL.h>
 
-Map::Map(SDL_Renderer* renderer, const int tile_size, const int map_size) :
-renderer(renderer), tile_size(tile_size), map_size(map_size), tiles_in_row(map_size / tile_size)
+Map::Map(SDL_Renderer* renderer, const int tile_size, const int map_size, Camera* camera) :
+	renderer(renderer), tile_size(tile_size), map_size(map_size), tiles_in_row(map_size / tile_size), camera(camera)
+	
 {
 	src_rect = new SDL_Rect();
 	dst_rect = new SDL_Rect();
@@ -31,8 +33,8 @@ void Map::Render()
 				src_rect->w = tile_size;
 				src_rect->h = tile_size;
 
-				dst_rect->x = x * tile_size;
-				dst_rect->y = y * tile_size;
+				dst_rect->x = x * tile_size - camera->GetX();
+				dst_rect->y = y * tile_size - camera->GetY();
 				dst_rect->w = tile_size;
 				dst_rect->h = tile_size;
 

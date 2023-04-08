@@ -1,6 +1,7 @@
 #pragma once
 
 #include "../../texture_loader.h"
+#include "../../camera.h"
 #include "../entity.h"
 #include "transform.h"
 #include "sprite.h"
@@ -15,8 +16,8 @@ void Sprite::Setup()
 
 void Sprite::Render()
 {
-    dst_rect->x = transform->GetX();
-    dst_rect->y = transform->GetY();
+    dst_rect->x = transform->GetX() - camera->GetX();
+    dst_rect->y = transform->GetY() - camera->GetY();
     dst_rect->w = width * transform->GetXScale();
     dst_rect->h = height * transform->GetYScale();
 

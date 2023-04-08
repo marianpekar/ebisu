@@ -20,8 +20,9 @@ private:
 	const int map_size;
 	const int tiles_in_row;
 	std::vector<Layer*> layers;
+	class Camera* camera;
 public:
-	Map(SDL_Renderer* renderer, const int tile_size, const int map_size);
+	Map(SDL_Renderer* renderer, const int tile_size, const int map_size, Camera* camera);
 	~Map();
 	void AddLayer(const char* sprite_filepath, std::vector<int> tilemap);
 	void Render();

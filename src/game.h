@@ -14,6 +14,7 @@ private:
 	bool is_running = false;
 	class ComponentManager* component_manager = nullptr;
 	class Map* map = nullptr;
+	class Camera* camera = nullptr;
 	struct SDL_Window* window = nullptr;
 	struct SDL_Renderer* renderer = nullptr;
 };

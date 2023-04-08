@@ -11,8 +11,10 @@ private:
 	struct SDL_Texture* sprite = nullptr;
 	struct SDL_Rect* dst_rect = nullptr;
 	class Transform* transform = nullptr;
+	class Camera* camera = nullptr;
 public:
-	Sprite(const char* filepath, SDL_Renderer* renderer) : filepath(filepath), renderer(renderer), width(0), height(0) {};
+	Sprite(const char* filepath, SDL_Renderer* renderer, Camera* camera) : 
+		filepath(filepath), renderer(renderer), width(0), height(0), camera(camera) {};
 	virtual ~Sprite() = default;
 	void Setup() override;
 	void Render() override;

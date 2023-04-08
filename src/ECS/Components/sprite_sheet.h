@@ -12,10 +12,11 @@ private:
 	SDL_Rect* dst_rect = nullptr;
 	const char* filepath;
 	class Transform* transform = nullptr;
+	class Camera* camera;
 public:
-	SpriteSheet(const char* filepath, SDL_Renderer* renderer, int rect_width, int rect_height) : 
+	SpriteSheet(const char* filepath, SDL_Renderer* renderer, int rect_width, int rect_height, Camera* camera) : 
 		renderer(renderer), rect_width(rect_width), rect_height(rect_height),
-		filepath(filepath), sheet_width(0), sheet_height(0) {};
+		filepath(filepath), sheet_width(0), sheet_height(0), camera(camera) {};
 	virtual ~SpriteSheet() = default;
 	void Setup() override;
 	void Render() override;
