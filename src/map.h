@@ -7,10 +7,7 @@ struct Layer
 	struct SDL_Texture* sprite = nullptr;
 	std::vector<int> tilemap;
 	Layer(SDL_Texture* sprite, std::vector<int> tilemap) : sprite(sprite), tilemap(tilemap) {}
-	~Layer() 
-	{ 
-		delete sprite; 
-	}
+	~Layer();
 };
 
 class Map

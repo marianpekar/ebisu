@@ -53,3 +53,7 @@ Map::~Map()
 	}
 }
 
+Layer::~Layer()
+{
+	SDL_DestroyTexture(sprite);
+}
