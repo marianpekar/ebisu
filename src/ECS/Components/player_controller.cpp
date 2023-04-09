@@ -144,11 +144,20 @@ void PlayerController::Update(float delta_time)
 			break;
 	}
 
-	float target_x = transform->GetX() + x * move_speed * delta_time;
-	float target_y = transform->GetY() + y * move_speed * delta_time;
+	float current_x = transform->GetX();
+	float current_y = transform->GetY();
 
-	if (map_collider->HasCollisionAt(target_x, target_y))
-		return;
+	float target_x = current_x + x * move_speed * delta_time;
+	if (map_collider->HasCollisionAt(target_x, current_y))
+	{
+		target_x = current_x;
+	}
+
+	float target_y = current_y + y * move_speed * delta_time;
+	if (map_collider->HasCollisionAt(current_x, target_y))
+	{
+		target_y = current_y;
+	}
 
 	transform->SetPosition(target_x, target_y);
 }
