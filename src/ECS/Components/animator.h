@@ -6,7 +6,7 @@
 
 struct Animation 
 {
-	Animation(int row, int start_frame, int end_frame, float frame_time, bool is_loop) : 
+	Animation(int row, int start_frame, int end_frame, int frame_time, bool is_loop) : 
 		row(row), frame_time(frame_time), is_loop(is_loop), start_frame(start_frame),
 		frames(end_frame - start_frame), current_frame(start_frame), 
 		end_frame(start_frame + (end_frame - start_frame)) {};
