@@ -74,6 +74,13 @@ int Game::Initialize(const char* title, int width, int height, bool fullscreen)
 	player->AddComponent<MapCollider>(64, 64, map);
 	player->AddComponent<PlayerController>(is_running);
 
+	Entity* static_animated = new Entity("StaticAnimated", component_manager);
+	Transform* sa_transform = static_animated->AddComponent<Transform>();
+	sa_transform->Move(64, 64);
+	SpriteSheet* sa_sheet = static_animated->AddComponent<SpriteSheet>("./../assets/test_4_frames_transparent_spritesheet_64x256.png", renderer, 64, 64, camera);
+	Animator* sa_animator = static_animated->AddComponent<Animator>();
+	sa_animator->AddAnimation(0, 0, 3, 500, true, true);
+
 	is_running = true;
 
 	return 0;

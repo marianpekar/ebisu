@@ -33,7 +33,7 @@ public:
 	virtual ~Animator() = default;
 	void Setup() override;
 	void Update(float deltaTime) override;
-	int AddAnimation(const int row, const int start_frame, const int end_frame, const float frame_time, const bool is_loop);
+	int AddAnimation(const int row, const int start_frame, const int end_frame, const float frame_time, const bool is_loop, const bool play_on_setup);
 	void Play(const int id);
 	void Stop();
 	void StopImmediately();

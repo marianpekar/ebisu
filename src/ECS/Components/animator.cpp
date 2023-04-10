@@ -6,6 +6,12 @@
 void Animator::Setup()
 {
 	sprite_sheet = owner->GetComponent<SpriteSheet>();
+
+	if (active_anim_id != -1)
+	{
+		sprite_sheet->SelectSprite(animations[active_anim_id]->row, animations[active_anim_id]->start_frame);
+		animations[active_anim_id]->is_running = true;
+	}
 }
 
 void Animator::Update(float deltaTime)
@@ -39,11 +45,17 @@ void Animator::Update(float deltaTime)
 	}
 }
 
-int Animator::AddAnimation(int row, int start_frame, int end_frame, float frame_time, bool is_loop)
+int Animator::AddAnimation(int row, int start_frame, int end_frame, float frame_time, bool is_loop, bool play_on_setup)
 {
 	Animation* animation = new Animation(row, start_frame, end_frame, frame_time, is_loop);
 	animation->id = animations.size();
 	animations.emplace_back(animation);
+
+	if (play_on_setup)
+	{
+		active_anim_id = animation->id;
+	}
+
 	return animation->id;
 }
 
