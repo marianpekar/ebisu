@@ -69,7 +69,7 @@ int Game::Initialize(const char* title, int width, int height, bool fullscreen)
 	};
 
 	map = new Map(renderer, 64, 512, camera, collision_map);
-	map->AddLayer("./../assets/test_tilemap_4_tiles_256x64.png", tile_map);
+	map->AddLayer("./../assets/test_tilemap_4_tiles_128x128.png", tile_map);
 
 	player->AddComponent<MapCollider>(64, 64, map);
 	player->AddComponent<PlayerController>(is_running);

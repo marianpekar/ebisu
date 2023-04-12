@@ -7,8 +7,9 @@ struct Layer
 	struct SDL_Texture* sprite = nullptr;
 	std::vector<int> tile_map;
 	const int tiles_in_row;
-	Layer(SDL_Texture* sprite, std::vector<int> tile_map, const int& tiles_in_row) :
-		sprite(sprite), tile_map(tile_map), tiles_in_row(tiles_in_row) {}
+	const int spritesheet_cols;
+	Layer(SDL_Texture* sprite, std::vector<int> tile_map, const int& tiles_in_row, const int spritesheet_cols) :
+		sprite(sprite), tile_map(tile_map), tiles_in_row(tiles_in_row), spritesheet_cols(spritesheet_cols) {}
 	~Layer();
 	const int& GetTileAt(const int& i, const int& j) { return tile_map[j * tiles_in_row + i]; }
 };
