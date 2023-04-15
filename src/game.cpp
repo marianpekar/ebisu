@@ -5,12 +5,14 @@
 #include "map.h"
 #include "camera.h"
 #include "ECS/component_manager.h"
+#include "ECS/collision_solver.h"
 #include "ECS/entity.h"
 #include "ECS/Components/sprite_sheet.h"
 #include "ECS/Components/player_controller.h"
 #include "ECS/Components/transform.h"
 #include "ECS/Components/animator.h"
 #include "ECS/Components/map_collider.h"
+#include "ECS/Components/box_collider.h"
 
 int Game::Initialize(const char* title, int width, int height, bool fullscreen)
 {
@@ -37,6 +39,7 @@ int Game::Initialize(const char* title, int width, int height, bool fullscreen)
 	SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
 	
 	component_manager = new ComponentManager();
+	collision_solver = new CollisionSolver();
 
 	Entity* player = new Entity("Player", component_manager);
 
@@ -45,6 +48,8 @@ int Game::Initialize(const char* title, int width, int height, bool fullscreen)
 
 	SpriteSheet* sprite = player->AddComponent<SpriteSheet>("./../assets/test_8dir_movement_animation_spritesheet_512x512.png", renderer, 64, 64, camera);
 	Animator* animator = player->AddComponent<Animator>();
+
+	player->AddComponent<BoxCollider>(64, 64, collision_solver);
 
 	std::vector<int> tile_map {
 		2, 2, 2, 2, 2, 2, 2, 2,
@@ -76,9 +81,10 @@ int Game::Initialize(const char* title, int width, int height, bool fullscreen)
 
 	Entity* static_animated = new Entity("StaticAnimated", component_manager);
 	Transform* sa_transform = static_animated->AddComponent<Transform>();
-	sa_transform->Move(64, 64);
+	sa_transform->Move(96, 96);
 	SpriteSheet* sa_sheet = static_animated->AddComponent<SpriteSheet>("./../assets/test_4_frames_transparent_spritesheet_64x256.png", renderer, 64, 64, camera);
 	Animator* sa_animator = static_animated->AddComponent<Animator>();
+	static_animated->AddComponent<BoxCollider>(64, 64, collision_solver);
 	sa_animator->AddAnimation(0, 0, 3, 500, true, true);
 
 	is_running = true;
@@ -94,6 +100,7 @@ void Game::Setup()
 void Game::Update(float delta_time)
 {
 	component_manager->Update(delta_time);
+	collision_solver->Update();
 	camera->Update();
 }
 

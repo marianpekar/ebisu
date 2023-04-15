@@ -11,6 +11,7 @@ private:
 	class Animator* animator = nullptr;
 	class Transform* transform = nullptr;
 	class MapCollider* map_collider = nullptr;
+	class BoxCollider* box_collider = nullptr;
 
 	int up_anim_id = 0;
 	int up_right_anim_id = 0;

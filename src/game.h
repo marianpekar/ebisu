@@ -13,6 +13,7 @@ public:
 private:
 	bool is_running = false;
 	class ComponentManager* component_manager = nullptr;
+	class CollisionSolver* collision_solver = nullptr;
 	class Map* map = nullptr;
 	class Camera* camera = nullptr;
 	struct SDL_Window* window = nullptr;

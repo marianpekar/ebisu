@@ -147,6 +147,7 @@ xcopy /y $(ProjectDir)..\libs\SDL2_image\lib\x64\SDL2_image.dll $(TargetDir)</Co
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="..\src\ECS\collision_solver.cpp" />
     <ClCompile Include="..\src\ECS\Components\animator.cpp" />
     <ClCompile Include="..\src\ECS\Components\box_collider.cpp" />
     <ClCompile Include="..\src\ECS\Components\map_collider.cpp" />
@@ -161,6 +162,7 @@ xcopy /y $(ProjectDir)..\libs\SDL2_image\lib\x64\SDL2_image.dll $(TargetDir)</Co
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\src\camera.h" />
+    <ClInclude Include="..\src\ECS\collision_solver.h" />
     <ClInclude Include="..\src\ECS\Components\animator.h" />
     <ClInclude Include="..\src\ECS\Components\box_collider.h" />
     <ClInclude Include="..\src\ECS\Components\component.h" />

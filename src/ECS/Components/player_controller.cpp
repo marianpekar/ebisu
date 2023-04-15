@@ -4,12 +4,14 @@
 #include "transform.h"
 #include "animator.h"
 #include "map_collider.h"
+#include "box_collider.h"
 
 void PlayerController::Setup()
 {
 	transform = owner->GetComponent<Transform>();
 	animator = owner->GetComponent<Animator>();
 	map_collider = owner->GetComponent<MapCollider>();
+	box_collider = owner->GetComponent<BoxCollider>();
 
 	const int move_start_anim_frame = 2;
 	const int move_end_anim_frame = 5;
@@ -157,6 +159,29 @@ void PlayerController::Update(float delta_time)
 	if (map_collider->HasCollisionAt(current_x, target_y))
 	{
 		target_y = current_y;
+	}
+
+	if(box_collider->GetHasCollision())
+	{
+		const BoxCollider* other = box_collider->GetOther();
+		Transform* other_transform = other->owner->GetComponent<Transform>();
+
+		float dir_x = other_transform->GetX() - current_x;
+		float dir_y = other_transform->GetY() - current_y;
+
+		float mag = std::sqrt(dir_x * dir_x + dir_y * dir_y);
+		if (mag > 0) {
+			float inv_mag = 1.0f / mag;
+			dir_x *= inv_mag;
+			dir_y *= inv_mag;
+		}
+
+		float push_back_dist = 10.f;
+		float push_x = dir_x * push_back_dist;
+		float push_y = dir_y * push_back_dist;
+
+		transform->SetPosition(target_x - push_x, target_y - push_y);
+		return;
 	}
 
 	transform->SetPosition(target_x, target_y);
