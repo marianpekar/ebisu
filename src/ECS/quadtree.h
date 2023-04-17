@@ -2,8 +2,6 @@
 
 #include <vector>
 
-const int QUADTREE_NODES_COUNT = 4;
-
 struct Rectangle
 {
 	float x, y;
@@ -21,7 +19,7 @@ private:
 	
 	Rectangle bounds;
 	std::vector<class BoxCollider*> objects;
-	Quadtree* nodes[QUADTREE_NODES_COUNT];
+	Quadtree* nodes[4];
 
 	void Split();
 	const size_t& GetIndex(BoxCollider* collider) const;

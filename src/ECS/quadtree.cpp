@@ -8,7 +8,7 @@ void Quadtree::Clear()
 {
 	objects.clear();
 
-	for (int i = 0; i < QUADTREE_NODES_COUNT; i++)
+	for (int i = 0; i < 4; i++)
 	{
 		if (nodes[i] == nullptr)
 			continue;
