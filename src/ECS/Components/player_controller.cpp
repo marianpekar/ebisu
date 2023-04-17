@@ -150,16 +150,7 @@ void PlayerController::Update(float delta_time)
 	float current_y = transform->GetY();
 
 	float target_x = current_x + x * move_speed * delta_time;
-	if (map_collider->HasCollisionAt(target_x, current_y))
-	{
-		target_x = current_x;
-	}
-
 	float target_y = current_y + y * move_speed * delta_time;
-	if (map_collider->HasCollisionAt(current_x, target_y))
-	{
-		target_y = current_y;
-	}
 
 	for (const auto& other : box_collider->GetOthers())
 	{		
@@ -179,8 +170,18 @@ void PlayerController::Update(float delta_time)
 		float push_x = dir_x * push_back_dist;
 		float push_y = dir_y * push_back_dist;
 
-		transform->SetPosition(target_x - push_x, target_y - push_y);
-		return;
+		target_x = target_x - push_x;
+		target_y = target_y - push_y;
+	}
+
+	if (map_collider->HasCollisionAt(target_x, current_y))
+	{
+		target_x = current_x;
+	}
+
+	if (map_collider->HasCollisionAt(current_x, target_y))
+	{
+		target_y = current_y;
 	}
 
 	transform->SetPosition(target_x, target_y);
