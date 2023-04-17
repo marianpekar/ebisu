@@ -1,6 +1,7 @@
 #pragma once
 
 #include "component.h"
+#include <unordered_map>
 
 class BoxCollider : public Component
 {
@@ -9,8 +10,7 @@ private:
 	bool is_trigger = false;
 	class Transform* transform = nullptr;
 	class CollisionSolver* collision_solver;
-	bool has_collision = false;
-	BoxCollider* other = nullptr;
+	std::unordered_map<class BoxCollider*, bool> others;
 public:
 	BoxCollider(float width, float height, CollisionSolver* collision_solver);
 	void Setup() override;
@@ -20,10 +20,8 @@ public:
 	const float& GetY() { return y; }
 	const float& GetWidth() { return width; }
 	const float& GetHeight() { return height; }
-	const bool& GetHasCollision() { return has_collision; }
-	void SetHasCollision(bool value) { has_collision = value; }
-	void SetOther(BoxCollider* other) { this->other = other; }
-	BoxCollider* GetOther() { return other; }
-	void ClearOther() { other = nullptr; }
+	void AddOther(BoxCollider* other) { others[other] = true; }
+	void RemoveOther(BoxCollider* other) { others.erase(other); }
+	const std::unordered_map<class BoxCollider*, bool>& GetOthers() { return others; }
 
 };

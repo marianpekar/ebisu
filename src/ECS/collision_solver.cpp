@@ -23,25 +23,23 @@ void CollisionSolver::Update()
 	{
 		quad_result.clear();
 		quad->Retrieve(quad_result, colliders[i]);
-	}
 
-	for (auto& a : quad_result)
-	{
-		for (auto& b : quad_result)
+		for (size_t j = 0; j < quad_result.size(); ++j)
 		{
-			bool intersects = AABB(a, b);
-			a->SetHasCollision(intersects);
-			b->SetHasCollision(intersects);
+			auto& a = colliders[i];
+			auto& b = quad_result[j];
 
+			if (a == b) 
+				continue;
+			
+			bool intersects = AABB(a, b);
 			if (intersects)
 			{
-				a->SetOther(b);
-				b->SetOther(a);
+				a->AddOther(b);
 			}
 			else
 			{
-				a->ClearOther();
-				b->ClearOther();
+				a->RemoveOther(b);
 			}
 		}
 	}

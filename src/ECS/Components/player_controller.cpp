@@ -161,10 +161,9 @@ void PlayerController::Update(float delta_time)
 		target_y = current_y;
 	}
 
-	if(box_collider->GetHasCollision())
-	{
-		const BoxCollider* other = box_collider->GetOther();
-		Transform* other_transform = other->owner->GetComponent<Transform>();
+	for (const auto& other : box_collider->GetOthers())
+	{		
+		Transform* other_transform = other.first->owner->GetComponent<Transform>();
 
 		float dir_x = other_transform->GetX() - current_x;
 		float dir_y = other_transform->GetY() - current_y;

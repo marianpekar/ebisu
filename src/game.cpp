@@ -87,6 +87,15 @@ int Game::Initialize(const char* title, int width, int height, bool fullscreen)
 	static_animated->AddComponent<BoxCollider>(64, 64, collision_solver);
 	sa_animator->AddAnimation(0, 0, 3, 500, true, true);
 
+
+	Entity* static_animated_2 = new Entity("StaticAnimated2", component_manager);
+	Transform* sa_transform_2 = static_animated_2->AddComponent<Transform>();
+	sa_transform_2->Move(400, 400);
+	SpriteSheet* sa_sheet_2 = static_animated_2->AddComponent<SpriteSheet>("./../assets/test_4_frames_transparent_spritesheet_64x256.png", renderer, 64, 64, camera);
+	Animator* sa_animator_2 = static_animated_2->AddComponent<Animator>();
+	static_animated_2->AddComponent<BoxCollider>(64, 64, collision_solver);
+	sa_animator_2->AddAnimation(0, 0, 3, 500, true, true);
+
 	is_running = true;
 
 	return 0;
