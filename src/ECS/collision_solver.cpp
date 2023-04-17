@@ -13,13 +13,12 @@ void CollisionSolver::AddCollider(BoxCollider* collider)
 void CollisionSolver::Update()
 {
 	quad->Clear();
-	for (size_t i = 0; i < colliders.size(); i++)
+	for (size_t i = 0; i < colliders.size(); ++i)
 	{
 		quad->Insert(colliders[i]);
 	}
 
-	std::vector<BoxCollider*> quad_result;
-	for (size_t i = 0; i < colliders.size(); i++)
+	for (size_t i = 0; i < colliders.size(); ++i)
 	{
 		quad_result.clear();
 		quad->Retrieve(quad_result, colliders[i]);
