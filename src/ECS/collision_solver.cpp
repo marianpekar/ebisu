@@ -1,5 +1,9 @@
 #include "collision_solver.h"
+#include "quadtree.h"
 #include "Components/box_collider.h"
+
+CollisionSolver::CollisionSolver(float quad_x, float quad_y, float quad_width, float quad_height) :
+	quad(new Quadtree(0, quad_x, quad_y, quad_width, quad_height)) {}
 
 void CollisionSolver::AddCollider(BoxCollider* collider)
 {
@@ -8,9 +12,22 @@ void CollisionSolver::AddCollider(BoxCollider* collider)
 
 void CollisionSolver::Update()
 {
-	for (auto& a : colliders)
+	quad->Clear();
+	for (size_t i = 0; i < colliders.size(); i++)
 	{
-		for (auto& b : colliders)
+		quad->Insert(colliders[i]);
+	}
+
+	std::vector<BoxCollider*> quad_result;
+	for (size_t i = 0; i < colliders.size(); i++)
+	{
+		quad_result.clear();
+		quad->Retrieve(quad_result, colliders[i]);
+	}
+
+	for (auto& a : quad_result)
+	{
+		for (auto& b : quad_result)
 		{
 			bool intersects = AABB(a, b);
 			a->SetHasCollision(intersects);

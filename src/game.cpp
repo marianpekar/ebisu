@@ -39,7 +39,7 @@ int Game::Initialize(const char* title, int width, int height, bool fullscreen)
 	SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
 	
 	component_manager = new ComponentManager();
-	collision_solver = new CollisionSolver();
+	collision_solver = new CollisionSolver(0, 0, width, height);
 
 	Entity* player = new Entity("Player", component_manager);
 

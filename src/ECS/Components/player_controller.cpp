@@ -176,7 +176,7 @@ void PlayerController::Update(float delta_time)
 			dir_y *= inv_mag;
 		}
 
-		float push_back_dist = 10.f;
+		float push_back_dist = 7.f;
 		float push_x = dir_x * push_back_dist;
 		float push_y = dir_y * push_back_dist;
 
