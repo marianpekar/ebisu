@@ -14,7 +14,6 @@ void Quadtree::Clear()
 			continue;
 
 		nodes[i]->Clear();
-		nodes[i] = nullptr;
 	}
 }
 
