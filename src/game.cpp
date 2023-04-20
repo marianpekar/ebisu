@@ -40,7 +40,7 @@ int Game::Initialize(const char* title, int width, int height, bool fullscreen)
 	SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
 	
 	component_manager = new ComponentManager();
-	collision_solver = new CollisionSolver(0, 0, width, height);
+	collision_solver = new CollisionSolver();
 
 	Entity* player = new Entity("Player", component_manager);
 
@@ -53,28 +53,44 @@ int Game::Initialize(const char* title, int width, int height, bool fullscreen)
 	player->AddComponent<BoxCollider>(64, 64, collision_solver);
 
 	std::vector<int> tile_map {
-		2, 2, 2, 2, 2, 2, 2, 2,
-		2, 0, 0, 0, 0, 0, 0, 2,
-		2, 0, 3, 1, 3, 1, 0, 2,
-		2, 0, 1, 3, 1, 3, 0, 2,
-		2, 0, 3, 1, 3, 1, 0, 2,
-		2, 0, 1, 3, 1, 3, 0, 2,
-		2, 0, 0, 0, 0, 0, 0, 2,
-		2, 2, 2, 2, 2, 2, 2, 2,
+		2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2,
+		2, 0, 0, 0, 0, 0, 0, 2, 2, 0, 0, 0, 0, 0, 0, 2,
+		2, 0, 3, 1, 3, 1, 0, 2, 2, 0, 3, 1, 3, 1, 0, 2,
+		2, 0, 1, 3, 1, 3, 0, 2, 2, 0, 1, 3, 1, 3, 0, 2,
+		2, 0, 3, 1, 3, 1, 0, 2, 2, 0, 3, 1, 3, 1, 0, 2,
+		2, 0, 1, 3, 1, 3, 0, 2, 2, 0, 1, 3, 1, 3, 0, 2,
+		2, 0, 0, 0, 0, 0, 0, 2, 2, 0, 0, 0, 0, 0, 0, 2,
+		2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2,
+		2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2,
+		2, 0, 0, 0, 0, 0, 0, 2, 2, 0, 0, 0, 0, 0, 0, 2,
+		2, 0, 3, 1, 3, 1, 0, 2, 2, 0, 3, 1, 3, 1, 0, 2,
+		2, 0, 1, 3, 1, 3, 0, 2, 2, 0, 1, 3, 1, 3, 0, 2,
+		2, 0, 3, 1, 3, 1, 0, 2, 2, 0, 3, 1, 3, 1, 0, 2,
+		2, 0, 1, 3, 1, 3, 0, 2, 2, 0, 1, 3, 1, 3, 0, 2,
+		2, 0, 0, 0, 0, 0, 0, 2, 2, 0, 0, 0, 0, 0, 0, 2,
+		2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2,
 	};
 
 	std::vector<int> collision_map {
-		0, 0, 0, 0, 0, 0, 0, 0,
-		0, 0, 0, 0, 0, 0, 0, 0,
-		0, 0, 1, 1, 1, 1, 0, 0,
-		0, 0, 1, 1, 1, 1, 0, 0,
-		0, 0, 1, 1, 1, 1, 0, 0,
-		0, 0, 1, 1, 1, 1, 0, 0,
-		0, 0, 0, 0, 0, 0, 0, 0,
-		0, 0, 0, 0, 0, 0, 0, 0,
+		0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+		0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+		0, 0, 1, 1, 1, 1, 0, 0, 0, 0, 1, 1, 1, 1, 0, 0,
+		0, 0, 1, 1, 1, 1, 0, 0, 0, 0, 1, 1, 1, 1, 0, 0,
+		0, 0, 1, 1, 1, 1, 0, 0, 0, 0, 1, 1, 1, 1, 0, 0,
+		0, 0, 1, 1, 1, 1, 0, 0, 0, 0, 1, 1, 1, 1, 0, 0,
+		0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+		0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+		0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+		0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+		0, 0, 1, 1, 1, 1, 0, 0, 0, 0, 1, 1, 1, 1, 0, 0,
+		0, 0, 1, 1, 1, 1, 0, 0, 0, 0, 1, 1, 1, 1, 0, 0,
+		0, 0, 1, 1, 1, 1, 0, 0, 0, 0, 1, 1, 1, 1, 0, 0, 
+		0, 0, 1, 1, 1, 1, 0, 0, 0, 0, 1, 1, 1, 1, 0, 0,
+		0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+		0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
 	};
 
-	map = new Map(renderer, 64, 512, camera, collision_map);
+	map = new Map(renderer, 64, 1024, camera, collision_map);
 	map->AddLayer("./../assets/test_tilemap_4_tiles_128x128.png", tile_map);
 
 	player->AddComponent<MapCollider>(64, 64, map);
@@ -89,18 +105,16 @@ int Game::Initialize(const char* title, int width, int height, bool fullscreen)
 	sa_animator->AddAnimation(0, 0, 3, 500, true, true);
 
 
-	for (size_t i = 0; i < 100; i++)
+	for (size_t i = 0; i < 20; i++)
 	{
 		Entity* static_animated_2 = new Entity("StaticAnimated", component_manager);
 		Transform* sa_transform_2 = static_animated_2->AddComponent<Transform>();
-		sa_transform_2->Move(rand() % 10000, rand() % 10000);
+		sa_transform_2->Move(rand() % 1000, rand() % 1000);
 		SpriteSheet* sa_sheet_2 = static_animated_2->AddComponent<SpriteSheet>("./../assets/test_4_frames_transparent_spritesheet_64x256.png", renderer, 64, 64, camera);
 		Animator* sa_animator_2 = static_animated_2->AddComponent<Animator>();
 		static_animated_2->AddComponent<BoxCollider>(64, 64, collision_solver);
 		sa_animator_2->AddAnimation(0, 0, 3, 500, true, true);
 	}
-
-
 
 	is_running = true;
 

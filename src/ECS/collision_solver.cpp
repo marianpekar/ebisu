@@ -1,9 +1,7 @@
 #include "collision_solver.h"
-#include "quadtree.h"
 #include "Components/box_collider.h"
 
-CollisionSolver::CollisionSolver(float quad_x, float quad_y, float quad_width, float quad_height) :
-	quad(new Quadtree(0, quad_x, quad_y, quad_width, quad_height)) {}
+CollisionSolver::CollisionSolver() {}
 
 void CollisionSolver::AddCollider(BoxCollider* collider)
 {
@@ -12,21 +10,12 @@ void CollisionSolver::AddCollider(BoxCollider* collider)
 
 void CollisionSolver::Update()
 {
-	quad->Clear();
 	for (size_t i = 0; i < colliders.size(); ++i)
 	{
-		quad->Insert(colliders[i]);
-	}
-
-	for (size_t i = 0; i < colliders.size(); ++i)
-	{
-		quad_result.clear();
-		quad->Retrieve(quad_result, colliders[i]);
-
-		for (size_t j = 0; j < quad_result.size(); ++j)
+		for (size_t j = 0; j < colliders.size(); ++j)
 		{
-			auto& a = colliders[i];
-			auto& b = quad_result[j];
+			auto& a = colliders[j];
+			auto& b = colliders[i];
 
 			if (a == b) 
 				continue;
