@@ -168,12 +168,12 @@ void PlayerController::Update(float delta_time)
 
 	if (map_collider->HasCollisionAt(Vector2(target_pos.x, current_pos.y)))
 	{
-		target_pos = current_pos;
+		target_pos.x = current_pos.x;
 	}
 
 	if (map_collider->HasCollisionAt(Vector2(current_pos.x, target_pos.y)))
 	{
-		target_pos = current_pos;
+		target_pos.y = current_pos.y;
 	}
 
 	transform->SetPosition(target_pos);
