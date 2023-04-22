@@ -1,29 +1,29 @@
-#include "map_collider.h"
-#include "../entity.h"
-#include "transform.h"
-#include "../../map.h"
 #include <iostream>
+#include "../../map.h"
+#include "../entity.h"
+#include "map_collider.h"
+#include "transform.h"
 
 MapCollider::MapCollider(float width, float height, Map* map) :
-	x(0), y(0), width(width), height(height), map(map)
+	position(), width(width), height(height), map(map)
 {
 	map_size = map->GetMapSize();
 	map_tile_size = map->GetTileSize();
 }
 
-bool MapCollider::HasCollisionAt(const float& x, const float& y)
+bool MapCollider::HasCollisionAt(const Vector2& position)
 {
-	float tl_x = x;
-	float tl_y = y;
+	float tl_x = position.x;
+	float tl_y = position.y;
 
-	float tr_x = x + width;
-	float tr_y = y;
+	float tr_x = position.x + width;
+	float tr_y = position.y;
 
-	float bl_x = x;
-	float bl_y = y + height;
+	float bl_x = position.x;
+	float bl_y = position.y + height;
 
-	float br_x = x + width;
-	float br_y = y + height;
+	float br_x = position.x + width;
+	float br_y = position.y + height;
 
 	int tl_i = tl_x / map_tile_size;
 	int tl_j = tl_y / map_tile_size;

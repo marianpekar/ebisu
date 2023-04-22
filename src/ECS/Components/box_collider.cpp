@@ -4,7 +4,7 @@
 #include "transform.h"
 
 BoxCollider::BoxCollider(float width, float height, CollisionSolver* collision_solver) : 
-	x(0), y(0), width(width), height(height), collision_solver(collision_solver) {}
+	position(Vector2(0, 0)), width(width), height(height), collision_solver(collision_solver) {}
 
 void BoxCollider::Setup()
 {
@@ -14,6 +14,5 @@ void BoxCollider::Setup()
 
 void BoxCollider::Update(float delta_time)
 {
-	x = transform->GetX();
-	y = transform->GetY();
+	position = transform->GetPosition();
 }

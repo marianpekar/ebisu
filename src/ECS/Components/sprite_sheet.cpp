@@ -28,10 +28,10 @@ void SpriteSheet::Setup()
 
 void SpriteSheet::Render()
 {
-    dst_rect->x = transform->GetX() - camera->GetX();
-    dst_rect->y = transform->GetY() - camera->GetY();
-    dst_rect->w = rect_width * transform->GetXScale();
-    dst_rect->h = rect_height * transform->GetYScale();
+    dst_rect->x = transform->GetPosition().x - camera->GetPosition().x;
+    dst_rect->y = transform->GetPosition().y - camera->GetPosition().y;
+    dst_rect->w = rect_width * transform->GetScale().x;
+    dst_rect->h = rect_height * transform->GetScale().y;
 
     SDL_RenderCopy(renderer, sprite, src_rect, dst_rect);
 }

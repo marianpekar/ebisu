@@ -35,8 +35,8 @@ void Map::Render()
 				src_rect->w = tile_size;
 				src_rect->h = tile_size;
 
-				dst_rect->x = i * tile_size - camera->GetX();
-				dst_rect->y = j * tile_size - camera->GetY();
+				dst_rect->x = i * tile_size - camera->GetPosition().x;
+				dst_rect->y = j * tile_size - camera->GetPosition().y;
 				dst_rect->w = tile_size;
 				dst_rect->h = tile_size;
 

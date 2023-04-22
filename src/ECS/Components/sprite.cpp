@@ -16,10 +16,10 @@ void Sprite::Setup()
 
 void Sprite::Render()
 {
-    dst_rect->x = transform->GetX() - camera->GetX();
-    dst_rect->y = transform->GetY() - camera->GetY();
-    dst_rect->w = width * transform->GetXScale();
-    dst_rect->h = height * transform->GetYScale();
+    dst_rect->x = transform->GetPosition().x - camera->GetPosition().x;
+    dst_rect->y = transform->GetPosition().y - camera->GetPosition().y;
+    dst_rect->w = width * transform->GetScale().x;
+    dst_rect->h = height * transform->GetScale().y;
 
     SDL_RenderCopy(renderer, sprite, nullptr, dst_rect);
 }

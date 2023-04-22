@@ -1,5 +1,6 @@
 #pragma once
 
+#include "../../Math/vector2.h"
 #include "component.h"
 
 class PlayerController : public Component
@@ -7,7 +8,7 @@ class PlayerController : public Component
 private:
 	bool& is_game_running;
 	float move_speed = 300.0f;
-	float x, y;
+	Vector2 move_dir;
 	class Animator* animator = nullptr;
 	class Transform* transform = nullptr;
 	class MapCollider* map_collider = nullptr;
@@ -35,7 +36,7 @@ private:
 
 	int current_idle_animation_id = 0;
 public:
-	PlayerController(bool& is_game_running) : is_game_running(is_game_running), x(0), y(0) {}
+	PlayerController(bool& is_game_running) : is_game_running(is_game_running), move_dir() {}
 	virtual ~PlayerController() = default;
 	void Setup() override;
 	void Update(float delta_time) override;

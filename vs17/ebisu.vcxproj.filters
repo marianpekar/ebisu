@@ -25,6 +25,9 @@
     <Filter Include="Source Files\ECS\Components">
       <UniqueIdentifier>{cab74734-a11a-46ef-b23d-ad03fc64061e}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\Math">
+      <UniqueIdentifier>{ef9776bd-9c1b-41c7-ad7b-2f9a3bb538b3}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\src\main.cpp">
@@ -109,6 +112,9 @@
     </ClInclude>
     <ClInclude Include="..\src\ECS\collision_solver.h">
       <Filter>Header Files\ECS</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Math\vector2.h">
+      <Filter>Header Files\Math</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

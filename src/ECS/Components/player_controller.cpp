@@ -56,87 +56,87 @@ void PlayerController::Update(float delta_time)
 		case SDL_KEYUP:
 			if (keys[SDL_SCANCODE_W])
 			{
-				y = -1;
+				move_dir.y = -1;
 			}
 			else if (keys[SDL_SCANCODE_S])
 			{
-				y = 1;
+				move_dir.y = 1;
 			}
 			else
 			{
-				y = 0;
+				move_dir.y = 0;
 			}
 
 			if (keys[SDL_SCANCODE_A])
 			{
-				x = -1;
+				move_dir.x = -1;
 			}
 			else if (keys[SDL_SCANCODE_D])
 			{
-				x = 1;
+				move_dir.x = 1;
 			}
 			else
 			{
-				x = 0;
+				move_dir.x = 0;
 			}
 
 			// up
-			if (x == 0 && y < 0)
+			if (move_dir.x == 0 && move_dir.y < 0)
 			{
 				animator->Play(up_anim_id);
 				current_idle_animation_id = idle_up_anim_id;
 			}
 			// down
-			else if (x == 0 && y > 0)
+			else if (move_dir.x == 0 && move_dir.y > 0)
 			{
 				animator->Play(down_anim_id);
 				current_idle_animation_id = idle_down_anim_id;
 			}
 			// left
-			else if (x < 0 && y == 0)
+			else if (move_dir.x < 0 && move_dir.y == 0)
 			{
 				animator->Play(left_anim_id);
 				current_idle_animation_id = idle_left_anim_id;
 			}
 			// right
-			else if (x > 0 && y == 0)
+			else if (move_dir.x > 0 && move_dir.y == 0)
 			{
 				animator->Play(right_anim_id);
 				current_idle_animation_id = idle_right_anim_id;
 			}
 			// up left
-			else if (x < 0 && y < 0)
+			else if (move_dir.x < 0 && move_dir.y < 0)
 			{
-				x = -0.707f;
-				y = -0.707f;
+				move_dir.x = -0.707f;
+				move_dir.y = -0.707f;
 				animator->Play(up_left_anim_id);
 				current_idle_animation_id = idle_up_left_anim_id;
 			}
 			// up right
-			else if (x > 0 && y < 0)
+			else if (move_dir.x > 0 && move_dir.y < 0)
 			{
-				x = 0.707f;
-				y = -0.707f;
+				move_dir.x = 0.707f;
+				move_dir.y = -0.707f;
 				animator->Play(up_right_anim_id);
 				current_idle_animation_id = idle_up_right_anim_id;
 			}
 			// down left
-			else if (x < 0 && y > 0)
+			else if (move_dir.x < 0 && move_dir.y > 0)
 			{
-				x = -0.707f;
-				y = 0.707f;
+				move_dir.x = -0.707f;
+				move_dir.y = 0.707f;
 				animator->Play(down_left_anim_id);
 				current_idle_animation_id = idle_down_left_anim_id;
 			}
 			// down right
-			else if (x > 0 && y > 0)
+			else if (move_dir.x > 0 && move_dir.y > 0)
 			{
-				x = 0.707f;
-				y = 0.707f;
+				move_dir.x = 0.707f;
+				move_dir.y = 0.707f;
 				animator->Play(down_right_anim_id);
 				current_idle_animation_id = idle_down_right_anim_id;
 			}
-			else if (x == 0 && y == 0)
+			else if (move_dir.x == 0 && move_dir.y == 0)
 			{
 				animator->Play(current_idle_animation_id);
 			}	
@@ -146,43 +146,35 @@ void PlayerController::Update(float delta_time)
 			break;
 	}
 
-	float current_x = transform->GetX();
-	float current_y = transform->GetY();
-
-	float target_x = current_x + x * move_speed * delta_time;
-	float target_y = current_y + y * move_speed * delta_time;
+	Vector2 current_pos = transform->GetPosition();
+	Vector2 target_pos = current_pos + move_dir * move_speed * delta_time;
 
 	for (const auto& other : box_collider->GetOthers())
 	{		
 		Transform* other_transform = other.first->owner->GetComponent<Transform>();
 
-		float dir_x = other_transform->GetX() - current_x;
-		float dir_y = other_transform->GetY() - current_y;
+		Vector2 dir = other_transform->GetPosition() - current_pos;
 
-		float mag = std::sqrt(dir_x * dir_x + dir_y * dir_y);
-		if (mag > 0) {
-			float inv_mag = 1.0f / mag;
-			dir_x *= inv_mag;
-			dir_y *= inv_mag;
+		float len = dir.Length();
+		if (len > 0) {
+			float inv_len = 1.0f / len;
+			dir *= inv_len;
 		}
 
 		float push_back_dist = 7.f;
-		float push_x = dir_x * push_back_dist;
-		float push_y = dir_y * push_back_dist;
-
-		target_x = target_x - push_x;
-		target_y = target_y - push_y;
+		Vector2 push = dir * push_back_dist;
+		target_pos -= push;
 	}
 
-	if (map_collider->HasCollisionAt(target_x, current_y))
+	if (map_collider->HasCollisionAt(Vector2(target_pos.x, current_pos.y)))
 	{
-		target_x = current_x;
+		target_pos = current_pos;
 	}
 
-	if (map_collider->HasCollisionAt(current_x, target_y))
+	if (map_collider->HasCollisionAt(Vector2(current_pos.x, target_pos.y)))
 	{
-		target_y = current_y;
+		target_pos = current_pos;
 	}
 
-	transform->SetPosition(target_x, target_y);
+	transform->SetPosition(target_pos);
 }
