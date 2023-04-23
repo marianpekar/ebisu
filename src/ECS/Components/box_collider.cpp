@@ -19,6 +19,23 @@ void BoxCollider::Update(float delta_time)
 
 void BoxCollider::Collide(BoxCollider* other)
 {
+	if (!is_trigger)
+	{
+		Transform* other_transform = other->owner->GetComponent<Transform>();
+
+		Vector2 dir = other_transform->GetPosition() - transform->GetPosition();
+
+		float len = dir.Length();
+		if (len > 0) {
+			float inv_len = 1.0f / len;
+			dir *= inv_len;
+		}
+
+		float push_back_dist = -1.f;
+		transform->Move(dir * push_back_dist);
+		other->transform->Move(dir * -push_back_dist);	
+	}
+
 	if(on_collision == nullptr)
 		return;
 

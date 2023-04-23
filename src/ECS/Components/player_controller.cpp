@@ -1,4 +1,5 @@
 #include <SDL.h>
+#include <algorithm>
 #include "../entity.h"
 #include "player_controller.h"
 #include "transform.h"
@@ -16,18 +17,7 @@ void PlayerController::Setup()
 	box_collider = owner->GetComponent<BoxCollider>();
 
 	box_collider->on_collision = [this](BoxCollider* other) {
-		Transform* other_transform = other->owner->GetComponent<Transform>();
-
-		Vector2 dir = other_transform->GetPosition() - transform->GetPosition();
-
-		float len = dir.Length();
-		if (len > 0) {
-			float inv_len = 1.0f / len;
-			dir *= inv_len;
-		}
-
-		float push_back_dist = 7.f;
-		push_back = dir * push_back_dist;
+		other_colliders.push(other);
 	};
 
 	const int move_start_anim_frame = 2;
@@ -166,10 +156,12 @@ void PlayerController::Update(float delta_time)
 	Vector2 current_pos = transform->GetPosition();
 	Vector2 target_pos = current_pos + move_dir * move_speed * delta_time;
 	
-	target_pos -= push_back;
-	push_back.x = 0;
-	push_back.y = 0;
+	while(other_colliders.size() > 0)
+	{
+		// on collision with each box collider
 
+		other_colliders.pop();
+	}
 
 	if (map_collider->HasCollisionAt(Vector2(target_pos.x, current_pos.y)))
 	{

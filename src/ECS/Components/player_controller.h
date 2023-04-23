@@ -2,6 +2,7 @@
 
 #include "../../Math/vector2.h"
 #include "component.h"
+#include <queue>
 
 class PlayerController : public Component
 {
@@ -9,11 +10,12 @@ private:
 	bool& is_game_running;
 	float move_speed = 300.0f;
 	Vector2 move_dir;
-	Vector2 push_back;
 	class Animator* animator = nullptr;
 	class Transform* transform = nullptr;
 	class MapCollider* map_collider = nullptr;
+
 	class BoxCollider* box_collider = nullptr;
+	class std::queue<BoxCollider*> other_colliders;
 
 	int up_anim_id = 0;
 	int up_right_anim_id = 0;
