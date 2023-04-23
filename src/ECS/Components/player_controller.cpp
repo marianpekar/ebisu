@@ -6,12 +6,29 @@
 #include "map_collider.h"
 #include "box_collider.h"
 
+
+
 void PlayerController::Setup()
 {
 	transform = owner->GetComponent<Transform>();
 	animator = owner->GetComponent<Animator>();
 	map_collider = owner->GetComponent<MapCollider>();
 	box_collider = owner->GetComponent<BoxCollider>();
+
+	box_collider->on_collision = [this](BoxCollider* other) {
+		Transform* other_transform = other->owner->GetComponent<Transform>();
+
+		Vector2 dir = other_transform->GetPosition() - transform->GetPosition();
+
+		float len = dir.Length();
+		if (len > 0) {
+			float inv_len = 1.0f / len;
+			dir *= inv_len;
+		}
+
+		float push_back_dist = 7.f;
+		push_back = dir * push_back_dist;
+	};
 
 	const int move_start_anim_frame = 2;
 	const int move_end_anim_frame = 5;
@@ -148,23 +165,11 @@ void PlayerController::Update(float delta_time)
 
 	Vector2 current_pos = transform->GetPosition();
 	Vector2 target_pos = current_pos + move_dir * move_speed * delta_time;
+	
+	target_pos -= push_back;
+	push_back.x = 0;
+	push_back.y = 0;
 
-	for (const auto& other : box_collider->GetOthers())
-	{		
-		Transform* other_transform = other.first->owner->GetComponent<Transform>();
-
-		Vector2 dir = other_transform->GetPosition() - current_pos;
-
-		float len = dir.Length();
-		if (len > 0) {
-			float inv_len = 1.0f / len;
-			dir *= inv_len;
-		}
-
-		float push_back_dist = 7.f;
-		Vector2 push = dir * push_back_dist;
-		target_pos -= push;
-	}
 
 	if (map_collider->HasCollisionAt(Vector2(target_pos.x, current_pos.y)))
 	{

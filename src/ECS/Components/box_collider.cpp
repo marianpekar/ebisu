@@ -16,3 +16,11 @@ void BoxCollider::Update(float delta_time)
 {
 	position = transform->GetPosition();
 }
+
+void BoxCollider::Collide(BoxCollider* other)
+{
+	if(on_collision == nullptr)
+		return;
+
+	on_collision(other);
+}

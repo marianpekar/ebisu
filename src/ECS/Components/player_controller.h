@@ -9,6 +9,7 @@ private:
 	bool& is_game_running;
 	float move_speed = 300.0f;
 	Vector2 move_dir;
+	Vector2 push_back;
 	class Animator* animator = nullptr;
 	class Transform* transform = nullptr;
 	class MapCollider* map_collider = nullptr;
@@ -35,6 +36,7 @@ private:
 	int idle_anim_frame_time = 600;
 
 	int current_idle_animation_id = 0;
+
 public:
 	PlayerController(bool& is_game_running) : is_game_running(is_game_running), move_dir() {}
 	virtual ~PlayerController() = default;

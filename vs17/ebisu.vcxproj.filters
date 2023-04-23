@@ -66,6 +66,9 @@
     <ClCompile Include="..\src\ECS\collision_solver.cpp">
       <Filter>Source Files\ECS</Filter>
     </ClCompile>
+    <ClCompile Include="..\src\quadtree.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\src\game.h">
@@ -115,6 +118,9 @@
     </ClInclude>
     <ClInclude Include="..\src\Math\vector2.h">
       <Filter>Header Files\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\quadtree.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

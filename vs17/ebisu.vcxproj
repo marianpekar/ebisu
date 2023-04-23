@@ -158,6 +158,7 @@ xcopy /y $(ProjectDir)..\libs\SDL2_image\lib\x64\SDL2_image.dll $(TargetDir)</Co
     <ClCompile Include="..\src\game.cpp" />
     <ClCompile Include="..\src\main.cpp" />
     <ClCompile Include="..\src\map.cpp" />
+    <ClCompile Include="..\src\quadtree.cpp" />
     <ClCompile Include="..\src\texture_loader.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -176,6 +177,7 @@ xcopy /y $(ProjectDir)..\libs\SDL2_image\lib\x64\SDL2_image.dll $(TargetDir)</Co
     <ClInclude Include="..\src\game.h" />
     <ClInclude Include="..\src\map.h" />
     <ClInclude Include="..\src\Math\vector2.h" />
+    <ClInclude Include="..\src\quadtree.h" />
     <ClInclude Include="..\src\texture_loader.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
