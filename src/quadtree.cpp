@@ -57,27 +57,27 @@ const size_t& Quadtree::GetIndex(BoxCollider* collider) const
 	float vertical_midpoint = bounds.x + bounds.width / 2;
 	float horizontal_midpoint = bounds.y + bounds.height / 2;
 
-	bool top_quad = collider->GetY() < horizontal_midpoint && collider->GetY() + collider->GetHeight() < horizontal_midpoint;
-	bool bottom_quad = collider->GetY() > horizontal_midpoint;
+	bool in_top_quad = collider->GetY() < horizontal_midpoint && collider->GetY() + collider->GetHeight() < horizontal_midpoint;
+	bool in_bottom_quad = collider->GetY() > horizontal_midpoint;
 
 	if (collider->GetX() < vertical_midpoint && collider->GetX() + collider->GetWidth() < vertical_midpoint)
 	{
-		if (top_quad) 
+		if (in_top_quad)
 		{
 			return 1;
 		}
-		else if (bottom_quad) 
+		else if (in_bottom_quad)
 		{
 			return 2;
 		}
 	}
 	else if (collider->GetX() > vertical_midpoint)
 	{
-		if (top_quad) 
+		if (in_top_quad)
 		{
 			return 0;
 		}
-		else if (bottom_quad) 
+		else if (in_bottom_quad)
 		{
 			return 3;
 		}
