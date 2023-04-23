@@ -152,6 +152,7 @@ xcopy /y $(ProjectDir)..\libs\SDL2_image\lib\x64\SDL2_image.dll $(TargetDir)</Co
     <ClCompile Include="..\src\ECS\Components\box_collider.cpp" />
     <ClCompile Include="..\src\ECS\Components\map_collider.cpp" />
     <ClCompile Include="..\src\ECS\Components\player_controller.cpp" />
+    <ClCompile Include="..\src\ECS\Components\rigidbody.cpp" />
     <ClCompile Include="..\src\ECS\Components\sprite.cpp" />
     <ClCompile Include="..\src\ECS\Components\sprite_sheet.cpp" />
     <ClCompile Include="..\src\ECS\component_manager.cpp" />
@@ -169,6 +170,7 @@ xcopy /y $(ProjectDir)..\libs\SDL2_image\lib\x64\SDL2_image.dll $(TargetDir)</Co
     <ClInclude Include="..\src\ECS\Components\component.h" />
     <ClInclude Include="..\src\ECS\Components\map_collider.h" />
     <ClInclude Include="..\src\ECS\Components\player_controller.h" />
+    <ClInclude Include="..\src\ECS\Components\rigidbody.h" />
     <ClInclude Include="..\src\ECS\Components\sprite.h" />
     <ClInclude Include="..\src\ECS\Components\sprite_sheet.h" />
     <ClInclude Include="..\src\ECS\Components\transform.h" />

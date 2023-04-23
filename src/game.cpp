@@ -14,6 +14,7 @@
 #include "ECS/Components/animator.h"
 #include "ECS/Components/map_collider.h"
 #include "ECS/Components/box_collider.h"
+#include "ECS/Components/rigidbody.h"
 
 int Game::Initialize(const char* title, int width, int height, bool fullscreen)
 {
@@ -95,25 +96,19 @@ int Game::Initialize(const char* title, int width, int height, bool fullscreen)
 
 	player->AddComponent<MapCollider>(64, 64, map);
 	player->AddComponent<PlayerController>(is_running);
+	player->AddComponent<Rigidbody>();
 
-	Entity* static_animated = new Entity("StaticAnimated", component_manager);
-	Transform* sa_transform = static_animated->AddComponent<Transform>();
-	sa_transform->Move(96, 96);
-	SpriteSheet* sa_sheet = static_animated->AddComponent<SpriteSheet>("./../assets/test_4_frames_transparent_spritesheet_64x256.png", renderer, 64, 64, camera);
-	Animator* sa_animator = static_animated->AddComponent<Animator>();
-	static_animated->AddComponent<BoxCollider>(64, 64, collision_solver);
-	sa_animator->AddAnimation(0, 0, 3, 500, true, true);
-
-
-	for (size_t i = 0; i < 20; i++)
+	for (size_t i = 0; i < 50; i++)
 	{
-		Entity* static_animated_2 = new Entity("StaticAnimated", component_manager);
-		Transform* sa_transform_2 = static_animated_2->AddComponent<Transform>();
-		sa_transform_2->Move(rand() % 1000, rand() % 1000);
-		SpriteSheet* sa_sheet_2 = static_animated_2->AddComponent<SpriteSheet>("./../assets/test_4_frames_transparent_spritesheet_64x256.png", renderer, 64, 64, camera);
-		Animator* sa_animator_2 = static_animated_2->AddComponent<Animator>();
-		static_animated_2->AddComponent<BoxCollider>(64, 64, collision_solver);
-		sa_animator_2->AddAnimation(0, 0, 3, 500, true, true);
+		Entity* other_entity = new Entity("Other Entity", component_manager);
+		Transform* other_entity_transform = other_entity->AddComponent<Transform>();
+		other_entity_transform->Move(rand() % 1000, rand() % 1000);
+		SpriteSheet* oe_sheet = other_entity->AddComponent<SpriteSheet>("./../assets/test_4_frames_transparent_spritesheet_64x256.png", renderer, 64, 64, camera);
+		Animator* oe_animator = other_entity->AddComponent<Animator>();
+		other_entity->AddComponent<BoxCollider>(64, 64, collision_solver);
+		oe_animator->AddAnimation(0, 0, 3, 500, true, true);
+		other_entity->AddComponent<MapCollider>(64, 64, map);
+		Rigidbody* rb = other_entity->AddComponent<Rigidbody>();
 	}
 
 	is_running = true;

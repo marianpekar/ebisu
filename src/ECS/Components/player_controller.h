@@ -8,12 +8,10 @@ class PlayerController : public Component
 {
 private:
 	bool& is_game_running;
-	float move_speed = 300.0f;
+	float move_speed = 4096.f;
 	Vector2 move_dir;
 	class Animator* animator = nullptr;
-	class Transform* transform = nullptr;
-	class MapCollider* map_collider = nullptr;
-
+	class Rigidbody* rigidbody = nullptr;
 	class BoxCollider* box_collider = nullptr;
 	class std::queue<BoxCollider*> other_colliders;
 

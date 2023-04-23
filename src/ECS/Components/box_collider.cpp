@@ -2,13 +2,15 @@
 #include "../entity.h"
 #include "box_collider.h"
 #include "transform.h"
+#include "rigidbody.h"
 
 BoxCollider::BoxCollider(float width, float height, CollisionSolver* collision_solver) : 
-	position(Vector2(0, 0)), width(width), height(height), collision_solver(collision_solver) {}
+	position(Vector2(0, 0)), width(width), height(height), collision_solver(collision_solver), resistance(32) {}
 
 void BoxCollider::Setup()
 {
 	transform = owner->GetComponent<Transform>();
+	rigidbody = owner->GetComponent<Rigidbody>();
 	collision_solver->AddCollider(this);
 }
 
@@ -22,18 +24,9 @@ void BoxCollider::Collide(BoxCollider* other)
 	if (!is_trigger)
 	{
 		Transform* other_transform = other->owner->GetComponent<Transform>();
+		Vector2 push_force = (other_transform->GetPosition() - transform->GetPosition()) * -resistance;
 
-		Vector2 dir = other_transform->GetPosition() - transform->GetPosition();
-
-		float len = dir.Length();
-		if (len > 0) {
-			float inv_len = 1.0f / len;
-			dir *= inv_len;
-		}
-
-		float push_back_dist = -1.f;
-		transform->Move(dir * push_back_dist);
-		other->transform->Move(dir * -push_back_dist);	
+		rigidbody->AddForce(push_force);
 	}
 
 	if(on_collision == nullptr)

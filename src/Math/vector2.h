@@ -29,10 +29,17 @@ struct Vector2
         return Vector2(x / scalar, y / scalar);
     }
 
-    Vector2& operator+=(const Vector2& other) 
+    constexpr Vector2& operator+=(const Vector2& other)
     {
         x += other.x;
         y += other.y;
+        return *this;
+    }
+
+    constexpr Vector2& operator+(const float& scalar)
+    {
+        x += scalar;
+        y += scalar;
         return *this;
     }
 

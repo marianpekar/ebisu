@@ -6,14 +6,12 @@
 #include "animator.h"
 #include "map_collider.h"
 #include "box_collider.h"
-
-
+#include "rigidbody.h"
 
 void PlayerController::Setup()
 {
-	transform = owner->GetComponent<Transform>();
+	rigidbody = owner->GetComponent<Rigidbody>();
 	animator = owner->GetComponent<Animator>();
-	map_collider = owner->GetComponent<MapCollider>();
 	box_collider = owner->GetComponent<BoxCollider>();
 
 	box_collider->on_collision = [this](BoxCollider* other) {
@@ -153,8 +151,8 @@ void PlayerController::Update(float delta_time)
 			break;
 	}
 
-	Vector2 current_pos = transform->GetPosition();
-	Vector2 target_pos = current_pos + move_dir * move_speed * delta_time;
+	Vector2 move_force = move_dir * move_speed;
+	rigidbody->AddForce(move_force);
 	
 	while(other_colliders.size() > 0)
 	{
@@ -162,16 +160,4 @@ void PlayerController::Update(float delta_time)
 
 		other_colliders.pop();
 	}
-
-	if (map_collider->HasCollisionAt(Vector2(target_pos.x, current_pos.y)))
-	{
-		target_pos.x = current_pos.x;
-	}
-
-	if (map_collider->HasCollisionAt(Vector2(current_pos.x, target_pos.y)))
-	{
-		target_pos.y = current_pos.y;
-	}
-
-	transform->SetPosition(target_pos);
 }
