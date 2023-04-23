@@ -32,6 +32,11 @@ public:
 		position.x += x;
 		position.y += y;
 	}
+	void Move(const Vector2& dir)
+	{
+		position.x += dir.x;
+		position.y += dir.y;
+	}
 	void Scale(const float& s) 
 	{
 		scale.x *= s;
