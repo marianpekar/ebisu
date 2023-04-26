@@ -1,15 +1,22 @@
 #pragma once
 
 #include <vector>
-#include <utility>
+#include "../Math/vector2.h"
 
 class CollisionSolver
 {
 private:
-	std::vector<class BoxCollider*> colliders;
+	struct Collision
+	{
+		class BoxCollider* a;
+		class BoxCollider* b;
+		Vector2 overlap;
+	};
+
+	std::vector<BoxCollider*> colliders;
 	std::vector<BoxCollider*> quad_result;
-	std::vector<std::pair<BoxCollider*, BoxCollider*>> collisions;
-	bool AABB(BoxCollider* a, BoxCollider* b);
+	std::vector<Collision> collisions;
+	bool SAT(BoxCollider* a, BoxCollider* b, Vector2& overlap);
 	class Quadtree* quad;
 public:
 	CollisionSolver(float quad_x, float quad_y, float quad_width, float quad_height);

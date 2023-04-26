@@ -11,6 +11,19 @@ MapCollider::MapCollider(float width, float height, Map* map) :
 	map_tile_size = map->GetTileSize();
 }
 
+void MapCollider::AdjustTargetPosition(const Vector2& current_pos, Vector2& target_pos)
+{
+	if (HasCollisionAt(Vector2(target_pos.x, current_pos.y)))
+	{
+		target_pos.x = current_pos.x;
+	}
+
+	if (HasCollisionAt(Vector2(current_pos.x, target_pos.y)))
+	{
+		target_pos.y = current_pos.y;
+	}
+}
+
 bool MapCollider::HasCollisionAt(const Vector2& position)
 {
 	float tl_x = position.x;

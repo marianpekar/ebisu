@@ -33,34 +33,59 @@ void CollisionSolver::Update()
 			if (a == b)
 				continue;
 
-			bool intersects = AABB(a, b);
+			Vector2 overlap;
+			bool intersects = SAT(a, b, overlap);
 			if (intersects)
 			{
-				collisions.emplace_back(a, b);
+				collisions.emplace_back(a, b, overlap);
 			}
 		}
 	}
 
-	for (auto& pair : collisions)
+	for (auto& col : collisions)
 	{
-		pair.first->Collide(pair.second);
-		pair.second->Collide(pair.first);
+		col.a->Collide(col.b, col.overlap);
+		col.b->Collide(col.a, -col.overlap);
 	}
 
 	collisions.clear();
 }
 
-bool CollisionSolver::AABB(BoxCollider* a, BoxCollider* b)
+bool CollisionSolver::SAT(BoxCollider* a, BoxCollider* b, Vector2& overlap)
 {
-	if (a->GetX() + a->GetWidth() < b->GetX() || a->GetX() > b->GetX() + b->GetWidth())
-	{
-		return false;
+	Vector2 a_center = a->GetPosition() + Vector2(a->GetHalfWidth(), a->GetHalfHeight());
+	Vector2 b_center = b->GetPosition() + Vector2(b->GetHalfWidth(), b->GetHalfHeight());
+
+	float x_dist = abs(a_center.x - b_center.x);
+	float y_dist = abs(a_center.y - b_center.y);
+
+	float x_min_dist = a->GetHalfWidth() + b->GetHalfWidth();
+	float y_min_dist = a->GetHalfHeight() + b->GetHalfHeight();
+
+	if (x_dist < x_min_dist && y_dist < y_min_dist) {
+		float x_overlap = x_min_dist - x_dist;
+		float y_overlap = y_min_dist - y_dist;
+
+		if (x_overlap < y_overlap) {
+			if (a_center.x < b_center.x) {
+				overlap = Vector2(-x_overlap, 0.0f);
+			}
+			else {
+				overlap = Vector2(x_overlap, 0.0f);
+			}
+		}
+		else {
+			if (a_center.y < b_center.y) {
+				overlap = Vector2(0.0f, -y_overlap);
+			}
+			else {
+				overlap = Vector2(0.0f, y_overlap);
+			}
+		}
+
+		return true;
 	}
 
-	if (a->GetY() + a->GetHeight() < b->GetY() || a->GetY() > b->GetY() + b->GetHeight())
-	{
-		return false;
-	}
-
-	return true;
+	return false;
 }
+

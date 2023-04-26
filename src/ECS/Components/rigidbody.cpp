@@ -14,22 +14,14 @@ void Rigidbody::Update(float delta_time)
     Vector2 current_pos = transform->GetPosition();
     Vector2 prev_pos = current_pos;
 
-    Vector2 acceleration = (force / mass) * (1.f - drag);
+    Vector2 acceleration = force / mass;
     Vector2 target_pos = current_pos * 2.f - prev_pos + acceleration * (delta_time * delta_time);
 
     if (map_collider != nullptr)
     {
-        if (map_collider->HasCollisionAt(Vector2(target_pos.x, current_pos.y)))
-        {
-            target_pos.x = current_pos.x;
-        }
-
-        if (map_collider->HasCollisionAt(Vector2(current_pos.x, target_pos.y)))
-        {
-            target_pos.y = current_pos.y;
-        }
+        map_collider->AdjustTargetPosition(current_pos, target_pos);
     }
 
     transform->SetPosition(target_pos);
-    force = Vector2(0, 0);
+    force *= drag;
 }

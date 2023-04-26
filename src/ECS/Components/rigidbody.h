@@ -11,8 +11,9 @@ private:
 	Vector2 force;
 	float mass, drag, acceleration;
 public:
-	Rigidbody() : force(0,0), mass(1), drag(0.01f), acceleration(1) {}
+	Rigidbody() : force(0,0), mass(1), drag(0.9f), acceleration(1) {}
 	void AddForce(Vector2& force) { this->force += force; }
+	const Vector2& GetForce() { return force; }
 	void Setup() override;
 	void Update(float delta_time) override;
 	void SetMass(const float& mass) { this->mass = mass; }

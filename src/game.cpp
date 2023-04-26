@@ -98,7 +98,7 @@ int Game::Initialize(const char* title, int width, int height, bool fullscreen)
 	player->AddComponent<PlayerController>(is_running);
 	player->AddComponent<Rigidbody>();
 
-	for (size_t i = 0; i < 50; i++)
+	for (size_t i = 0; i < 30; i++)
 	{
 		Entity* other_entity = new Entity("Other Entity", component_manager);
 		Transform* other_entity_transform = other_entity->AddComponent<Transform>();

@@ -11,7 +11,8 @@ private:
 	float width, height;
 	int map_size, map_tile_size;
 	class Map* map;
+	bool HasCollisionAt(const Vector2& position);
 public:
 	MapCollider(float width, float height, Map* map);
-	bool HasCollisionAt(const Vector2& position);
+	void AdjustTargetPosition(const Vector2& current_pos, Vector2& target_pos);
 };
