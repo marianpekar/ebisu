@@ -17,5 +17,5 @@ public:
 	void Setup() override;
 	void Update(float delta_time) override;
 	void SetMass(const float& mass) { this->mass = mass; }
-	void SetDrag(const float& drag) { this->drag = drag; }
+	void SetDrag(const float& drag) { this->drag = 1.0f - drag; }
 };

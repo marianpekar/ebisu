@@ -109,6 +109,8 @@ int Game::Initialize(const char* title, int width, int height, bool fullscreen)
 		oe_animator->AddAnimation(0, 0, 3, 500, true, true);
 		other_entity->AddComponent<MapCollider>(64, 64, map);
 		Rigidbody* rb = other_entity->AddComponent<Rigidbody>();
+		rb->SetMass(10);
+		rb->SetDrag(0.5);
 	}
 
 	is_running = true;
