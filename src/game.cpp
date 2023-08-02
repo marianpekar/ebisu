@@ -1,4 +1,6 @@
 #include <iostream>
+#include <fstream>
+#include <string>
 #include <stdlib.h>
 #include <SDL.h>
 #include <SDL_image.h>
@@ -15,6 +17,9 @@
 #include "ECS/Components/map_collider.h"
 #include "ECS/Components/box_collider.h"
 #include "ECS/Components/rigidbody.h"
+#include "json.hpp"
+
+using json = nlohmann::json;
 
 int Game::Initialize(const char* title, int width, int height, bool fullscreen)
 {
@@ -43,56 +48,47 @@ int Game::Initialize(const char* title, int width, int height, bool fullscreen)
 	component_manager = new ComponentManager();
 	collision_solver = new CollisionSolver(0, 0, width, height);
 
+	bool success = LoadMap(width, height);
+	if (!success)
+	{
+		std::cout << "[Game] Failed to load map" << std::endl;
+		return -1;
+	}
+
+	is_running = true;
+
+	return 0;
+}
+
+bool Game::LoadMap(int width, int height)
+{
+	std::ifstream map_file("./../assets/maps/map01.json");
+	if (!map_file.is_open())
+		return false;
+		
+	json map_data = json::parse(map_file);
+
+	auto tile_map_array = map_data["Tilemap"];
+	std::vector<int> tile_map = tile_map_array.get<std::vector<int>>();
+
+	auto collision_map_array = map_data["CollisionMap"];
+	std::vector<int> collision_map = collision_map_array.get<std::vector<int>>();
+
 	Entity* player = new Entity("Player", component_manager);
 
 	Transform* transform = player->AddComponent<Transform>();
+
 	camera = new Camera(transform, width, height);
+
+	std::string tilemap_sheet_path = map_data["TilemapSpriteSheet"].get<std::string>();
+
+	map = new Map(renderer, 64, 1024, camera, collision_map);
+	map->AddLayer(tilemap_sheet_path.c_str(), tile_map);
 
 	SpriteSheet* sprite = player->AddComponent<SpriteSheet>("./../assets/test_8dir_movement_animation_spritesheet_512x512.png", renderer, 64, 64, camera);
 	Animator* animator = player->AddComponent<Animator>();
 
 	player->AddComponent<BoxCollider>(64, 64, collision_solver);
-
-	std::vector<int> tile_map {
-		2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2,
-		2, 0, 0, 0, 0, 0, 0, 2, 2, 0, 0, 0, 0, 0, 0, 2,
-		2, 0, 3, 1, 3, 1, 0, 2, 2, 0, 3, 1, 3, 1, 0, 2,
-		2, 0, 1, 3, 1, 3, 0, 2, 2, 0, 1, 3, 1, 3, 0, 2,
-		2, 0, 3, 1, 3, 1, 0, 2, 2, 0, 3, 1, 3, 1, 0, 2,
-		2, 0, 1, 3, 1, 3, 0, 2, 2, 0, 1, 3, 1, 3, 0, 2,
-		2, 0, 0, 0, 0, 0, 0, 2, 2, 0, 0, 0, 0, 0, 0, 2,
-		2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2,
-		2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2,
-		2, 0, 0, 0, 0, 0, 0, 2, 2, 0, 0, 0, 0, 0, 0, 2,
-		2, 0, 3, 1, 3, 1, 0, 2, 2, 0, 3, 1, 3, 1, 0, 2,
-		2, 0, 1, 3, 1, 3, 0, 2, 2, 0, 1, 3, 1, 3, 0, 2,
-		2, 0, 3, 1, 3, 1, 0, 2, 2, 0, 3, 1, 3, 1, 0, 2,
-		2, 0, 1, 3, 1, 3, 0, 2, 2, 0, 1, 3, 1, 3, 0, 2,
-		2, 0, 0, 0, 0, 0, 0, 2, 2, 0, 0, 0, 0, 0, 0, 2,
-		2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2,
-	};
-
-	std::vector<int> collision_map {
-		0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-		0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-		0, 0, 1, 1, 1, 1, 0, 0, 0, 0, 1, 1, 1, 1, 0, 0,
-		0, 0, 1, 1, 1, 1, 0, 0, 0, 0, 1, 1, 1, 1, 0, 0,
-		0, 0, 1, 1, 1, 1, 0, 0, 0, 0, 1, 1, 1, 1, 0, 0,
-		0, 0, 1, 1, 1, 1, 0, 0, 0, 0, 1, 1, 1, 1, 0, 0,
-		0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-		0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-		0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-		0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-		0, 0, 1, 1, 1, 1, 0, 0, 0, 0, 1, 1, 1, 1, 0, 0,
-		0, 0, 1, 1, 1, 1, 0, 0, 0, 0, 1, 1, 1, 1, 0, 0,
-		0, 0, 1, 1, 1, 1, 0, 0, 0, 0, 1, 1, 1, 1, 0, 0, 
-		0, 0, 1, 1, 1, 1, 0, 0, 0, 0, 1, 1, 1, 1, 0, 0,
-		0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-		0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-	};
-
-	map = new Map(renderer, 64, 1024, camera, collision_map);
-	map->AddLayer("./../assets/test_tilemap_4_tiles_128x128.png", tile_map);
 
 	player->AddComponent<MapCollider>(64, 64, map);
 	player->AddComponent<PlayerController>(is_running);
@@ -113,9 +109,7 @@ int Game::Initialize(const char* title, int width, int height, bool fullscreen)
 		rb->SetDrag(0.5);
 	}
 
-	is_running = true;
-
-	return 0;
+	return true;
 }
 
 void Game::Setup()
