@@ -17,9 +17,6 @@
 #include "ECS/Components/map_collider.h"
 #include "ECS/Components/box_collider.h"
 #include "ECS/Components/rigidbody.h"
-#include "json.hpp"
-
-using json = nlohmann::json;
 
 int Game::Initialize(const char* title, int width, int height, bool fullscreen)
 {
@@ -62,37 +59,61 @@ int Game::Initialize(const char* title, int width, int height, bool fullscreen)
 
 bool Game::LoadMap(int width, int height)
 {
+	Entity* player = new Entity("Player", component_manager);
+	Transform* transform = player->AddComponent<Transform>();
+
 	std::ifstream map_file("./../assets/maps/map01.json");
 	if (!map_file.is_open())
 		return false;
 		
 	json map_data = json::parse(map_file);
 
-	auto tile_map_array = map_data["Tilemap"];
-	std::vector<int> tile_map = tile_map_array.get<std::vector<int>>();
+	LoadTilemaps(map_data, transform, width, height);
+	
+	auto& entities = map_data["Entities"];
 
-	auto collision_map_array = map_data["CollisionMap"];
-	std::vector<int> collision_map = collision_map_array.get<std::vector<int>>();
+	for (const auto& entity : entities) {
+		if (entity["Name"] == "Player")
+		{
+			SpriteSheet* sprite_sheet = nullptr;
+			const auto& components = entity["Components"];
+			for (const auto& component : components) 
+			{
+				auto component_type = component["Type"];
+				if (component_type == "MapCollider")
+				{
+					int width = component["Width"].get<int>();
+					int height = component["Height"].get<int>();
+					player->AddComponent<MapCollider>(width, height, map);
+				}
+				if (component_type == "BoxCollider")
+				{
+					int width = component["Width"].get<int>();
+					int height = component["Height"].get<int>();
+					player->AddComponent<BoxCollider>(width, height, collision_solver);
+				}
+				if (component_type == "SpriteSheet")
+				{
+					int width = component["Width"].get<int>();
+					int height = component["Height"].get<int>();
+					std::string file_path = component["FilePath"];
+					sprite_sheet = player->AddComponent<SpriteSheet>(file_path, renderer, width, height, camera);
+				}
 
-	Entity* player = new Entity("Player", component_manager);
+				if (component_type == "Rigidbody")
+				{	
+					Rigidbody* rigidbody = player->AddComponent<Rigidbody>();
+					float mass = component["Mass"].get<float>();
+					float drag = component["Drag"].get<float>();
+					rigidbody->SetMass(mass);
+					rigidbody->SetDrag(drag);
+				}
+			}
 
-	Transform* transform = player->AddComponent<Transform>();
-
-	camera = new Camera(transform, width, height);
-
-	std::string tilemap_sheet_path = map_data["TilemapSpriteSheet"].get<std::string>();
-
-	map = new Map(renderer, 64, 1024, camera, collision_map);
-	map->AddLayer(tilemap_sheet_path.c_str(), tile_map);
-
-	SpriteSheet* sprite = player->AddComponent<SpriteSheet>("./../assets/test_8dir_movement_animation_spritesheet_512x512.png", renderer, 64, 64, camera);
-	Animator* animator = player->AddComponent<Animator>();
-
-	player->AddComponent<BoxCollider>(64, 64, collision_solver);
-
-	player->AddComponent<MapCollider>(64, 64, map);
-	player->AddComponent<PlayerController>(is_running);
-	player->AddComponent<Rigidbody>();
+			player->AddComponent<Animator>();
+			player->AddComponent<PlayerController>(is_running);
+		}
+	}
 
 	for (size_t i = 0; i < 30; i++)
 	{
@@ -110,6 +131,22 @@ bool Game::LoadMap(int width, int height)
 	}
 
 	return true;
+}
+
+void Game::LoadTilemaps(json& map_data, Transform* transform, int width, int height)
+{
+	auto tile_map_array = map_data["Tilemap"];
+	std::vector<int> tile_map = tile_map_array.get<std::vector<int>>();
+
+	auto collision_map_array = map_data["CollisionMap"];
+	std::vector<int> collision_map = collision_map_array.get<std::vector<int>>();
+
+	camera = new Camera(transform, width, height);
+
+	std::string tilemap_sheet_path = map_data["TilemapSpriteSheet"].get<std::string>();
+
+	map = new Map(renderer, 64, 1024, camera, collision_map);
+	map->AddLayer(tilemap_sheet_path.c_str(), tile_map);
 }
 
 void Game::Setup()

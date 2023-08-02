@@ -7,7 +7,7 @@
 #include "sprite_sheet.h"
 #include <SDL.h>
 
-SpriteSheet::SpriteSheet(const char* filepath, SDL_Renderer* renderer, int rect_width, int rect_height, Camera* camera) :
+SpriteSheet::SpriteSheet(std::string filepath, SDL_Renderer* renderer, int rect_width, int rect_height, Camera* camera) :
     renderer(renderer), rect_width(rect_width), rect_height(rect_height),
     filepath(filepath), sheet_width(0), sheet_height(0), camera(camera) 
 {
@@ -23,7 +23,7 @@ SpriteSheet::SpriteSheet(const char* filepath, SDL_Renderer* renderer, int rect_
 void SpriteSheet::Setup()
 {
     transform = owner->GetComponent<Transform>();
-    sprite = TextureLoader::LoadTexture(filepath, renderer, sheet_width, sheet_height);
+    sprite = TextureLoader::LoadTexture(filepath.c_str(), renderer, sheet_width, sheet_height);
 }
 
 void SpriteSheet::Render()

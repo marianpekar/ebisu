@@ -10,11 +10,11 @@ private:
 	struct SDL_Renderer* renderer;
 	struct SDL_Rect* src_rect = nullptr;
 	SDL_Rect* dst_rect = nullptr;
-	const char* filepath;
+	std::string filepath;
 	class Transform* transform = nullptr;
 	class Camera* camera;
 public:
-	SpriteSheet(const char* filepath, SDL_Renderer* renderer, int rect_width, int rect_height, Camera* camera);
+	SpriteSheet(std::string filepath, SDL_Renderer* renderer, int rect_width, int rect_height, Camera* camera);
 	~SpriteSheet();
 	void Setup() override;
 	void Render() override;

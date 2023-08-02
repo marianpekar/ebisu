@@ -1,5 +1,9 @@
 #pragma once
 
+#include "json.hpp"
+
+using json = nlohmann::json;
+
 class Game 
 {
 public:
@@ -12,6 +16,7 @@ public:
 	const bool& IsRunning() { return is_running; }
 private:
 	bool LoadMap(int width, int height);
+	void LoadTilemaps(json& map_data, class Transform* transform, int width, int height);
 	bool is_running = false;
 	class ComponentManager* component_manager = nullptr;
 	class CollisionSolver* collision_solver = nullptr;

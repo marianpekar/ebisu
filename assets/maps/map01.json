@@ -54,20 +54,15 @@
                     "Height": 64
                 },
                 {
-                    "Type": "Transform"
-                },
-                {
                     "Type": "SpriteSheet",
-                    "FilePath": "./../assets/test_8dir_movement_animation_spritesheet_512x512.png"
+                    "FilePath": "./../assets/test_8dir_movement_animation_spritesheet_512x512.png",
+                    "Width": 64,
+                    "Height": 64
                 },
                 {
-                    "Type": "Animator"
-                },
-                {
-                    "Type": "PlayerController"
-                },
-                {
-                    "Type": "Rigidbody"
+                    "Type": "Rigidbody",
+                    "Mass": 1.0,
+                    "Drag": 0.1
                 }
             ]
        }
