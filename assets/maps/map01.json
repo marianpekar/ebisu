@@ -1,5 +1,7 @@
 {
     "TilemapSpriteSheet": "./../assets/test_tilemap_4_tiles_128x128.png",
+    "TileSize": 64,
+    "RowTileCount": 16,
     "Tilemap":
     [
 		2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2,
@@ -42,7 +44,8 @@
     [
        {
             "Name": "Player",
-            "Components": [
+            "Components": 
+            [
                 { 
                     "Type": "MapCollider",
                     "Width": 64,
@@ -63,8 +66,101 @@
                     "Type": "Rigidbody",
                     "Mass": 1.0,
                     "Drag": 0.1
+                },
+                {
+                    "Type": "Transform",
+                    "X": 15.0,
+                    "Y": 25.0
                 }
             ]
-       }
+       },
+       {
+            "Name": "Box",
+            "Components": 
+            [
+                { 
+                    "Type": "MapCollider",
+                    "Width": 64,
+                    "Height": 64
+                },
+                { 
+                    "Type": "BoxCollider",
+                    "Width": 64,
+                    "Height": 64
+                },
+                {
+                    "Type": "SpriteSheet",
+                    "FilePath": "./../assets/test_4_frames_transparent_spritesheet_64x256.png",
+                    "Width": 64,
+                    "Height": 64
+                },
+                {
+                    "Type": "Rigidbody",
+                    "Mass": 1,
+                    "Drag": 0.1
+                },
+                {
+                    "Type": "Transform",
+                    "X": 480.0,
+                    "Y": 32.0
+                },
+                {
+                    "Type":"Animator",
+                    "Animation": 
+                    {
+                        "SpriteSheetRow": 0,
+                        "StartFrame": 0,
+                        "EndFrame": 3,
+                        "FrameTime": 500,
+                        "IsLoop": true,
+                        "PlayOnSetup": true
+                    }
+                }
+            ]
+       },
+       {
+        "Name": "Box2",
+        "Components": 
+            [
+                { 
+                    "Type": "MapCollider",
+                    "Width": 64,
+                    "Height": 64
+                },
+                { 
+                    "Type": "BoxCollider",
+                    "Width": 64,
+                    "Height": 64
+                },
+                {
+                    "Type": "SpriteSheet",
+                    "FilePath": "./../assets/test_4_frames_transparent_spritesheet_64x256.png",
+                    "Width": 64,
+                    "Height": 64
+                },
+                {
+                    "Type": "Rigidbody",
+                    "Mass": 1,
+                    "Drag": 0.1
+                },
+                {
+                    "Type": "Transform",
+                    "X": 480.0,
+                    "Y": 480.0
+                },
+                {
+                    "Type":"Animator",
+                    "Animation": 
+                    {
+                        "SpriteSheetRow": 0,
+                        "StartFrame": 0,
+                        "EndFrame": 3,
+                        "FrameTime": 1000,
+                        "IsLoop": true,
+                        "PlayOnSetup": true
+                    }
+                }
+            ]
+        }
     ]
 }
