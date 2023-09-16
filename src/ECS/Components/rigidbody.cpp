@@ -5,7 +5,7 @@
 
 void Rigidbody::Setup()
 {
-	transform = owner->GetComponent<Transform>();
+    transform = owner->GetComponent<Transform>();
     map_collider = owner->GetComponent<MapCollider>();
 }
 

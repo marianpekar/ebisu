@@ -8,7 +8,7 @@
 void Sprite::Setup()
 {
     transform = owner->GetComponent<Transform>();
-	sprite = TextureLoader::LoadTexture(filepath, renderer, width, height);
+    sprite = TextureLoader::LoadTexture(filepath, renderer, width, height);
     dst_rect = new SDL_Rect();
 }
 
