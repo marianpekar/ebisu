@@ -1,7 +1,7 @@
 #include "game.h"
 #include <SDL.h>
 
-int main(int argc, char* args[])
+int main(int argc, char*[])
 {
 	Game game;
 	if (game.Initialize("Ebisu", 1024, 768, false) != 0)
@@ -9,9 +9,9 @@ int main(int argc, char* args[])
 
 	game.Setup();
 
-	const Uint32 target_fps = 60;
-	const Uint32 max_frame_time = (1000 / target_fps);
-	const float max_delta_time = 0.05f;
+	constexpr Uint32 target_fps = 60;
+	constexpr Uint32 max_frame_time = (1000 / target_fps);
+	constexpr float max_delta_time = 0.05f;
 	Uint32 ticks = 0;
 	while (game.IsRunning())
 	{
@@ -20,7 +20,7 @@ int main(int argc, char* args[])
 			SDL_Delay(1);
 		}
 
-		float delta_time = (SDL_GetTicks() - ticks) * 0.001f;
+		float delta_time = static_cast<float>(SDL_GetTicks() - ticks) * 0.001f;
 
 		if (delta_time > max_delta_time)
 		{

@@ -10,15 +10,16 @@ public:
 	Game() = default;
 	~Game();
 	int Initialize(const char* title, int width, int height, bool fullscreen);
-	void Setup();
-	void Update(float delta_time);
-	void Render();
-	const bool& IsRunning() { return is_running; }
+	void Setup() const;
+	void Update(float delta_time) const;
+	void Render() const;
+	const bool& IsRunning() const { return is_running; }
+	void Quit();
 private:
 	bool LoadMap(int width, int height);
 	void LoadTilemaps(const json& map_data, class Transform* transform, int width, int height);
 	void LoadPlayer(const json& entity, class Entity* player, class Transform* transform);
-	void LoadComponents(const json& component, Entity* player, Transform* transform);
+	void LoadComponents(const json& component, Entity* game_entity, Transform* transform);
 	void LoadEntity(const json& entity, class Entity* game_entity, class Transform* transform);
 	bool is_running = false;
 	class ComponentManager* component_manager = nullptr;

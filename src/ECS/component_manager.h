@@ -8,8 +8,8 @@ private:
     std::vector<class Component*> components;
 public:
     ~ComponentManager();
-    void Setup();
-    void Update(float delta_time);
-    void Render();
+    void Setup() const;
+    void Update(float delta_time) const;
+    void Render() const;
     void AddComponent(Component* component);
 };

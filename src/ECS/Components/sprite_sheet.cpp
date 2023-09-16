@@ -1,5 +1,3 @@
-#pragma once
-
 #include "../../texture_loader.h"
 #include "../../camera.h"
 #include "../entity.h"
@@ -7,9 +5,9 @@
 #include "sprite_sheet.h"
 #include <SDL.h>
 
-SpriteSheet::SpriteSheet(std::string filepath, SDL_Renderer* renderer, int rect_width, int rect_height, Camera* camera) :
-    renderer(renderer), rect_width(rect_width), rect_height(rect_height),
-    filepath(filepath), sheet_width(0), sheet_height(0), camera(camera) 
+SpriteSheet::SpriteSheet(std::string filepath, SDL_Renderer* renderer, const int rect_width, const int rect_height, Camera* camera) :
+    sheet_width(0), sheet_height(0), rect_width(rect_width),
+    rect_height(rect_height), renderer(renderer), filepath(std::move(filepath)), camera(camera) 
 {
     src_rect = new SDL_Rect();
     dst_rect = new SDL_Rect();
@@ -28,15 +26,15 @@ void SpriteSheet::Setup()
 
 void SpriteSheet::Render()
 {
-    dst_rect->x = transform->GetPosition().x - camera->GetPosition().x;
-    dst_rect->y = transform->GetPosition().y - camera->GetPosition().y;
-    dst_rect->w = rect_width * transform->GetScale().x;
-    dst_rect->h = rect_height * transform->GetScale().y;
+    dst_rect->x = static_cast<int>(transform->GetPosition().x - camera->GetPosition().x);
+    dst_rect->y = static_cast<int>(transform->GetPosition().y - camera->GetPosition().y);
+    dst_rect->w = rect_width * static_cast<int>(transform->GetScale().x);
+    dst_rect->h = rect_height * static_cast<int>(transform->GetScale().y);
 
     SDL_RenderCopy(renderer, sprite, src_rect, dst_rect);
 }
 
-void SpriteSheet::SelectSprite(const int& row, const int& col)
+void SpriteSheet::SelectSprite(const int& row, const int& col) const
 {
     src_rect->x = col * rect_width;
     src_rect->y = row * rect_height;

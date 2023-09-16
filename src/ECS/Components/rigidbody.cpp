@@ -11,11 +11,11 @@ void Rigidbody::Setup()
 
 void Rigidbody::Update(float delta_time)
 {
-    Vector2 current_pos = transform->GetPosition();
-    Vector2 prev_pos = current_pos;
+    const Vector2 current_pos = transform->GetPosition();
+    const Vector2 prev_pos = current_pos;
 
-    Vector2 acceleration = force / mass;
-    Vector2 target_pos = current_pos * 2.f - prev_pos + acceleration * (delta_time * delta_time);
+    const Vector2 next_acceleration = force / mass;
+    Vector2 target_pos = current_pos * 2.f - prev_pos + next_acceleration * (delta_time * delta_time);
 
     if (map_collider != nullptr)
     {
@@ -25,3 +25,5 @@ void Rigidbody::Update(float delta_time)
     transform->SetPosition(target_pos);
     force *= drag;
 }
+void Rigidbody::SetMass(const float& new_mass) { this->mass = new_mass; }
+void Rigidbody::SetDrag(const float& new_drag) { this->drag = 1.0f - new_drag; }

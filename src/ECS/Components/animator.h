@@ -1,16 +1,16 @@
 #pragma once
 
+#include <SDL.h>
 #include "component.h"
-
 #include <vector>
 
 struct Animation 
 {
-	Animation(int row, int start_frame, int end_frame, int frame_time, bool is_loop) : 
-		row(row), frame_time(frame_time), is_loop(is_loop), start_frame(start_frame),
-		frames(end_frame - start_frame), current_frame(start_frame), 
-		end_frame(start_frame + (end_frame - start_frame)) {};
-	int id = 0;
+	Animation(const int row, const int start_frame, const int end_frame, const int frame_time, const bool is_loop) : 
+		row(row), frames(end_frame - start_frame), frame_time(frame_time), start_frame(start_frame),
+		current_frame(start_frame), end_frame(start_frame + (end_frame - start_frame)),
+		is_loop(is_loop) {}
+	size_t id = 0;
 	int row;
 	int frames;
 	int frame_time;
@@ -21,20 +21,19 @@ struct Animation
 	bool is_running = false;
 };
 
-class Animator : public Component
+class Animator final : public Component
 {
 private:
 	class SpriteSheet* sprite_sheet = nullptr;
 	std::vector<Animation*> animations;
-	int active_anim_id = -1;
-	int last_time = 0;
+	size_t active_anim_id = -1;
+	size_t no_id = -1;
+	Uint32 last_time = 0;
 public:
-	Animator() = default;
-	virtual ~Animator() = default;
 	void Setup() override;
-	void Update(float deltaTime) override;
-	int AddAnimation(const int row, const int start_frame, const int end_frame, const float frame_time, const bool is_loop, const bool play_on_setup);
-	void Play(const int id);
-	void Stop();
+	void Update(float delta_time) override;
+	size_t AddAnimation(int row, int start_frame, int end_frame, int frame_time, bool is_loop, bool play_on_setup);
+	void Play(size_t id);
+	void Stop() const;
 	void StopImmediately();
 };

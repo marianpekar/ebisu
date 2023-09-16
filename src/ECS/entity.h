@@ -1,9 +1,7 @@
 #pragma once
 
-#include <vector>
 #include <unordered_map>
 #include <typeindex>
-#include <stdexcept>
 
 #include "component_manager.h"
 #include "Components/component.h"
@@ -17,7 +15,7 @@ private:
     const char* name;
 public:
     Entity(const char* name, ComponentManager* component_manager) :
-        name(name), component_manager(component_manager), is_active(true) {}
+        is_active(true), component_manager(component_manager), name(name) {}
     ~Entity() = default;
     const bool& IsActive() const { return is_active; }
     const char* GetName() const { return name; }
@@ -25,7 +23,7 @@ public:
     template <typename T, typename... TArgs>
     T* AddComponent(TArgs&&... args)
     {
-        T* component = new T(std::forward<TArgs>(args)...);
+        T* component = new T(std::forward<TArgs>(args)...);  // NOLINT(clang-diagnostic-implicit-int-float-conversion)
         component->owner = this;
         component_map[typeid(T)] = component;
         component_manager->AddComponent(component);
@@ -35,8 +33,7 @@ public:
     template <typename T>
     T* GetComponent()
     {
-        auto component = component_map[typeid(T)];
-        if (component != nullptr)
+        if (auto component = component_map[typeid(T)]; component != nullptr)
         {
             return dynamic_cast<T*>(component);
         }

@@ -16,7 +16,7 @@ private:
 	std::vector<BoxCollider*> colliders;
 	std::vector<BoxCollider*> quad_result;
 	std::vector<Collision> collisions;
-	bool SAT(BoxCollider* a, BoxCollider* b, Vector2& overlap);
+	static bool SAT(const BoxCollider* a, const BoxCollider* b, Vector2& overlap);
 	class Quadtree* quad;
 public:
 	CollisionSolver(float quad_x, float quad_y, float quad_width, float quad_height);

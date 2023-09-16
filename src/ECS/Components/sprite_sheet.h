@@ -1,8 +1,10 @@
 #pragma once
 
+#include <string>
+
 #include "component.h"
 
-class SpriteSheet : public Component
+class SpriteSheet final : public Component
 {
 private:
 	int sheet_width, sheet_height, rect_width, rect_height;
@@ -15,8 +17,8 @@ private:
 	class Camera* camera;
 public:
 	SpriteSheet(std::string filepath, SDL_Renderer* renderer, int rect_width, int rect_height, Camera* camera);
-	~SpriteSheet();
+	~SpriteSheet() override;
 	void Setup() override;
 	void Render() override;
-	void SelectSprite(const int& row, const int& col);
+	void SelectSprite(const int& row, const int& col) const;
 };

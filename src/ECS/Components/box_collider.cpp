@@ -5,8 +5,8 @@
 #include "map_collider.h"
 #include "rigidbody.h"
 
-BoxCollider::BoxCollider(float width, float height, CollisionSolver* collision_solver) : 
-	position(Vector2(0, 0)), width(width), height(height), half_width(width * 0.5f), half_height(height * 0.5),
+BoxCollider::BoxCollider(const float width, const float height, CollisionSolver* collision_solver) : 
+	position(Vector2(0, 0)), width(width), height(height), half_width(width * 0.5f), half_height(height * 0.5f),
 	collision_solver(collision_solver) {}
 
 void BoxCollider::Setup()
@@ -22,11 +22,11 @@ void BoxCollider::Update(float delta_time)
 	position = transform->GetPosition();
 }
 
-void BoxCollider::Collide(BoxCollider* other, const Vector2& overlap)
+void BoxCollider::Collide(BoxCollider* other, const Vector2& overlap) const
 {
 	if (!is_trigger)
 	{
-		Vector2 current_pos = transform->GetPosition();
+		const Vector2 current_pos = transform->GetPosition();
 		Vector2 target_pos = current_pos + overlap / 2.0f;
 
 		if (map_collider != nullptr)

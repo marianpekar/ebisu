@@ -4,7 +4,7 @@
 #include <functional>
 #include "../../Math/vector2.h"
 
-class BoxCollider : public Component
+class BoxCollider final : public Component
 {
 private:
 	Vector2 position;
@@ -20,14 +20,14 @@ public:
 	void Setup() override;
 	void Update(float delta_time) override;
 	std::function<void(BoxCollider*)> on_collision;
-	void Collide(BoxCollider* other, const Vector2& overlap);
-	const bool& GetIsTrigger() { return is_trigger; }
+	void Collide(BoxCollider* other, const Vector2& overlap) const;
+	const bool& GetIsTrigger() const { return is_trigger; }
 	void SetIsTrigger(const bool& value) { is_trigger = value; }
-	const float& GetX() { return position.x; }
-	const float& GetY() { return position.y; }
-	const float& GetWidth() { return width; }
-	const float& GetHeight() { return height; }
-	const float& GetHalfWidth() { return half_width; }
-	const float& GetHalfHeight() { return half_height; }
-	const Vector2& GetPosition() { return position; }
+	const float& GetX() const { return position.x; }
+	const float& GetY() const { return position.y; }
+	const float& GetWidth() const { return width; }
+	const float& GetHeight() const { return height; }
+	const float& GetHalfWidth() const { return half_width; }
+	const float& GetHalfHeight() const { return half_height; }
+	const Vector2& GetPosition() const { return position; }
 };

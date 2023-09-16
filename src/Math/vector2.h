@@ -7,31 +7,31 @@ struct Vector2
     float x, y;
 
     Vector2() : x(0.0f), y(0.0f) {}
-    Vector2(float x, float y) : x(x), y(y) {}
+    Vector2(const float x, const float y) : x(x), y(y) {}
 
     Vector2 operator+(const Vector2& other) const 
     {
-        return Vector2(x + other.x, y + other.y);
+        return { x + other.x, y + other.y };
     }
 
     Vector2 operator-(const Vector2& other) const 
     {
-        return Vector2(x - other.x, y - other.y);
+        return { x - other.x, y - other.y };
     }
 
     Vector2 operator-() const
     {
-        return Vector2(-x, -y);
+        return { -x, -y };
     }
 
-    Vector2 operator*(float scalar) const 
+    Vector2 operator*(const float scalar) const 
     {
-        return Vector2(x * scalar, y * scalar);
+        return { x * scalar, y * scalar };
     }
 
-    Vector2 operator/(float scalar) const 
+    Vector2 operator/(const float scalar) const 
     {
-        return Vector2(x / scalar, y / scalar);
+        return { x / scalar, y / scalar };
     }
 
     constexpr Vector2& operator+=(const Vector2& other)
@@ -55,14 +55,14 @@ struct Vector2
         return *this;
     }
 
-    constexpr Vector2& operator*=(float scalar) 
+    constexpr Vector2& operator*=(const float scalar) 
     {
         x *= scalar;
         y *= scalar;
         return *this;
     }
 
-    constexpr Vector2& operator/=(float scalar) 
+    constexpr Vector2& operator/=(const float scalar) 
     {
         x /= scalar;
         y /= scalar;
@@ -82,10 +82,10 @@ struct Vector2
 
     Vector2 Normalized() const 
     {
-        float len = Length();
-        if (len != 0.0f) {
+        if (const float len = Length(); len != 0.0f) {
             return *this / len;
         }
-        return Vector2(0.0f, 0.0f);
+        
+        return { 0.0f, 0.0f };
     }
 };

@@ -6,7 +6,7 @@ void ComponentManager::AddComponent(Component* component)
     components.emplace_back(component);
 }
 
-void ComponentManager::Setup()
+void ComponentManager::Setup() const
 {
     for (auto& component : components)
     {
@@ -15,15 +15,15 @@ void ComponentManager::Setup()
 }
 
 
-void ComponentManager::Update(float deltaTime)
+void ComponentManager::Update(const float delta_time) const
 {
     for (auto& component : components)
     {
-        component->Update(deltaTime);
+        component->Update(delta_time);
     }
 }
 
-void ComponentManager::Render()
+void ComponentManager::Render() const
 {
     for (auto& component : components)
     {
@@ -33,7 +33,7 @@ void ComponentManager::Render()
 
 ComponentManager::~ComponentManager()
 {
-    for (auto& component : components)
+    for (const auto& component : components)
     {
         delete component;
     }

@@ -13,9 +13,9 @@ private:
 	class Transform* transform = nullptr;
 	class Camera* camera = nullptr;
 public:
-	Sprite(const char* filepath, SDL_Renderer* renderer, Camera* camera) : 
-		filepath(filepath), renderer(renderer), width(0), height(0), camera(camera) {};
-	virtual ~Sprite() = default;
+	Sprite(const char* filepath, SDL_Renderer* renderer, Camera* camera) :
+		width(0), height(0), renderer(renderer), filepath(filepath), camera(camera) {};
+	~Sprite() override = default;
 	void Setup() override;
 	void Render() override;
 };

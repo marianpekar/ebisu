@@ -1,24 +1,22 @@
-#include <iostream>
-#include <fstream>
-#include <string>
-#include <stdlib.h>
-#include <SDL.h>
-#include <SDL_image.h>
 #include "game.h"
-#include "map.h"
+#include <fstream>
+#include <iostream>
+#include <SDL.h>
+#include <string>
 #include "camera.h"
-#include "ECS/component_manager.h"
+#include "map.h"
 #include "ECS/collision_solver.h"
+#include "ECS/component_manager.h"
 #include "ECS/entity.h"
-#include "ECS/Components/sprite_sheet.h"
-#include "ECS/Components/player_controller.h"
-#include "ECS/Components/transform.h"
 #include "ECS/Components/animator.h"
-#include "ECS/Components/map_collider.h"
 #include "ECS/Components/box_collider.h"
+#include "ECS/Components/map_collider.h"
+#include "ECS/Components/player_controller.h"
 #include "ECS/Components/rigidbody.h"
+#include "ECS/Components/sprite_sheet.h"
+#include "ECS/Components/transform.h"
 
-int Game::Initialize(const char* title, int width, int height, bool fullscreen)
+int Game::Initialize(const char* title, const int width, const int height, const bool fullscreen)
 {
 	if (SDL_Init(SDL_INIT_EVERYTHING) != 0)
 	{
@@ -43,10 +41,9 @@ int Game::Initialize(const char* title, int width, int height, bool fullscreen)
 	SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
 	
 	component_manager = new ComponentManager();
-	collision_solver = new CollisionSolver(0, 0, width, height);
+	collision_solver = new CollisionSolver(0, 0, static_cast<float>(width), static_cast<float>(height));
 
-	bool success = LoadMap(width, height);
-	if (!success)
+	if (const bool success = LoadMap(width, height); !success)
 	{
 		std::cout << "[Game] Failed to load map" << std::endl;
 		return -1;
@@ -57,7 +54,12 @@ int Game::Initialize(const char* title, int width, int height, bool fullscreen)
 	return 0;
 }
 
-bool Game::LoadMap(int width, int height)
+void Game::Quit()
+{
+	is_running = false;	
+}
+
+bool Game::LoadMap(const int width, const int height)
 {
 	std::ifstream map_file("./../assets/maps/map01.json");
 	if (!map_file.is_open())
@@ -65,14 +67,12 @@ bool Game::LoadMap(int width, int height)
 		
 	json map_data = nlohmann::json::parse(map_file);
 
-	Entity* player = new Entity("Player", component_manager);
-	Transform* player_transform = player->AddComponent<Transform>();
+	const auto player = new Entity("Player", component_manager);
+	const auto player_transform = player->AddComponent<Transform>();
 
 	LoadTilemaps(map_data, player_transform, width, height);
-	
-	auto& entities = map_data["Entities"];
 
-	for (const json& entity : entities) 
+	for (auto& entities = map_data["Entities"]; const json& entity : entities) 
 	{
 		std::string entity_name = entity["Name"];
 
@@ -82,26 +82,26 @@ bool Game::LoadMap(int width, int height)
 			continue;
 		}
 
-		Entity* game_entity = new Entity(entity_name.c_str(), component_manager);
-		Transform* entity_transform = game_entity->AddComponent<Transform>();
+		const auto game_entity = new Entity(entity_name.c_str(), component_manager);
+		const auto entity_transform = game_entity->AddComponent<Transform>();
 		LoadEntity(entity, game_entity, entity_transform);
 	}
 
 	return true;
 }
 
-void Game::LoadTilemaps(const json& map_data, Transform* transform, int width, int height)
+void Game::LoadTilemaps(const json& map_data, Transform* transform, const int width, const int height)
 {
-	std::vector<int> tile_map = map_data["Tilemap"];
-	std::vector<int> collision_map = map_data["CollisionMap"];
+	const std::vector<int> tile_map = map_data["Tilemap"];
+	const std::vector<int> collision_map = map_data["CollisionMap"];
 
 	camera = new Camera(transform, width, height);
 
-	std::string tilemap_sheet_path = map_data["TilemapSpriteSheet"];
+	const std::string tilemap_sheet_path = map_data["TilemapSpriteSheet"];
 
-	int tile_size = map_data["TileSize"];
-	int row_tile_count = map_data["RowTileCount"];
-	int map_size = tile_size * row_tile_count;
+	const int tile_size = map_data["TileSize"];
+	const int row_tile_count = map_data["RowTileCount"];
+	const int map_size = tile_size * row_tile_count;
 
 	map = new Map(renderer, tile_size, map_size, camera, collision_map);
 	map->AddLayer(tilemap_sheet_path.c_str(), tile_map);
@@ -116,7 +116,7 @@ void Game::LoadPlayer(const json& entity, Entity* player, Transform* transform)
 	}
 
 	player->AddComponent<Animator>();
-	player->AddComponent<PlayerController>(is_running);
+	player->AddComponent<PlayerController>(this);
 }
 
 void Game::LoadEntity(const json& entity, Entity* game_entity, Transform* transform)
@@ -130,7 +130,7 @@ void Game::LoadEntity(const json& entity, Entity* game_entity, Transform* transf
 
 void Game::LoadComponents(const json& component, Entity* game_entity, Transform* transform)
 {
-	auto component_type = component["Type"];
+	const auto component_type = component["Type"];
 	if (component_type == "MapCollider")
 	{
 		int width = component["Width"];
@@ -152,45 +152,45 @@ void Game::LoadComponents(const json& component, Entity* game_entity, Transform*
 	}
 	if (component_type == "Rigidbody")
 	{
-		Rigidbody* rigidbody = game_entity->AddComponent<Rigidbody>();
-		float mass = component["Mass"];
-		float drag = component["Drag"];
+		const auto rigidbody = game_entity->AddComponent<Rigidbody>();
+		const float mass = component["Mass"];
+		const float drag = component["Drag"];
 		rigidbody->SetMass(mass);
 		rigidbody->SetDrag(drag);
 	}
 	if (component_type == "Transform")
 	{
-		float x = component["X"];
-		float y = component["Y"];
+		const float x = component["X"];
+		const float y = component["Y"];
 		transform->SetPosition(x, y);
 	}
 	if (component_type == "Animator")
 	{
-		Animator* animator = game_entity->AddComponent<Animator>();
+		const auto animator = game_entity->AddComponent<Animator>();
 		const auto& animation = component["Animation"];
-		int row = animation["SpriteSheetRow"];
-		int start_frame = animation["StartFrame"];
-		int end_frame = animation["EndFrame"];
-		int frame_time = animation["FrameTime"];
-		bool is_loop = animation["IsLoop"];
-		bool play_on_setup = animation["PlayOnSetup"];
+		const int row = animation["SpriteSheetRow"];
+		const int start_frame = animation["StartFrame"];
+		const int end_frame = animation["EndFrame"];
+		const int frame_time = animation["FrameTime"];
+		const bool is_loop = animation["IsLoop"];
+		const bool play_on_setup = animation["PlayOnSetup"];
 		animator->AddAnimation(row, start_frame, end_frame, frame_time, is_loop, play_on_setup);
 	}
 }
 
-void Game::Setup()
+void Game::Setup() const
 {
 	component_manager->Setup();
 }
 
-void Game::Update(float delta_time)
+void Game::Update(const float delta_time) const
 {
 	component_manager->Update(delta_time);
 	collision_solver->Update();
 	camera->Update();
 }
 
-void Game::Render()
+void Game::Render() const
 {
 	SDL_RenderClear(renderer);
 	map->Render();

@@ -1,5 +1,3 @@
-#pragma once
-
 #include "../../texture_loader.h"
 #include "../../camera.h"
 #include "../entity.h"
@@ -16,10 +14,10 @@ void Sprite::Setup()
 
 void Sprite::Render()
 {
-    dst_rect->x = transform->GetPosition().x - camera->GetPosition().x;
-    dst_rect->y = transform->GetPosition().y - camera->GetPosition().y;
-    dst_rect->w = width * transform->GetScale().x;
-    dst_rect->h = height * transform->GetScale().y;
+    dst_rect->x = static_cast<int>(transform->GetPosition().x - camera->GetPosition().x);
+    dst_rect->y = static_cast<int>(transform->GetPosition().y - camera->GetPosition().y);
+    dst_rect->w = width * static_cast<int>(transform->GetScale().x);
+    dst_rect->h = height * static_cast<int>(transform->GetScale().y);
 
     SDL_RenderCopy(renderer, sprite, nullptr, dst_rect);
 }

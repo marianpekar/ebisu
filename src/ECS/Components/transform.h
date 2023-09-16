@@ -3,13 +3,13 @@
 #include "../../Math/vector2.h"
 #include "component.h"
 
-class Transform : public Component
+class Transform final : public Component
 {
 private:
 	Vector2 position, scale;
 public:
 	Transform() : position(), scale(Vector2(1,1)) {}
-	virtual ~Transform() = default;
+	~Transform() override = default;
 	const Vector2& GetPosition() const { return position; } 
 	const Vector2& GetScale() const { return scale; }
 	void SetScale(const float& x, const float& y)
@@ -22,10 +22,10 @@ public:
 		position.x = x;
 		position.y = y;
 	}
-	void SetPosition(const Vector2& position)
+	void SetPosition(const Vector2& new_position)
 	{
-		this->position.x = position.x;
-		this->position.y = position.y;
+		this->position.x = new_position.x;
+		this->position.y = new_position.y;
 	}
 	void Move(const float& x, const float& y)
 	{
