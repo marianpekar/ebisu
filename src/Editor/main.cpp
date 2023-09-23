@@ -11,6 +11,8 @@
 #include "backends/imgui_impl_sdl2.h"
 #include "backends/imgui_impl_opengl3.h"
 
+#include "editor.h"
+
 int main(int argc, char* argv[])
 {
     if (SDL_Init(SDL_INIT_EVERYTHING) != 0)
@@ -73,12 +75,19 @@ int main(int argc, char* argv[])
     ImGui_ImplSDL2_InitForOpenGL(window, gl_context);
     ImGui_ImplOpenGL3_Init(glsl_version);
 
+    Editor editor;
+    
     constexpr Uint32 target_fps = 60;
     constexpr Uint32 max_frame_time = (1000 / target_fps);
     Uint32 ticks = 0;
     bool isRunning = true;
     while (isRunning)
     {
+        
+        ImGui_ImplOpenGL3_NewFrame();
+        ImGui_ImplSDL2_NewFrame();
+        ImGui::NewFrame();
+        
         while (SDL_GetTicks() < ticks + max_frame_time)
         {
             SDL_Delay(1);
@@ -95,12 +104,7 @@ int main(int argc, char* argv[])
                 break;
         }
         
-        ImGui_ImplOpenGL3_NewFrame();
-        ImGui_ImplSDL2_NewFrame();
-        ImGui::NewFrame();
-
-        // TODO: Impl Editor class and editor.Draw() instead of this
-        ImGui::ShowDemoWindow();
+        editor.Draw();
         
         // Rendering
         ImGui::Render();
@@ -109,6 +113,8 @@ int main(int argc, char* argv[])
         glClear(GL_COLOR_BUFFER_BIT);
         ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
         SDL_GL_SwapWindow(window);
+
+        ImGui::EndFrame();
     }
 
     // Cleanup
