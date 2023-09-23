@@ -143,7 +143,7 @@ xcopy /y $(ProjectDir)..\libs\SDL2_image\lib\x64\SDL2_image.dll $(TargetDir)</Co
     </Link>
     <PostBuildEvent>
       <Command>xcopy /y $(ProjectDir)..\libs\SDL2\lib\x64\SDL2.dll $(TargetDir)
-xcopy /y $(ProjectDir)..\libs\SDL2_image\lib\x64\SDL2_image.dll $(TargetDir)</Command>
+ &amp;&amp; xcopy /y $(ProjectDir)..\libs\SDL2_image\lib\x64\SDL2_image.dll $(TargetDir)</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
