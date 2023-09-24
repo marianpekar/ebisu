@@ -19,11 +19,16 @@ void Editor::Draw()
 
 void Editor::DrawSpriteBank()
 {
-	constexpr static auto window_flags = ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoScrollbar;
-	constexpr static auto window_size = ImVec2(256.0F, 256.0F);
-	constexpr static auto window_pos = ImVec2(0.0F, 0.0F);
+	if (!is_bank_window_init_size_set)
+	{
+		constexpr static auto offset_width = 15.0f;
+		constexpr static auto offset_height = 35.0f;
+		static auto window_size = ImVec2(bank_texture->width + offset_width, bank_texture->height + offset_height);
+		ImGui::SetNextWindowSize(window_size);
+		is_bank_window_init_size_set = true;
+	}
 	
-	ImGui::Begin("Sprite Bank", nullptr, window_flags);
+	ImGui::Begin("Sprite Bank", nullptr);
 
 	glBindTexture(GL_TEXTURE_2D, bank_texture->id);
 	

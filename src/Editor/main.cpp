@@ -1,5 +1,10 @@
-#include <iostream>
+#include "imgui.h"
+#include "backends/imgui_impl_sdl2.h"
+#include "backends/imgui_impl_opengl3.h"
+#include <cstdio>
 #include <SDL.h>
+
+#include "editor.h"
 
 #if defined(IMGUI_IMPL_OPENGL_ES2)
 #include <SDL_opengles2.h>
@@ -7,20 +12,16 @@
 #include <SDL_opengl.h>
 #endif
 
-#include "imgui.h"
-#include "backends/imgui_impl_sdl2.h"
-#include "backends/imgui_impl_opengl3.h"
-
-#include "editor.h"
-
-int main(int argc, char* argv[])
+int main(int, char**)
 {
-    if (SDL_Init(SDL_INIT_EVERYTHING) != 0)
+    // Setup SDL
+    if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_TIMER | SDL_INIT_GAMECONTROLLER) != 0)
     {
-        std::cout << "[Game] Failed to initialize SDL subsystems" << std::endl;
+        printf("Error: %s\n", SDL_GetError());
         return -1;
     }
-    
+
+    // Decide GL+GLSL versions
 #if defined(IMGUI_IMPL_OPENGL_ES2)
     // GL ES 2.0 + GLSL 100
     const char* glsl_version = "#version 100";
@@ -48,7 +49,7 @@ int main(int argc, char* argv[])
 #ifdef SDL_HINT_IME_SHOW_UI
     SDL_SetHint(SDL_HINT_IME_SHOW_UI, "1");
 #endif
-    
+
     // Create window with graphics context
     SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
     SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, 24);
@@ -63,49 +64,40 @@ int main(int argc, char* argv[])
     IMGUI_CHECKVERSION();
     ImGui::CreateContext();
     ImGuiIO& io = ImGui::GetIO(); (void)io;
-    io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;
-    io.ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad;
+    io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;     // Enable Keyboard Controls
+    io.ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad;      // Enable Gamepad Controls
 
     // Setup Dear ImGui style
     ImGui::StyleColorsDark();
 
-    ImVec4 clear_color = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
-
     // Setup Platform/Renderer backends
     ImGui_ImplSDL2_InitForOpenGL(window, gl_context);
     ImGui_ImplOpenGL3_Init(glsl_version);
+    
+    ImVec4 clear_color = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
 
     Editor editor;
     
-    constexpr Uint32 target_fps = 60;
-    constexpr Uint32 max_frame_time = (1000 / target_fps);
-    Uint32 ticks = 0;
-    bool isRunning = true;
-    while (isRunning)
+    bool done = false;
+    while (!done)
     {
-        
+        SDL_Event event;
+        while (SDL_PollEvent(&event))
+        {
+            ImGui_ImplSDL2_ProcessEvent(&event);
+            if (event.type == SDL_QUIT)
+                done = true;
+            if (event.type == SDL_WINDOWEVENT && event.window.event == SDL_WINDOWEVENT_CLOSE && event.window.windowID == SDL_GetWindowID(window))
+                done = true;
+        }
+
+        // Start the Dear ImGui frame
         ImGui_ImplOpenGL3_NewFrame();
         ImGui_ImplSDL2_NewFrame();
         ImGui::NewFrame();
-        
-        while (SDL_GetTicks() < ticks + max_frame_time)
-        {
-            SDL_Delay(1);
-        }
 
-        SDL_Event event;
-        SDL_PollEvent(&event);
-        switch (event.type)
-        {
-            case SDL_QUIT:
-                isRunning = false;
-                break;
-            default:
-                break;
-        }
-        
         editor.Draw();
-        
+
         // Rendering
         ImGui::Render();
         glViewport(0, 0, (int)io.DisplaySize.x, (int)io.DisplaySize.y);
@@ -113,8 +105,6 @@ int main(int argc, char* argv[])
         glClear(GL_COLOR_BUFFER_BIT);
         ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
         SDL_GL_SwapWindow(window);
-
-        ImGui::EndFrame();
     }
 
     // Cleanup
@@ -126,5 +116,5 @@ int main(int argc, char* argv[])
     SDL_DestroyWindow(window);
     SDL_Quit();
 
-    return  0;
+    return 0;
 }

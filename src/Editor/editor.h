@@ -16,6 +16,7 @@ public:
 	~Editor();
 	void Draw();
 private:
+	bool is_bank_window_init_size_set = false;
 	Texture* bank_texture;
 	static Texture* LoadTexture(const char* path);
 	
