@@ -1,5 +1,7 @@
 #pragma once
 
+#include <vector>
+
 #include "SDL_opengl.h"
 
 struct Texture
@@ -20,6 +22,12 @@ private:
 	int selected_sprite_index = 0;
 	Texture* bank_texture;
 	static Texture* LoadTexture(const char* path);
+
+	int tile_size = 64;
+	int row_tile_count = 16;
+	std::vector<int> tile_map;
+	std::vector<int> collision_map;
 	
 	void DrawSpriteBank();
+	void DrawCanvas();
 };

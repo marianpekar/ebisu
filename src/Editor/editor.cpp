@@ -10,11 +10,18 @@
 Editor::Editor()
 {
 	bank_texture = LoadTexture("./../../assets/test_tilemap_4_tiles_128x128.png");
+	
+	for(int i = 0; i < row_tile_count * row_tile_count; i++)
+	{
+		tile_map.push_back(0);
+		collision_map.push_back(0);
+	}
 }
 
 void Editor::Draw()
 {
 	DrawSpriteBank();
+	DrawCanvas();
 }
 
 void Editor::DrawSpriteBank()
@@ -29,11 +36,8 @@ void Editor::DrawSpriteBank()
 	}
 	
 	ImGui::Begin("Sprite Bank", nullptr);
-
-	glBindTexture(GL_TEXTURE_2D, bank_texture->id);
 	
 	ImVec2 imageSize(bank_texture->width, bank_texture->height);
-
 	ImVec2 image_screen_pos = ImGui::GetCursorScreenPos();
 	ImGui::Image((void*)(intptr_t)bank_texture->id, imageSize);
 
@@ -45,9 +49,8 @@ void Editor::DrawSpriteBank()
 	ImGui::Text("Mouse Relative: %i %i", (int)mouse_pos_relative.x, (int)mouse_pos_relative.y);
 
 	if (mouse_pos_relative.x >= 0 && mouse_pos_relative.x < bank_texture->width &&
-		mouse_pos_relative.y >= 0 && mouse_pos_relative.y < bank_texture->height )
+		mouse_pos_relative.y >= 0 && mouse_pos_relative.y < bank_texture->height)
 	{
-		constexpr static auto tile_size = 64.0f;
 		float tiles_in_col = bank_texture->height / tile_size; // assume square spritesheet; TODO: assert on load
 
 		int i = static_cast<int>(mouse_pos_relative.x / tile_size);
@@ -67,6 +70,40 @@ void Editor::DrawSpriteBank()
 	}
 
 	ImGui::Text("Selected Index: %d", selected_sprite_index);	
+	
+	ImGui::End();
+}
+
+void Editor::DrawCanvas()
+{
+	ImGui::Begin("Canvas");
+	
+	ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing, ImVec2(0, 0));
+	
+	for (int i = 0; i < row_tile_count * row_tile_count ; i++)
+	{
+		if (i % row_tile_count != 0)
+		{
+			ImGui::SameLine();
+		}
+
+		int tile_index = tile_map[i];
+
+		int numColumns = bank_texture->width / tile_size;
+		int row = tile_index / numColumns;
+		int col = tile_index % numColumns;
+
+		ImVec2 uv0;
+		ImVec2 uv1;
+		uv0.x = static_cast<float>(col) * (tile_size / static_cast<float>(bank_texture->width));
+		uv0.y = static_cast<float>(row) * (tile_size / static_cast<float>(bank_texture->width));
+		uv1.x = uv0.x + (tile_size / static_cast<float>(bank_texture->width));
+		uv1.y = uv0.y + (tile_size / static_cast<float>(bank_texture->width));
+		
+		ImGui::Image((void*)bank_texture->id, ImVec2(tile_size, tile_size), uv0, uv1);
+	}
+
+	ImGui::PopStyleVar();
 	
 	ImGui::End();
 }
