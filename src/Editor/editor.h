@@ -19,6 +19,10 @@ public:
 	void Draw();
 private:
 	bool is_bank_window_init_size_set = false;
+	
+	bool show_collision_map = true;
+	bool lock_canvas_position = true;
+	
 	int selected_sprite_index = 0;
 	Texture* bank_texture;
 	static Texture* LoadTexture(const char* path);

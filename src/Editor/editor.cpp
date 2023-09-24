@@ -43,7 +43,7 @@ void Editor::DrawSpriteBank()
 
 	ImVec2 mouse_position = ImGui::GetMousePos();
 	ImVec2 mouse_pos_relative = ImVec2(mouse_position.x - image_screen_pos.x, mouse_position.y - image_screen_pos.y);
-	
+
 	ImGui::Text("Image: %i %i", (int)image_screen_pos.x, (int)image_screen_pos.y);
 	ImGui::Text("Mouse: %i %i", (int)mouse_position.x, (int)mouse_position.y);
 	ImGui::Text("Mouse Relative: %i %i", (int)mouse_pos_relative.x, (int)mouse_pos_relative.y);
@@ -76,11 +76,22 @@ void Editor::DrawSpriteBank()
 
 void Editor::DrawCanvas()
 {
-	ImGui::Begin("Canvas");
+
+	ImGuiWindowFlags window_flags = lock_canvas_position ? ImGuiWindowFlags_NoMove : 0;
+	
+	ImGui::Begin("Canvas", nullptr, window_flags);
+
+	ImGui::Checkbox("Show Collision Map", &show_collision_map);
+	ImGui::SameLine();
+	ImGui::Checkbox("Lock Canvas Position", &lock_canvas_position);
 	
 	ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing, ImVec2(0, 0));
+
+	static constexpr ImVec4 grey_tint_color = ImVec4(0.33f, 0.33f, 0.33f, 1.0f);
+	static constexpr ImVec4 neutral_tint_color = ImVec4(1.0f, 1.0f, 1.0f, 1.0f);
 	
-	for (int i = 0; i < row_tile_count * row_tile_count ; i++)
+	ImVec2 canvas_screen_pos = ImGui::GetCursorScreenPos();
+	for (int i = 0; i < row_tile_count * row_tile_count; i++)
 	{
 		if (i % row_tile_count != 0)
 		{
@@ -99,11 +110,47 @@ void Editor::DrawCanvas()
 		uv0.y = static_cast<float>(row) * (tile_size / static_cast<float>(bank_texture->width));
 		uv1.x = uv0.x + (tile_size / static_cast<float>(bank_texture->width));
 		uv1.y = uv0.y + (tile_size / static_cast<float>(bank_texture->width));
-		
-		ImGui::Image((void*)bank_texture->id, ImVec2(tile_size, tile_size), uv0, uv1);
+
+		ImVec4 tint_color = show_collision_map && collision_map[i] == 1 ? grey_tint_color : neutral_tint_color;
+		ImGui::Image((void*)bank_texture->id, ImVec2(tile_size, tile_size), uv0, uv1, tint_color);
 	}
 
 	ImGui::PopStyleVar();
+
+	ImVec2 mouse_position = ImGui::GetMousePos();
+	ImVec2 mouse_pos_relative = ImVec2(mouse_position.x - canvas_screen_pos.x, mouse_position.y - canvas_screen_pos.y);
+	int i = static_cast<int>(mouse_pos_relative.x / tile_size);
+	int j = static_cast<int>(mouse_pos_relative.y / tile_size);
+	int tile_index = j * row_tile_count + i;
+	
+	ImGui::Text("Image: %i %i", (int)canvas_screen_pos.x, (int)canvas_screen_pos.y);
+	ImGui::Text("Mouse: %i %i", (int)mouse_position.x, (int)mouse_position.y);
+	ImGui::Text("Mouse Relative: %i %i", (int)mouse_pos_relative.x, (int)mouse_pos_relative.y);
+
+	if (mouse_pos_relative.x >= 0 && mouse_pos_relative.x < row_tile_count * tile_size &&
+		mouse_pos_relative.y >= 0 && mouse_pos_relative.y < row_tile_count * tile_size)
+	{
+		ImGui::Text("Tile Index: %i", tile_index);
+
+		if (ImGui::IsMouseDown(0))
+		{
+			tile_map[tile_index] = selected_sprite_index;
+		}
+
+		if (ImGui::IsMouseDown(1))
+		{
+			collision_map[tile_index] = 1;
+		}
+
+		if (ImGui::IsMouseDown(2))
+		{
+			collision_map[tile_index] = 0;
+		}
+	}
+	else
+	{
+		ImGui::Text("Cursor Outside Canvas");
+	}
 	
 	ImGui::End();
 }
