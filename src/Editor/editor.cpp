@@ -29,7 +29,7 @@ void Editor::DrawSpriteBank()
 	if (!is_bank_window_init_size_set)
 	{
 		constexpr static auto offset_width = 64.0f;
-		constexpr static auto offset_height = 128.0f;
+		constexpr static auto offset_height = 136.0f;
 		static auto window_size = ImVec2(bank_texture->width + offset_width, bank_texture->height + offset_height);
 		ImGui::SetNextWindowSize(window_size);
 		is_bank_window_init_size_set = true;
@@ -61,7 +61,11 @@ void Editor::DrawSpriteBank()
 
 		if (ImGui::IsMouseClicked(0))
 		{
-			selected_sprite_index = index;
+			selected_sprite_index_left_mb = index;
+		}
+		if (ImGui::IsMouseClicked(1))
+		{
+			selected_sprite_index_right_mb = index;
 		}
 	}
 	else
@@ -69,7 +73,8 @@ void Editor::DrawSpriteBank()
 		ImGui::Text("Cursor Outside Image");	
 	}
 
-	ImGui::Text("Selected Index: %d", selected_sprite_index);	
+	ImGui::Text("Selected Index LMB: %d", selected_sprite_index_left_mb);
+	ImGui::Text("Selected Index RMB: %d", selected_sprite_index_right_mb);	
 	
 	ImGui::End();
 }
@@ -81,7 +86,7 @@ void Editor::DrawCanvas()
 	
 	ImGui::Begin("Canvas", nullptr, window_flags);
 
-	ImGui::Checkbox("Show Collision Map", &show_collision_map);
+	ImGui::Checkbox("Paint Collision Map", &paint_collision_map);
 	ImGui::SameLine();
 	ImGui::Checkbox("Lock Canvas Position", &lock_canvas_position);
 	
@@ -111,7 +116,7 @@ void Editor::DrawCanvas()
 		uv1.x = uv0.x + (tile_size / static_cast<float>(bank_texture->width));
 		uv1.y = uv0.y + (tile_size / static_cast<float>(bank_texture->width));
 
-		ImVec4 tint_color = show_collision_map && collision_map[i] == 1 ? grey_tint_color : neutral_tint_color;
+		ImVec4 tint_color = paint_collision_map && collision_map[i] == 1 ? grey_tint_color : neutral_tint_color;
 		ImGui::Image((void*)bank_texture->id, ImVec2(tile_size, tile_size), uv0, uv1, tint_color);
 	}
 
@@ -131,20 +136,29 @@ void Editor::DrawCanvas()
 		mouse_pos_relative.y >= 0 && mouse_pos_relative.y < row_tile_count * tile_size)
 	{
 		ImGui::Text("Tile Index: %i", tile_index);
-
+		
 		if (ImGui::IsMouseDown(0))
 		{
-			tile_map[tile_index] = selected_sprite_index;
+			if (paint_collision_map)
+			{
+				collision_map[tile_index] = 1;
+			}
+			else
+			{
+				tile_map[tile_index] = selected_sprite_index_left_mb;
+			}
 		}
 
 		if (ImGui::IsMouseDown(1))
 		{
-			collision_map[tile_index] = 1;
-		}
-
-		if (ImGui::IsMouseDown(2))
-		{
-			collision_map[tile_index] = 0;
+			if (paint_collision_map)
+			{
+				collision_map[tile_index] = 0;
+			}
+			else
+			{
+				tile_map[tile_index] = selected_sprite_index_right_mb;
+			}
 		}
 	}
 	else
