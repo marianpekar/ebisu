@@ -17,6 +17,7 @@ public:
 	void Draw();
 private:
 	bool is_bank_window_init_size_set = false;
+	int selected_sprite_index = 0;
 	Texture* bank_texture;
 	static Texture* LoadTexture(const char* path);
 	

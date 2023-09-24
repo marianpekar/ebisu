@@ -21,8 +21,8 @@ void Editor::DrawSpriteBank()
 {
 	if (!is_bank_window_init_size_set)
 	{
-		constexpr static auto offset_width = 15.0f;
-		constexpr static auto offset_height = 35.0f;
+		constexpr static auto offset_width = 64.0f;
+		constexpr static auto offset_height = 128.0f;
 		static auto window_size = ImVec2(bank_texture->width + offset_width, bank_texture->height + offset_height);
 		ImGui::SetNextWindowSize(window_size);
 		is_bank_window_init_size_set = true;
@@ -33,7 +33,40 @@ void Editor::DrawSpriteBank()
 	glBindTexture(GL_TEXTURE_2D, bank_texture->id);
 	
 	ImVec2 imageSize(bank_texture->width, bank_texture->height);
+
+	ImVec2 image_screen_pos = ImGui::GetCursorScreenPos();
 	ImGui::Image((void*)(intptr_t)bank_texture->id, imageSize);
+
+	ImVec2 mouse_position = ImGui::GetMousePos();
+	ImVec2 mouse_pos_relative = ImVec2(mouse_position.x - image_screen_pos.x, mouse_position.y - image_screen_pos.y);
+	
+	ImGui::Text("Image: %i %i", (int)image_screen_pos.x, (int)image_screen_pos.y);
+	ImGui::Text("Mouse: %i %i", (int)mouse_position.x, (int)mouse_position.y);
+	ImGui::Text("Mouse Relative: %i %i", (int)mouse_pos_relative.x, (int)mouse_pos_relative.y);
+
+	if (mouse_pos_relative.x >= 0 && mouse_pos_relative.x < bank_texture->width &&
+		mouse_pos_relative.y >= 0 && mouse_pos_relative.y < bank_texture->height )
+	{
+		constexpr static auto tile_size = 64.0f;
+		float tiles_in_col = bank_texture->height / tile_size; // assume square spritesheet; TODO: assert on load
+
+		int i = static_cast<int>(mouse_pos_relative.x / tile_size);
+		int j = static_cast<int>(mouse_pos_relative.y / tile_size);
+		int index = j * static_cast<int>(tiles_in_col) + i;
+
+		ImGui::Text("Sprite Index: %d", index);
+
+		if (ImGui::IsMouseClicked(0))
+		{
+			selected_sprite_index = index;
+		}
+	}
+	else
+	{
+		ImGui::Text("Cursor Outside Image");	
+	}
+
+	ImGui::Text("Selected Index: %d", selected_sprite_index);	
 	
 	ImGui::End();
 }
