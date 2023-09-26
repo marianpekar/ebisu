@@ -48,11 +48,11 @@ void Editor::DrawSpriteBank()
 	ImGui::Text("Mouse: %i %i", (int)mouse_position.x, (int)mouse_position.y);
 	ImGui::Text("Mouse Relative: %i %i", (int)mouse_pos_relative.x, (int)mouse_pos_relative.y);
 
+	float tiles_in_col = bank_texture->height / tile_size; // assume square spritesheet; TODO: assert on load
+	
 	if (mouse_pos_relative.x >= 0 && mouse_pos_relative.x < bank_texture->width &&
 		mouse_pos_relative.y >= 0 && mouse_pos_relative.y < bank_texture->height)
 	{
-		float tiles_in_col = bank_texture->height / tile_size; // assume square spritesheet; TODO: assert on load
-
 		int i = static_cast<int>(mouse_pos_relative.x / tile_size);
 		int j = static_cast<int>(mouse_pos_relative.y / tile_size);
 		int index = j * static_cast<int>(tiles_in_col) + i;
@@ -61,11 +61,11 @@ void Editor::DrawSpriteBank()
 
 		if (ImGui::IsMouseClicked(0))
 		{
-			selected_sprite_index_left_mb = index;
+			selected_sprite_index_lmb = index;
 		}
 		if (ImGui::IsMouseClicked(1))
 		{
-			selected_sprite_index_right_mb = index;
+			selected_sprite_index_rmb = index;
 		}
 	}
 	else
@@ -73,15 +73,29 @@ void Editor::DrawSpriteBank()
 		ImGui::Text("Cursor Outside Image");	
 	}
 
-	ImGui::Text("Selected Index LMB: %d", selected_sprite_index_left_mb);
-	ImGui::Text("Selected Index RMB: %d", selected_sprite_index_right_mb);	
+	ImGui::Text("Selected Index LMB: %d", selected_sprite_index_lmb);
+	ImGui::Text("Selected Index RMB: %d", selected_sprite_index_rmb);	
+
+	DrawSelectedSpriteRect(selected_sprite_index_lmb, image_screen_pos, tiles_in_col, ImColor(1.0f, 0.0f, 0.0f));
+	DrawSelectedSpriteRect(selected_sprite_index_rmb, image_screen_pos, tiles_in_col, ImColor(1.0f, 1.0f, 0.0f));
 	
 	ImGui::End();
 }
 
+void Editor::DrawSelectedSpriteRect(const int& index, const ImVec2& image_screen_pos, const float& tiles_in_col, const ImColor& color) const
+{
+	const auto draw_list = ImGui::GetWindowDrawList();
+
+	int col = index % static_cast<int>(tiles_in_col);
+	int row = index / static_cast<int>(tiles_in_col);
+	ImVec2 selected_sprite_rect_tl_pos = ImVec2(image_screen_pos.x + col * tile_size, image_screen_pos.y + row * tile_size);
+	ImVec2 selected_sprite_rect_br_pos = ImVec2(selected_sprite_rect_tl_pos.x + tile_size, selected_sprite_rect_tl_pos.y + tile_size);
+	
+	draw_list->AddRect(selected_sprite_rect_tl_pos, selected_sprite_rect_br_pos,color);
+}
+
 void Editor::DrawCanvas()
 {
-
 	ImGuiWindowFlags window_flags = lock_canvas_position ? ImGuiWindowFlags_NoMove : 0;
 	
 	ImGui::Begin("Canvas", nullptr, window_flags);
@@ -145,7 +159,7 @@ void Editor::DrawCanvas()
 			}
 			else
 			{
-				tile_map[tile_index] = selected_sprite_index_left_mb;
+				tile_map[tile_index] = selected_sprite_index_lmb;
 			}
 		}
 
@@ -157,7 +171,7 @@ void Editor::DrawCanvas()
 			}
 			else
 			{
-				tile_map[tile_index] = selected_sprite_index_right_mb;
+				tile_map[tile_index] = selected_sprite_index_rmb;
 			}
 		}
 	}
