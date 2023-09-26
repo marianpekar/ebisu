@@ -92,19 +92,23 @@ bool Game::LoadMap(const int width, const int height)
 
 void Game::LoadTilemaps(const json& map_data, Transform* transform, const int width, const int height)
 {
-    const std::vector<int> tile_map = map_data["Tilemap"];
     const std::vector<int> collision_map = map_data["CollisionMap"];
 
     camera = new Camera(transform, width, height);
-
-    const std::string tilemap_sheet_path = map_data["TilemapSpriteSheet"];
-
+    
     const int tile_size = map_data["TileSize"];
     const int row_tile_count = map_data["RowTileCount"];
     const int map_size = tile_size * row_tile_count;
 
     map = new Map(renderer, tile_size, map_size, camera, collision_map);
-    map->AddLayer(tilemap_sheet_path.c_str(), tile_map);
+
+    const auto layers = map_data["TileMapLayers"];
+    for(const auto& layer : layers)
+    {
+        const std::string tilemap_sheet_path = layer["SpriteSheet"];
+        const std::vector<int> tile_map = layer["TileMap"];
+        map->AddLayer(tilemap_sheet_path.c_str(), tile_map);   
+    }
 }
 
 void Game::LoadPlayer(const json& entity, Entity* player, Transform* transform)
