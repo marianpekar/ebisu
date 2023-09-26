@@ -107,7 +107,8 @@ void Game::LoadTilemaps(const json& map_data, Transform* transform, const int wi
     {
         const std::string tilemap_sheet_path = layer["SpriteSheet"];
         const std::vector<int> tile_map = layer["TileMap"];
-        map->AddLayer(tilemap_sheet_path.c_str(), tile_map);   
+        const bool is_front = layer["IsFront"];
+        map->AddLayer(tilemap_sheet_path.c_str(), tile_map, is_front);   
     }
 }
 
@@ -197,8 +198,9 @@ void Game::Update(const float delta_time) const
 void Game::Render() const
 {
     SDL_RenderClear(renderer);
-    map->Render();
+    map->RenderBackLayers();
     component_manager->Render();
+    map->RenderFrontLayers();
     SDL_RenderPresent(renderer);
 }
 

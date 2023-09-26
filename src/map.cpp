@@ -11,35 +11,56 @@ Map::Map(SDL_Renderer* renderer, const int tile_size, const int map_size, Camera
     dst_rect = new SDL_Rect();
 }
 
-void Map::AddLayer(const char* sprite_filepath, const std::vector<int>& tile_map)
+void Map::AddLayer(const char* sprite_filepath, const std::vector<int>& tile_map, bool is_front)
 {
     int image_width, image_height;
     SDL_Texture* sprite = TextureLoader::LoadTexture(sprite_filepath, renderer, image_width, image_height);
     const int spritesheet_cols = image_width / tile_size;
     auto layer = new Layer(sprite, tile_map, tiles_in_row, spritesheet_cols);
-    layers.emplace_back(layer);
+
+    if (is_front)
+    {
+        layers_front.emplace_back(layer);
+    }
+    else
+    {
+        layers_back.emplace_back(layer);
+    }
 }
 
-void Map::Render() const
+void Map::RenderBackLayers() const
 {
-    for (auto& layer : layers)
+    for (const auto layer : layers_back)
     {
-        for (int j = 0; j < tiles_in_row; j++)
+        Render(layer);
+    }
+}
+
+void Map::RenderFrontLayers() const
+{
+    for (const auto layer : layers_front)
+    {
+        Render(layer);
+    }
+}
+
+void Map::Render(const Layer* layer) const
+{
+    for (int j = 0; j < tiles_in_row; j++)
+    {
+        for (int i = 0; i < tiles_in_row; i++)
         {
-            for (int i = 0; i < tiles_in_row; i++)
-            {
-                src_rect->x = (layer->tile_map[j * tiles_in_row + i] % layer->spritesheet_cols) * tile_size;
-                src_rect->y = (layer->tile_map[j * tiles_in_row + i] / layer->spritesheet_cols) * tile_size;
-                src_rect->w = tile_size;
-                src_rect->h = tile_size;
+            src_rect->x = (layer->tile_map[j * tiles_in_row + i] % layer->spritesheet_cols) * tile_size;
+            src_rect->y = (layer->tile_map[j * tiles_in_row + i] / layer->spritesheet_cols) * tile_size;
+            src_rect->w = tile_size;
+            src_rect->h = tile_size;
 
-                dst_rect->x = i * tile_size - static_cast<int>(camera->GetPosition().x);
-                dst_rect->y = j * tile_size - static_cast<int>(camera->GetPosition().y);
-                dst_rect->w = tile_size;
-                dst_rect->h = tile_size;
+            dst_rect->x = i * tile_size - static_cast<int>(camera->GetPosition().x);
+            dst_rect->y = j * tile_size - static_cast<int>(camera->GetPosition().y);
+            dst_rect->w = tile_size;
+            dst_rect->h = tile_size;
 
-                SDL_RenderCopy(renderer, layer->sprite, src_rect, dst_rect);
-            }
+            SDL_RenderCopy(renderer, layer->sprite, src_rect, dst_rect);
         }
     }
 }
@@ -61,7 +82,7 @@ Map::~Map()
     delete src_rect;
     delete dst_rect;
 
-    for (const auto& layer : layers)
+    for (const auto& layer : layers_back)
     {
         delete layer;
     }
