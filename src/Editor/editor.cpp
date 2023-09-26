@@ -9,7 +9,7 @@
 
 Editor::Editor()
 {
-	bank_texture = LoadTexture("./../../assets/test_tilemap_4_tiles_128x128.png");
+	bank_texture = LoadTexture("./../../assets/test_tilemap_16_tiles_256x256.png");
 	
 	for(int i = 0; i < row_tile_count * row_tile_count; i++)
 	{
@@ -39,6 +39,7 @@ void Editor::DrawSpriteBank()
 	
 	ImVec2 imageSize(bank_texture->width, bank_texture->height);
 	ImVec2 image_screen_pos = ImGui::GetCursorScreenPos();
+	
 	ImGui::Image((void*)(intptr_t)bank_texture->id, imageSize);
 
 	ImVec2 mouse_position = ImGui::GetMousePos();
