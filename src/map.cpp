@@ -50,6 +50,9 @@ void Map::Render(const Layer* layer) const
     {
         for (int i = 0; i < tiles_in_row; i++)
         {
+            if (layer->tile_map[j * tiles_in_row + i] == -1)
+                continue;
+            
             src_rect->x = (layer->tile_map[j * tiles_in_row + i] % layer->spritesheet_cols) * tile_size;
             src_rect->y = (layer->tile_map[j * tiles_in_row + i] / layer->spritesheet_cols) * tile_size;
             src_rect->w = tile_size;
