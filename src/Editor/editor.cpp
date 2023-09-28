@@ -62,16 +62,16 @@ void Editor::DrawSpriteBank()
 
 		if (ImGui::IsMouseClicked(0))
 		{
-			selected_sprite_index_lmb = index;
+			selected_sprite_index_lmb = selected_sprite_index_lmb == index ? -1 : index;
 		}
 		if (ImGui::IsMouseClicked(1))
 		{
-			selected_sprite_index_rmb = index;
+			selected_sprite_index_rmb = selected_sprite_index_rmb == index ? -1 : index;
 		}
 	}
 	else
 	{
-		ImGui::Text("Cursor Outside Image");	
+		ImGui::Text("Cursor Outside Image");
 	}
 
 	ImGui::Text("Selected Index LMB: %d", selected_sprite_index_lmb);
@@ -85,6 +85,9 @@ void Editor::DrawSpriteBank()
 
 void Editor::DrawSelectedSpriteRect(const int& index, const ImVec2& image_screen_pos, const float& tiles_in_col, const ImColor& color) const
 {
+	if (index == -1)
+		return;
+	
 	const auto draw_list = ImGui::GetWindowDrawList();
 
 	int col = index % static_cast<int>(tiles_in_col);
@@ -119,6 +122,12 @@ void Editor::DrawCanvas()
 		}
 
 		int tile_index = tile_map[i];
+
+		if (tile_index == -1)
+		{
+			ImGui::Image(ImTextureID(nullptr), ImVec2(tile_size, tile_size));
+			continue;
+		}
 
 		int numColumns = bank_texture->width / tile_size;
 		int row = tile_index / numColumns;

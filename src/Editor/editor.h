@@ -27,7 +27,7 @@ private:
 	bool lock_canvas_position = true;
 	
 	int selected_sprite_index_lmb = 0;
-	int selected_sprite_index_rmb = 0;
+	int selected_sprite_index_rmb = -1;
 	Texture* bank_texture;
 	static Texture* LoadTexture(const char* path);
 
