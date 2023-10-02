@@ -135,7 +135,7 @@ void Game::LoadEntity(const json& entity, Entity* game_entity, Transform* transf
 
 void Game::LoadComponents(const json& component, Entity* game_entity, Transform* transform)
 {
-    const auto component_type = component["Type"];
+    const auto& component_type = component["Type"];
     if (component_type == "MapCollider")
     {
         int width = component["Width"];
