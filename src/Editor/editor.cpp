@@ -3,28 +3,42 @@
 
 #include "editor.h"
 
+#include <format>
 #include <SDL_opengl.h>
 
 #include "imgui.h"
 
 Editor::Editor()
 {
-	bank_texture = LoadTexture("./../../assets/test_tilemap_16_tiles_256x256.png");
+	//TODO: This is just for testing, user should be able to add a tilemap layer via UI
+	LoadTexture("./../../assets/test_tilemap_16_tiles_256x256.png");
+	LoadTexture("./../../assets/test_tilemap_4_tiles_128x128_alpha.png");
+
+	tile_maps.emplace_back();
+	tile_maps.emplace_back();
 	
+	for(auto& tile_map : tile_maps)
+	{
+		for(int i = 0; i < row_tile_count * row_tile_count; i++)
+		{
+			tile_map.push_back(0);
+		}		
+	}
+
 	for(int i = 0; i < row_tile_count * row_tile_count; i++)
 	{
-		tile_map.push_back(0);
 		collision_map.push_back(0);
 	}
+
 }
 
-Texture* Editor::LoadTexture(const char* path)
+void Editor::LoadTexture(const char* path)
 {
 	const auto texture = new Texture();
 	
 	int image_width = 0;
 	int image_height = 0;
-	unsigned char* image_data = stbi_load(path, &image_width, &image_height, NULL, 4);
+	unsigned char* image_data = stbi_load(path, &image_width, &image_height, nullptr, 4);
 	
 	GLuint texture_id;
 	glGenTextures(1, &texture_id);
@@ -40,48 +54,55 @@ Texture* Editor::LoadTexture(const char* path)
 	texture->width = image_width;
 	texture->height = image_height;
 	
-	return texture;
+	bank_textures.emplace_back(texture);
 }
 
 void Editor::Draw()
 {
-	DrawSpriteBank();
+	for(int i = 0; i < tile_maps.size(); i++)
+	{
+		DrawSpriteBank(i);
+	}
+
 	DrawCanvas();
 }
 
-void Editor::DrawSpriteBank()
+void Editor::DrawSpriteBank(const int& tile_map_index)
 {
 	if (!is_bank_window_init_size_set)
 	{
 		constexpr static auto offset_width = 16.0f;
 		constexpr static auto offset_height = 40.0f;
-		static auto window_size = ImVec2(static_cast<float>(bank_texture->width) + offset_width, static_cast<float>(bank_texture->height) + offset_height);
+		static auto window_size = ImVec2(static_cast<float>(bank_textures[tile_map_index]->width) + offset_width,
+			static_cast<float>(bank_textures[tile_map_index]->height) + offset_height);
 		ImGui::SetNextWindowSize(window_size);
 		is_bank_window_init_size_set = true;
 	}
 	
-	ImGui::Begin("Sprite Bank", nullptr);
+	ImGui::Begin(std::format("Sprite Bank #{}", tile_map_index).c_str(), nullptr);
 
-	const ImVec2 image_size(static_cast<float>(bank_texture->width), static_cast<float>(bank_texture->height));
+	const ImVec2 image_size(static_cast<float>(bank_textures[tile_map_index]->width), static_cast<float>(bank_textures[tile_map_index]->height));
 	const ImVec2 image_screen_pos = ImGui::GetCursorScreenPos();
 	
-	ImGui::Image(reinterpret_cast<ImTextureID>(bank_texture->id), image_size); // NOLINT(performance-no-int-to-ptr)
+	ImGui::Image(reinterpret_cast<ImTextureID>(bank_textures[tile_map_index]->id), image_size); // NOLINT(performance-no-int-to-ptr)
 
-	const float tiles_in_col = static_cast<float>(bank_texture->height) / tile_size;
-	HandleSpriteSelection(image_screen_pos, tiles_in_col);
+	const float tiles_in_col = static_cast<float>(bank_textures[tile_map_index]->height) / tile_size;
+	HandleSpriteSelection(image_screen_pos, tiles_in_col, tile_map_index);
 
-	DrawSelectedSpriteRect(selected_sprite_index_lmb, image_screen_pos, tiles_in_col, ImColor(1.0f, 0.0f, 0.0f));
-	DrawSelectedSpriteRect(selected_sprite_index_rmb, image_screen_pos, tiles_in_col, ImColor(1.0f, 1.0f, 0.0f));
+	if (selected_tile_map_index == tile_map_index)
+	{
+		DrawSelectedSpriteRect(selected_sprite_index, image_screen_pos, tiles_in_col, ImColor(1.0f, 0.0f, 0.0f));
+	}
 	
 	ImGui::End();
 }
 
-void Editor::HandleSpriteSelection(const ImVec2& image_screen_pos, const float& tiles_in_col)
+void Editor::HandleSpriteSelection(const ImVec2& image_screen_pos, const float& tiles_in_col, const int& tile_map_index)
 {
 	const ImVec2 mouse_position = ImGui::GetMousePos();
 	const auto mouse_pos_relative = ImVec2(mouse_position.x - image_screen_pos.x, mouse_position.y - image_screen_pos.y);
 	
-	if (IsPositionOutsideSpriteBank(mouse_pos_relative))
+	if (IsPositionOutsideSpriteBank(mouse_pos_relative, tile_map_index))
 		return;
 
 	const int i = static_cast<int>(mouse_pos_relative.x / tile_size);
@@ -90,35 +111,31 @@ void Editor::HandleSpriteSelection(const ImVec2& image_screen_pos, const float& 
 
 	if (ImGui::IsMouseClicked(0))
 	{
-		selected_sprite_index_lmb = selected_sprite_index_lmb == index ? -1 : index;
-	}
-	else if (ImGui::IsMouseClicked(1))
-	{
-		selected_sprite_index_rmb = selected_sprite_index_rmb == index ? -1 : index;
+		selected_sprite_index = selected_sprite_index == index ? -1 : index;
+		selected_tile_map_index = tile_map_index;
 	}
 }
 
-bool Editor::IsPositionOutsideSpriteBank(const ImVec2 mouse_pos_relative) const
+bool Editor::IsPositionOutsideSpriteBank(const ImVec2 mouse_pos_relative, const int& tile_map_index) const
 {
-	return mouse_pos_relative.x < 0 || mouse_pos_relative.x >= static_cast<float>(bank_texture->width) ||
-		   mouse_pos_relative.y < 0 || mouse_pos_relative.y >= static_cast<float>(bank_texture->height);
+	return mouse_pos_relative.x < 0 || mouse_pos_relative.x >= static_cast<float>(bank_textures[tile_map_index]->width) ||
+		   mouse_pos_relative.y < 0 || mouse_pos_relative.y >= static_cast<float>(bank_textures[tile_map_index]->height);
 }
 
 void Editor::DrawSelectedSpriteRect(const int& index, const ImVec2& image_screen_pos, const float& tiles_in_col, const ImColor& color) const
 {
 	if (index == -1)
 		return;
-	
-	const auto draw_list = ImGui::GetWindowDrawList();
 
 	const int col = index % static_cast<int>(tiles_in_col);
 	const int row = index / static_cast<int>(tiles_in_col);
 	const auto selected_sprite_rect_tl_pos = ImVec2(image_screen_pos.x + static_cast<float>(col) * tile_size, image_screen_pos.y + static_cast<float>(row) * tile_size);
 	const auto selected_sprite_rect_br_pos = ImVec2(selected_sprite_rect_tl_pos.x + tile_size, selected_sprite_rect_tl_pos.y + tile_size);
 	
-	draw_list->AddRect(selected_sprite_rect_tl_pos, selected_sprite_rect_br_pos,color);
+	ImGui::GetWindowDrawList()->AddRect(selected_sprite_rect_tl_pos, selected_sprite_rect_br_pos,color);
 }
 
+//TODO: Fix issue with missing scrollbars (since full control over cursor position is required for drawing multiple tile_map layers, Image is now drawn via draw list)
 void Editor::DrawCanvas()
 {
 	const ImGuiWindowFlags window_flags = lock_canvas_position ? ImGuiWindowFlags_NoMove : 0;
@@ -136,42 +153,58 @@ void Editor::DrawCanvas()
 	ImGui::End();
 }
 
-void Editor::DrawTilemap(ImVec2& canvas_screen_pos) const
+void Editor::DrawTilemap(ImVec2& current_cursor_pos) const
 {
 	ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing, ImVec2(0, 0));
 
 	static constexpr auto grey_tint_color = ImVec4(0.33f, 0.33f, 0.33f, 1.0f);
 	static constexpr auto neutral_tint_color = ImVec4(1.0f, 1.0f, 1.0f, 1.0f);
 
-	canvas_screen_pos = ImGui::GetCursorScreenPos();
-	for (int i = 0; i < row_tile_count * row_tile_count; i++)
+	current_cursor_pos = ImGui::GetCursorScreenPos();
+	const ImVec2 init_cursor_pos = ImGui::GetCursorScreenPos();
+	for (int i = 0; i < tile_maps.size(); i++)
 	{
-		if (i % row_tile_count != 0)
+		const auto& tile_map = tile_maps[i];
+		for (int j = 0; j < row_tile_count * row_tile_count; j++)
 		{
-			ImGui::SameLine();
+			if (j % row_tile_count == 0 && j > 0)
+			{
+				current_cursor_pos.y += tile_size;
+				current_cursor_pos.x = init_cursor_pos.x;
+			}
+			
+			const int tile_index = tile_map[j];
+
+			if (tile_index == -1)
+			{
+				current_cursor_pos.x += tile_size;
+				continue;
+			}
+
+			const int num_columns = static_cast<int>(static_cast<float>(bank_textures[i]->width) / tile_size);
+			const int row = tile_index / num_columns;
+			const int col = tile_index % num_columns;
+
+			ImVec2 uv0;
+			ImVec2 uv1;
+			uv0.x = static_cast<float>(col) * (tile_size / static_cast<float>(bank_textures[i]->width));
+			uv0.y = static_cast<float>(row) * (tile_size / static_cast<float>(bank_textures[i]->width));
+			uv1.x = uv0.x + (tile_size / static_cast<float>(bank_textures[i]->width));
+			uv1.y = uv0.y + (tile_size / static_cast<float>(bank_textures[i]->width));
+
+			ImVec4 tint_color = paint_collision_map && collision_map[j] == 1 ? grey_tint_color : neutral_tint_color;
+			
+			ImGui::GetWindowDrawList()->AddImage(reinterpret_cast<ImTextureID>(bank_textures[i]->id), // NOLINT(performance-no-int-to-ptr)
+				current_cursor_pos,
+				ImVec2(current_cursor_pos.x + tile_size, current_cursor_pos.y + tile_size),
+				uv0, uv1,
+				ImColor(tint_color));
+			
+			current_cursor_pos.x += tile_size;
 		}
-
-		const int tile_index = tile_map[i];
-
-		if (tile_index == -1)
-		{
-			ImGui::Image(nullptr, ImVec2(tile_size, tile_size));
-			continue;
-		}
-
-		const int num_columns = static_cast<int>(static_cast<float>(bank_texture->width) / tile_size);
-		const int row = tile_index / num_columns;
-		const int col = tile_index % num_columns;
-
-		ImVec2 uv0;
-		ImVec2 uv1;
-		uv0.x = static_cast<float>(col) * (tile_size / static_cast<float>(bank_texture->width));
-		uv0.y = static_cast<float>(row) * (tile_size / static_cast<float>(bank_texture->width));
-		uv1.x = uv0.x + (tile_size / static_cast<float>(bank_texture->width));
-		uv1.y = uv0.y + (tile_size / static_cast<float>(bank_texture->width));
-
-		ImVec4 tint_color = paint_collision_map && collision_map[i] == 1 ? grey_tint_color : neutral_tint_color;
-		ImGui::Image(reinterpret_cast<ImTextureID>(bank_texture->id), ImVec2(tile_size, tile_size), uv0, uv1, tint_color); // NOLINT(performance-no-int-to-ptr)
+		
+		current_cursor_pos.x = init_cursor_pos.x;
+		current_cursor_pos.y = init_cursor_pos.y;
 	}
 
 	ImGui::PopStyleVar();
@@ -187,13 +220,13 @@ void Editor::HandleTilePaint(const ImVec2 canvas_screen_pos)
 
 	if (IsPositionOutsideCanvas(mouse_pos_relative))
 		return;
-
+	
 	if (ImGui::IsMouseDown(0))
 	{
-		paint_collision_map ? collision_map[tile_index] = 1 : tile_map[tile_index] = selected_sprite_index_lmb;
+		paint_collision_map ? collision_map[tile_index] = 1 : tile_maps[selected_tile_map_index][tile_index] = selected_sprite_index;
 	} else if (ImGui::IsMouseDown(1))
 	{
-		paint_collision_map ? collision_map[tile_index] = 0 : tile_map[tile_index] = selected_sprite_index_rmb;
+		paint_collision_map ? collision_map[tile_index] = 0 : tile_maps[selected_tile_map_index][tile_index] = -1;
 	}
 }
 
@@ -206,6 +239,9 @@ bool Editor::IsPositionOutsideCanvas(const ImVec2 mouse_pos_relative) const
 
 Editor::~Editor()
 {
-	glDeleteTextures(1, &bank_texture->id);
-	delete bank_texture;
+	for (const auto texture : bank_textures)
+	{
+		glDeleteTextures(1, &texture->id);
+		delete texture;		
+	}
 }
