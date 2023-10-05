@@ -28,7 +28,7 @@ private:
 	bool lock_canvas_position = true;
 	
 	int selected_sprite_index = 0;
-	int selected_tile_map_index = 0;
+	size_t selected_tile_map_index = 0;
 	
 	std::vector<Texture*> bank_textures;
 	void LoadTexture(const char* path);
@@ -39,9 +39,9 @@ private:
 	TilemapLayers tile_maps;
 	std::vector<int> collision_map;
 	
-	void DrawSpriteBank(const int& tile_map_index);
-	void HandleSpriteSelection(const ImVec2& image_screen_pos, const float& tiles_in_col, const int& tile_map_index);
-	bool IsPositionOutsideSpriteBank(ImVec2 mouse_pos_relative, const int& tile_map_index) const;
+	void DrawSpriteBank(const size_t& tile_map_index);
+	void HandleSpriteSelection(const ImVec2& image_screen_pos, const float& tiles_in_col, const size_t& tile_map_index);
+	bool IsPositionOutsideSpriteBank(ImVec2 mouse_pos_relative, const size_t& tile_map_index) const;
 	void DrawSelectedSpriteRect(const int& index, const ImVec2& image_screen_pos, const float& tiles_in_col, const ImColor& color) const;
 
 	void DrawCanvas();

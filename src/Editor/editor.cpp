@@ -59,7 +59,7 @@ void Editor::LoadTexture(const char* path)
 
 void Editor::Draw()
 {
-	for(int i = 0; i < tile_maps.size(); i++)
+	for(size_t i = 0; i < tile_maps.size(); i++)
 	{
 		DrawSpriteBank(i);
 	}
@@ -67,7 +67,7 @@ void Editor::Draw()
 	DrawCanvas();
 }
 
-void Editor::DrawSpriteBank(const int& tile_map_index)
+void Editor::DrawSpriteBank(const size_t& tile_map_index)
 {
 	if (!is_bank_window_init_size_set)
 	{
@@ -97,7 +97,7 @@ void Editor::DrawSpriteBank(const int& tile_map_index)
 	ImGui::End();
 }
 
-void Editor::HandleSpriteSelection(const ImVec2& image_screen_pos, const float& tiles_in_col, const int& tile_map_index)
+void Editor::HandleSpriteSelection(const ImVec2& image_screen_pos, const float& tiles_in_col, const size_t& tile_map_index)
 {
 	const ImVec2 mouse_position = ImGui::GetMousePos();
 	const auto mouse_pos_relative = ImVec2(mouse_position.x - image_screen_pos.x, mouse_position.y - image_screen_pos.y);
@@ -116,7 +116,7 @@ void Editor::HandleSpriteSelection(const ImVec2& image_screen_pos, const float& 
 	}
 }
 
-bool Editor::IsPositionOutsideSpriteBank(const ImVec2 mouse_pos_relative, const int& tile_map_index) const
+bool Editor::IsPositionOutsideSpriteBank(const ImVec2 mouse_pos_relative, const size_t& tile_map_index) const
 {
 	return mouse_pos_relative.x < 0 || mouse_pos_relative.x >= static_cast<float>(bank_textures[tile_map_index]->width) ||
 		   mouse_pos_relative.y < 0 || mouse_pos_relative.y >= static_cast<float>(bank_textures[tile_map_index]->height);
@@ -163,7 +163,7 @@ void Editor::DrawTilemap(ImVec2& current_cursor_pos) const
 
 	current_cursor_pos = ImGui::GetCursorScreenPos();
 	const ImVec2 init_cursor_pos = ImGui::GetCursorScreenPos();
-	for (int i = 0; i < tile_maps.size(); i++)
+	for (size_t i = 0; i < tile_maps.size(); i++)
 	{
 		const auto& tile_map = tile_maps[i];
 		for (int j = 0; j < row_tile_count * row_tile_count; j++)
