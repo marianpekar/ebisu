@@ -135,13 +135,14 @@ void Editor::DrawSelectedSpriteRect(const int& index, const ImVec2& image_screen
 	ImGui::GetWindowDrawList()->AddRect(selected_sprite_rect_tl_pos, selected_sprite_rect_br_pos,color);
 }
 
-//TODO: Fix issue with missing scrollbars (since full control over cursor position is required for drawing multiple tile_map layers, Image is now drawn via draw list)
 void Editor::DrawCanvas()
 {
-	const ImGuiWindowFlags window_flags = lock_canvas_position ? ImGuiWindowFlags_NoMove : 0;
-	
-	ImGui::Begin("Canvas", nullptr, window_flags);
+	const ImGuiWindowFlags window_flags = (lock_canvas_position ? ImGuiWindowFlags_NoMove : 0) |
+		ImGuiWindowFlags_AlwaysVerticalScrollbar | ImGuiWindowFlags_AlwaysHorizontalScrollbar;
 
+	const auto canvas_size = ImVec2(tile_size * static_cast<float>(row_tile_count), tile_size * static_cast<float>(row_tile_count));
+	ImGui::SetNextWindowContentSize(canvas_size);
+	ImGui::Begin("Canvas", nullptr, window_flags);
 	ImGui::Checkbox("Paint Collision Map", &paint_collision_map);
 	ImGui::SameLine();
 	ImGui::Checkbox("Lock Canvas Position", &lock_canvas_position);
