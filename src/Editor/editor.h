@@ -17,7 +17,7 @@ struct Texture
 class Editor
 {
 public:
-	Editor();
+	Editor() = default;
 	~Editor();
 	void Draw();
 	
@@ -50,6 +50,11 @@ private:
 	void DrawNewLevelPopup();
 
 	bool openNewLevelPopup = false;
+	
+	void InitTilemapPathsInputFields();
+	void DrawAddAndRemoveLayerButtons();
+	void DisposeCurrentLevel();
+	void CreateNewLevel();
 	
 	void DrawSpriteBank(const size_t& tile_map_index);
 	void HandleSpriteSelection(const ImVec2& image_screen_pos, const float& tiles_in_col, const size_t& tile_map_index);

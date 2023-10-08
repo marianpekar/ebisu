@@ -3,16 +3,10 @@
 
 #include "editor.h"
 
-#include <array>
 #include <format>
 #include <SDL_opengl.h>
 
 #include "imgui.h"
-
-Editor::Editor()
-{
-
-}
 
 void Editor::LoadTexture(const char* path)
 {
@@ -83,38 +77,10 @@ void Editor::DrawNewLevelPopup()
 		ImGui::SliderInt("Level Size", &new_level_row_tile_count, 1, 256);
 		ImGui::SliderInt("Tile Size", &new_level_tile_size, 8, 64);
 
-		if (ImGui::Button("Add Layer"))
-		{
-			tilemap_paths_count++;
-			new_level_tilemap_paths_dirty = true;
-		}
-
-		if (tilemap_paths_count > 1)
-		{
-			ImGui::SameLine();
-			if (ImGui::Button("Remove Layer"))
-			{
-				tilemap_paths_count--;
-				new_level_tilemap_paths_dirty = true;			
-			}
-		}
-		
+		DrawAddAndRemoveLayerButtons();
 		if (new_level_tilemap_paths_dirty)
 		{
-			for (const auto& new_level_tilemap_path : new_level_tilemap_paths)
-			{
-				delete new_level_tilemap_path;
-			}
-			new_level_tilemap_paths.clear();
-			
-			new_level_tilemap_paths = std::vector<char*>(tilemap_paths_count);
-			for (auto& new_level_tilemap_path : new_level_tilemap_paths)
-			{
-				new_level_tilemap_path = new char[256];
-				for (int i = 0; i < 256; i++) {
-					new_level_tilemap_path[i] = '\0';
-				}
-			}
+			InitTilemapPathsInputFields();
 			new_level_tilemap_paths_dirty = false;
 		}
 		
@@ -125,36 +91,8 @@ void Editor::DrawNewLevelPopup()
 		
 		if (ImGui::Button("Confirm"))
 		{
-			for(auto& tile_map : tile_maps)
-			{
-				tile_map.clear();
-			}
-			tile_maps.clear();
-			collision_map.clear();
-			DeleteBankTextures();
-			
-			row_tile_count = new_level_row_tile_count;
-			tile_size = static_cast<float>(new_level_tile_size);
-
-			for (const auto& path : new_level_tilemap_paths)
-			{
-				LoadTexture(path);
-				tile_maps.emplace_back();
-			}
-	
-			for(auto& tile_map : tile_maps)
-			{
-				for(int i = 0; i < row_tile_count * row_tile_count; i++)
-				{
-					tile_map.push_back(0);
-				}		
-			}
-			
-			for(int i = 0; i < row_tile_count * row_tile_count; i++)
-			{
-				collision_map.push_back(0);
-			}
-			
+			DisposeCurrentLevel();
+			CreateNewLevel();
 			openNewLevelPopup = false;
 		}
 
@@ -166,6 +104,79 @@ void Editor::DrawNewLevelPopup()
 		}
 
 		ImGui::EndPopup();
+	}
+}
+
+void Editor::DrawAddAndRemoveLayerButtons()
+{
+	if (ImGui::Button("Add Layer"))
+	{
+		tilemap_paths_count++;
+		new_level_tilemap_paths_dirty = true;
+	}
+
+	if (tilemap_paths_count > 1)
+	{
+		ImGui::SameLine();
+		if (ImGui::Button("Remove Layer"))
+		{
+			tilemap_paths_count--;
+			new_level_tilemap_paths_dirty = true;			
+		}
+	}
+}
+
+void Editor::InitTilemapPathsInputFields()
+{
+	for (const auto& new_level_tilemap_path : new_level_tilemap_paths)
+	{
+		delete new_level_tilemap_path;
+	}
+	new_level_tilemap_paths.clear();
+			
+	new_level_tilemap_paths = std::vector<char*>(tilemap_paths_count);
+	for (auto& new_level_tilemap_path : new_level_tilemap_paths)
+	{
+		new_level_tilemap_path = new char[256];
+		for (int i = 0; i < 256; i++) {
+			new_level_tilemap_path[i] = '\0';
+		}
+	}
+}
+
+void Editor::DisposeCurrentLevel()
+{
+	for(auto& tile_map : tile_maps)
+	{
+		tile_map.clear();
+	}
+	tile_maps.clear();
+	collision_map.clear();
+	DeleteBankTextures();
+			
+	row_tile_count = new_level_row_tile_count;
+	tile_size = static_cast<float>(new_level_tile_size);
+}
+
+void Editor::CreateNewLevel()
+{
+	for (const auto& path : new_level_tilemap_paths)
+	{
+		LoadTexture(path);
+		tile_maps.emplace_back();
+	}
+	
+	for(auto& tile_map : tile_maps)
+	{
+		for(int i = 0; i < row_tile_count * row_tile_count; i++)
+		{
+			tile_map.push_back(0);
+		}		
+	}
+			
+	for(int i = 0; i < row_tile_count * row_tile_count; i++)
+	{
+		collision_map.push_back(0);
 	}
 }
 
