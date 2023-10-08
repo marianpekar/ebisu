@@ -3,6 +3,7 @@
 
 #include "editor.h"
 
+#include <array>
 #include <format>
 #include <SDL_opengl.h>
 
@@ -10,25 +11,6 @@
 
 Editor::Editor()
 {
-	//TODO: This is just for testing, user should be able to add a tilemap layer via UI
-	LoadTexture("./../../assets/test_tilemap_16_tiles_256x256.png");
-	LoadTexture("./../../assets/test_tilemap_4_tiles_128x128_alpha.png");
-
-	tile_maps.emplace_back();
-	tile_maps.emplace_back();
-	
-	for(auto& tile_map : tile_maps)
-	{
-		for(int i = 0; i < row_tile_count * row_tile_count; i++)
-		{
-			tile_map.push_back(0);
-		}		
-	}
-
-	for(int i = 0; i < row_tile_count * row_tile_count; i++)
-	{
-		collision_map.push_back(0);
-	}
 
 }
 
@@ -59,12 +41,132 @@ void Editor::LoadTexture(const char* path)
 
 void Editor::Draw()
 {
+	DrawMainMenuBar();
+
+	if (openNewLevelPopup)
+	{
+		DrawNewLevelPopup();
+	}
+	
+	if (tile_maps.empty())
+		return;
+	
 	for(size_t i = 0; i < tile_maps.size(); i++)
 	{
 		DrawSpriteBank(i);
 	}
 
 	DrawCanvas();
+}
+
+void Editor::DrawMainMenuBar()
+{
+	if (ImGui::BeginMainMenuBar())
+	{
+		if (ImGui::BeginMenu("File"))
+		{
+			if (ImGui::MenuItem("New Level"))
+			{
+				openNewLevelPopup = true;
+			}
+			ImGui::EndMenu();
+		}
+		ImGui::EndMainMenuBar();
+	}
+}
+
+void Editor::DrawNewLevelPopup()
+{
+	ImGui::OpenPopup("Create New Level");
+	if (ImGui::BeginPopupModal("Create New Level", &openNewLevelPopup))
+	{
+		ImGui::SliderInt("Level Size", &new_level_row_tile_count, 1, 256);
+		ImGui::SliderInt("Tile Size", &new_level_tile_size, 8, 64);
+
+		if (ImGui::Button("Add Layer"))
+		{
+			tilemap_paths_count++;
+			new_level_tilemap_paths_dirty = true;
+		}
+
+		if (tilemap_paths_count > 1)
+		{
+			ImGui::SameLine();
+			if (ImGui::Button("Remove Layer"))
+			{
+				tilemap_paths_count--;
+				new_level_tilemap_paths_dirty = true;			
+			}
+		}
+		
+		if (new_level_tilemap_paths_dirty)
+		{
+			for (const auto& new_level_tilemap_path : new_level_tilemap_paths)
+			{
+				delete new_level_tilemap_path;
+			}
+			new_level_tilemap_paths.clear();
+			
+			new_level_tilemap_paths = std::vector<char*>(tilemap_paths_count);
+			for (auto& new_level_tilemap_path : new_level_tilemap_paths)
+			{
+				new_level_tilemap_path = new char[256];
+				for (int i = 0; i < 256; i++) {
+					new_level_tilemap_path[i] = '\0';
+				}
+			}
+			new_level_tilemap_paths_dirty = false;
+		}
+		
+		for (int i = 0; i < tilemap_paths_count; ++i)
+		{
+			ImGui::InputText(std::format("Tilemap Path {}", i).c_str(), new_level_tilemap_paths[i], 256);
+		}
+		
+		if (ImGui::Button("Confirm"))
+		{
+			for(auto& tile_map : tile_maps)
+			{
+				tile_map.clear();
+			}
+			tile_maps.clear();
+			collision_map.clear();
+			DeleteBankTextures();
+			
+			row_tile_count = new_level_row_tile_count;
+			tile_size = static_cast<float>(new_level_tile_size);
+
+			for (const auto& path : new_level_tilemap_paths)
+			{
+				LoadTexture(path);
+				tile_maps.emplace_back();
+			}
+	
+			for(auto& tile_map : tile_maps)
+			{
+				for(int i = 0; i < row_tile_count * row_tile_count; i++)
+				{
+					tile_map.push_back(0);
+				}		
+			}
+			
+			for(int i = 0; i < row_tile_count * row_tile_count; i++)
+			{
+				collision_map.push_back(0);
+			}
+			
+			openNewLevelPopup = false;
+		}
+
+		ImGui::SameLine();
+
+		if (ImGui::Button("Cancel"))
+		{
+			openNewLevelPopup = false;
+		}
+
+		ImGui::EndPopup();
+	}
 }
 
 void Editor::DrawSpriteBank(const size_t& tile_map_index)
@@ -233,16 +335,22 @@ void Editor::HandleTilePaint(const ImVec2 canvas_screen_pos)
 
 bool Editor::IsPositionOutsideCanvas(const ImVec2 mouse_pos_relative) const
 {
-	static const int canvas_length = row_tile_count * static_cast<int>(tile_size);
+	const int canvas_length = row_tile_count * static_cast<int>(tile_size);
 	return  mouse_pos_relative.x < 0 || static_cast<int>(mouse_pos_relative.x) >= canvas_length ||
 		   	mouse_pos_relative.y < 0 || static_cast<int>(mouse_pos_relative.y) >= canvas_length;
 }
 
 Editor::~Editor()
 {
+	DeleteBankTextures();
+}
+
+void Editor::DeleteBankTextures()
+{
 	for (const auto texture : bank_textures)
 	{
 		glDeleteTextures(1, &texture->id);
 		delete texture;		
 	}
+	bank_textures.clear();
 }

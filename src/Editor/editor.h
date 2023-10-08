@@ -34,10 +34,22 @@ private:
 	void LoadTexture(const char* path);
 
 	float tile_size = 64.0f;
-	int row_tile_count = 16; //TODO: Let user set this when initializing a new map file
+	int new_level_tile_size = 64;
+
+	int new_level_row_tile_count = 32;
+	int row_tile_count = 16;
+
+	int tilemap_paths_count = 2;
+	std::vector<char*> new_level_tilemap_paths;
+	bool new_level_tilemap_paths_dirty = true;
 	
 	TilemapLayers tile_maps;
 	std::vector<int> collision_map;
+
+	void DrawMainMenuBar();
+	void DrawNewLevelPopup();
+
+	bool openNewLevelPopup = false;
 	
 	void DrawSpriteBank(const size_t& tile_map_index);
 	void HandleSpriteSelection(const ImVec2& image_screen_pos, const float& tiles_in_col, const size_t& tile_map_index);
@@ -48,4 +60,5 @@ private:
 	void DrawTilemap(ImVec2& current_cursor_pos) const;
 	void HandleTilePaint(ImVec2 canvas_screen_pos);
 	bool IsPositionOutsideCanvas(ImVec2 mouse_pos_relative) const;
+	void DeleteBankTextures();
 };
