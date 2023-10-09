@@ -5,7 +5,13 @@
 #include "imgui.h"
 #include "SDL_opengl.h"
 
-typedef std::vector<std::vector<int>> TilemapLayers;
+struct TilemapLayer
+{
+	std::vector<int> data;
+	bool is_front = false;
+};
+
+typedef std::vector<TilemapLayer> TilemapLayers;
 
 struct Texture
 {
@@ -62,6 +68,7 @@ private:
 	void DrawSelectedSpriteRect(const int& index, const ImVec2& image_screen_pos, const float& tiles_in_col, const ImColor& color) const;
 
 	void DrawCanvas();
+	void DrawCanvasOptions();
 	void DrawTilemap(ImVec2& current_cursor_pos) const;
 	void HandleTilePaint(ImVec2 canvas_screen_pos);
 	bool IsPositionOutsideCanvas(ImVec2 mouse_pos_relative) const;

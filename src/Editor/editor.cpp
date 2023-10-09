@@ -51,6 +51,7 @@ void Editor::Draw()
 	}
 
 	DrawCanvas();
+	DrawCanvasOptions();
 }
 
 void Editor::DrawMainMenuBar()
@@ -148,7 +149,7 @@ void Editor::DisposeCurrentLevel()
 {
 	for(auto& tile_map : tile_maps)
 	{
-		tile_map.clear();
+		tile_map.data.clear();
 	}
 	tile_maps.clear();
 	collision_map.clear();
@@ -170,7 +171,7 @@ void Editor::CreateNewLevel()
 	{
 		for(int i = 0; i < row_tile_count * row_tile_count; i++)
 		{
-			tile_map.push_back(0);
+			tile_map.data.push_back(0);
 		}		
 	}
 			
@@ -248,6 +249,22 @@ void Editor::DrawSelectedSpriteRect(const int& index, const ImVec2& image_screen
 	ImGui::GetWindowDrawList()->AddRect(selected_sprite_rect_tl_pos, selected_sprite_rect_br_pos,color);
 }
 
+void Editor::DrawCanvasOptions()
+{
+	ImGui::SetNextWindowContentSize(ImVec2(256, 128));
+	ImGui::Begin("Canvas Options");
+
+	ImGui::Checkbox("Paint Collision Map", &paint_collision_map);
+	ImGui::Checkbox("Lock Canvas Position", &lock_canvas_position);
+	ImGui::Text("Layers In Front Of Entities:");
+	for (size_t i = 0; i < tile_maps.size(); i++)
+	{
+		ImGui::Checkbox(std::format("Layer #{}", i).c_str(), &tile_maps[i].is_front);
+	}
+	
+	ImGui::End();
+}
+
 void Editor::DrawCanvas()
 {
 	const ImGuiWindowFlags window_flags = (lock_canvas_position ? ImGuiWindowFlags_NoMove : 0) |
@@ -256,9 +273,6 @@ void Editor::DrawCanvas()
 	const auto canvas_size = ImVec2(tile_size * static_cast<float>(row_tile_count), tile_size * static_cast<float>(row_tile_count));
 	ImGui::SetNextWindowContentSize(canvas_size);
 	ImGui::Begin("Canvas", nullptr, window_flags);
-	ImGui::Checkbox("Paint Collision Map", &paint_collision_map);
-	ImGui::SameLine();
-	ImGui::Checkbox("Lock Canvas Position", &lock_canvas_position);
 
 	ImVec2 canvas_screen_pos;
 	DrawTilemap(canvas_screen_pos);
@@ -287,7 +301,7 @@ void Editor::DrawTilemap(ImVec2& current_cursor_pos) const
 				current_cursor_pos.x = init_cursor_pos.x;
 			}
 			
-			const int tile_index = tile_map[j];
+			const int tile_index = tile_map.data[j];
 
 			if (tile_index == -1)
 			{
@@ -337,10 +351,10 @@ void Editor::HandleTilePaint(const ImVec2 canvas_screen_pos)
 	
 	if (ImGui::IsMouseDown(0))
 	{
-		paint_collision_map ? collision_map[tile_index] = 1 : tile_maps[selected_tile_map_index][tile_index] = selected_sprite_index;
+		paint_collision_map ? collision_map[tile_index] = 1 : tile_maps[selected_tile_map_index].data[tile_index] = selected_sprite_index;
 	} else if (ImGui::IsMouseDown(1))
 	{
-		paint_collision_map ? collision_map[tile_index] = 0 : tile_maps[selected_tile_map_index][tile_index] = -1;
+		paint_collision_map ? collision_map[tile_index] = 0 : tile_maps[selected_tile_map_index].data[tile_index] = -1;
 	}
 }
 
