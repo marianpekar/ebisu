@@ -4,9 +4,21 @@
 #include "editor.h"
 
 #include <format>
+#include <filesystem>
+namespace fs = std::filesystem;
+
 #include <SDL_opengl.h>
 
 #include "imgui.h"
+
+const std::string project_path = 
+#if _DEBUG
+	"./../../";
+#else
+	"./"
+#endif
+
+const std::string assets_path = project_path + "assets/";
 
 void Editor::LoadTexture(const char* path)
 {
@@ -14,7 +26,8 @@ void Editor::LoadTexture(const char* path)
 	
 	int image_width = 0;
 	int image_height = 0;
-	unsigned char* image_data = stbi_load(path, &image_width, &image_height, nullptr, 4);
+	unsigned char* image_data = stbi_load(std::format("{}{}", assets_path.c_str(),  path).c_str(),
+		&image_width, &image_height, nullptr, 4);
 	
 	GLuint texture_id;
 	glGenTextures(1, &texture_id);
@@ -40,6 +53,11 @@ void Editor::Draw()
 	if (openNewLevelPopup)
 	{
 		DrawNewLevelPopup();
+	}
+
+	if (openSelectAssetPopup)
+	{
+		DrawSelectAssetPopup();				
 	}
 	
 	if (tile_maps.empty())
@@ -87,6 +105,13 @@ void Editor::DrawNewLevelPopup()
 		
 		for (int i = 0; i < tilemap_paths_count; ++i)
 		{
+			if (ImGui::Button(std::format("...###{}", i).c_str()))
+			{
+				selected_tilemap_input_field_index = i;
+				openNewLevelPopup = false;
+				openSelectAssetPopup = true;
+			}
+			ImGui::SameLine();
 			ImGui::InputText(std::format("Tilemap Path {}", i).c_str(), new_level_tilemap_paths[i], 256);
 		}
 		
@@ -124,6 +149,34 @@ void Editor::DrawAddAndRemoveLayerButtons()
 			tilemap_paths_count--;
 			new_level_tilemap_paths_dirty = true;			
 		}
+	}
+}
+
+//TODO: Add support for subfolders
+void Editor::DrawSelectAssetPopup()
+{
+	ImGui::OpenPopup("Select Asset");
+	if(ImGui::BeginPopupModal("Select Asset", &openSelectAssetPopup))
+	{
+		for (const auto& entry : fs::directory_iterator(assets_path))
+		{
+			std::string filename = entry.path().filename().string();
+
+			if (is_regular_file(entry)) {
+				if (ImGui::Button(filename.c_str()))
+				{
+					const size_t source_length = strlen(filename.c_str());
+					strncpy_s(new_level_tilemap_paths[selected_tilemap_input_field_index],
+						source_length + 1,
+						filename.c_str(),
+						source_length);
+					
+					openSelectAssetPopup = false;
+					openNewLevelPopup = true;
+				}
+			}
+		}
+		ImGui::EndPopup();		
 	}
 }
 
@@ -167,11 +220,12 @@ void Editor::CreateNewLevel()
 		tile_maps.emplace_back();
 	}
 	
-	for(auto& tile_map : tile_maps)
+	for(int j = 0; j < tile_maps.size(); j++)
 	{
+		int initial_tile_index = j == 0 ? 0 : -1;
 		for(int i = 0; i < row_tile_count * row_tile_count; i++)
 		{
-			tile_map.data.push_back(0);
+			tile_maps[j].data.push_back(initial_tile_index);
 		}		
 	}
 			

@@ -38,6 +38,7 @@ private:
 	
 	std::vector<Texture*> bank_textures;
 	void LoadTexture(const char* path);
+	void DrawSelectAssetPopup();
 
 	float tile_size = 64.0f;
 	int new_level_tile_size = 64;
@@ -56,6 +57,8 @@ private:
 	void DrawNewLevelPopup();
 
 	bool openNewLevelPopup = false;
+	bool openSelectAssetPopup = false;
+	int selected_tilemap_input_field_index = 0;
 	
 	void InitTilemapPathsInputFields();
 	void DrawAddAndRemoveLayerButtons();
