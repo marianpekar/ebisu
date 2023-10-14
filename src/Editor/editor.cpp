@@ -93,7 +93,8 @@ void Editor::DrawNewLevelPopup()
 	ImGui::OpenPopup("Create New Level");
 	if (ImGui::BeginPopupModal("Create New Level", &openNewLevelPopup))
 	{
-		ImGui::SliderInt("Level Size", &new_level_row_tile_count, 1, 256);
+		ImGui::SliderInt("Rows", &new_level_row_tile_count, 1, 256);
+		ImGui::SliderInt("Columns", &new_level_col_tile_count, 1, 256);
 		ImGui::SliderInt("Tile Size", &new_level_tile_size, 8, 64);
 
 		DrawAddAndRemoveLayerButtons();
@@ -209,6 +210,7 @@ void Editor::DisposeCurrentLevel()
 	DeleteBankTextures();
 			
 	row_tile_count = new_level_row_tile_count;
+	col_tile_count = new_level_col_tile_count;
 	tile_size = static_cast<float>(new_level_tile_size);
 }
 
@@ -223,13 +225,13 @@ void Editor::CreateNewLevel()
 	for(int j = 0; j < tile_maps.size(); j++)
 	{
 		int initial_tile_index = j == 0 ? 0 : -1;
-		for(int i = 0; i < row_tile_count * row_tile_count; i++)
+		for(int i = 0; i < row_tile_count * col_tile_count; i++)
 		{
 			tile_maps[j].data.push_back(initial_tile_index);
 		}		
 	}
 			
-	for(int i = 0; i < row_tile_count * row_tile_count; i++)
+	for(int i = 0; i < row_tile_count * col_tile_count; i++)
 	{
 		collision_map.push_back(0);
 	}
@@ -324,7 +326,7 @@ void Editor::DrawCanvas()
 	const ImGuiWindowFlags window_flags = (lock_canvas_position ? ImGuiWindowFlags_NoMove : 0) |
 		ImGuiWindowFlags_AlwaysVerticalScrollbar | ImGuiWindowFlags_AlwaysHorizontalScrollbar;
 
-	const auto canvas_size = ImVec2(tile_size * static_cast<float>(row_tile_count), tile_size * static_cast<float>(row_tile_count));
+	const auto canvas_size = ImVec2(tile_size * static_cast<float>(col_tile_count), tile_size * static_cast<float>(row_tile_count));
 	ImGui::SetNextWindowContentSize(canvas_size);
 	ImGui::Begin("Canvas", nullptr, window_flags);
 
@@ -335,58 +337,57 @@ void Editor::DrawCanvas()
 	ImGui::End();
 }
 
-void Editor::DrawTilemap(ImVec2& current_cursor_pos) const
+void Editor::DrawTilemap(ImVec2& canvas_screen_pos) const
 {
 	ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing, ImVec2(0, 0));
 
 	static constexpr auto grey_tint_color = ImVec4(0.33f, 0.33f, 0.33f, 1.0f);
 	static constexpr auto neutral_tint_color = ImVec4(1.0f, 1.0f, 1.0f, 1.0f);
 
-	current_cursor_pos = ImGui::GetCursorScreenPos();
-	const ImVec2 init_cursor_pos = ImGui::GetCursorScreenPos();
+	ImVec2 current_cursor_pos = ImGui::GetCursorScreenPos();
+	canvas_screen_pos = ImGui::GetCursorScreenPos();
 	for (size_t i = 0; i < tile_maps.size(); i++)
 	{
 		const auto& tile_map = tile_maps[i];
-		for (int j = 0; j < row_tile_count * row_tile_count; j++)
+		for(int j = 0; j < row_tile_count; j++)
 		{
-			if (j % row_tile_count == 0 && j > 0)
+			for (int k = 0; k < col_tile_count; k++)
 			{
-				current_cursor_pos.y += tile_size;
-				current_cursor_pos.x = init_cursor_pos.x;
-			}
-			
-			const int tile_index = tile_map.data[j];
+				const int tile_index = tile_map.data[j * col_tile_count + k];
 
-			if (tile_index == -1)
-			{
+				if (tile_index == -1)
+				{
+					current_cursor_pos.x += tile_size;
+					continue;
+				}
+
+				const int num_columns = static_cast<int>(static_cast<float>(bank_textures[i]->width) / tile_size);
+				const int row = tile_index / num_columns;
+				const int col = tile_index % num_columns;
+
+				ImVec2 uv0;
+				ImVec2 uv1;
+				uv0.x = static_cast<float>(col) * (tile_size / static_cast<float>(bank_textures[i]->width));
+				uv0.y = static_cast<float>(row) * (tile_size / static_cast<float>(bank_textures[i]->width));
+				uv1.x = uv0.x + (tile_size / static_cast<float>(bank_textures[i]->width));
+				uv1.y = uv0.y + (tile_size / static_cast<float>(bank_textures[i]->width));
+
+				ImVec4 tint_color = paint_collision_map && collision_map[k] == 1 ? grey_tint_color : neutral_tint_color;
+			
+				ImGui::GetWindowDrawList()->AddImage(reinterpret_cast<ImTextureID>(bank_textures[i]->id), // NOLINT(performance-no-int-to-ptr)
+					current_cursor_pos,
+					ImVec2(current_cursor_pos.x + tile_size, current_cursor_pos.y + tile_size),
+					uv0, uv1,
+					ImColor(tint_color));
+			
 				current_cursor_pos.x += tile_size;
-				continue;
 			}
 
-			const int num_columns = static_cast<int>(static_cast<float>(bank_textures[i]->width) / tile_size);
-			const int row = tile_index / num_columns;
-			const int col = tile_index % num_columns;
-
-			ImVec2 uv0;
-			ImVec2 uv1;
-			uv0.x = static_cast<float>(col) * (tile_size / static_cast<float>(bank_textures[i]->width));
-			uv0.y = static_cast<float>(row) * (tile_size / static_cast<float>(bank_textures[i]->width));
-			uv1.x = uv0.x + (tile_size / static_cast<float>(bank_textures[i]->width));
-			uv1.y = uv0.y + (tile_size / static_cast<float>(bank_textures[i]->width));
-
-			ImVec4 tint_color = paint_collision_map && collision_map[j] == 1 ? grey_tint_color : neutral_tint_color;
-			
-			ImGui::GetWindowDrawList()->AddImage(reinterpret_cast<ImTextureID>(bank_textures[i]->id), // NOLINT(performance-no-int-to-ptr)
-				current_cursor_pos,
-				ImVec2(current_cursor_pos.x + tile_size, current_cursor_pos.y + tile_size),
-				uv0, uv1,
-				ImColor(tint_color));
-			
-			current_cursor_pos.x += tile_size;
+			current_cursor_pos.y += tile_size;
+			current_cursor_pos.x = canvas_screen_pos.x;
 		}
 		
-		current_cursor_pos.x = init_cursor_pos.x;
-		current_cursor_pos.y = init_cursor_pos.y;
+		current_cursor_pos.y = canvas_screen_pos.y;
 	}
 
 	ImGui::PopStyleVar();
@@ -398,8 +399,8 @@ void Editor::HandleTilePaint(const ImVec2 canvas_screen_pos)
 	const auto mouse_pos_relative = ImVec2(mouse_position.x - canvas_screen_pos.x, mouse_position.y - canvas_screen_pos.y);
 	const int i = static_cast<int>(mouse_pos_relative.x / tile_size);
 	const int j = static_cast<int>(mouse_pos_relative.y / tile_size);
-	const int tile_index = j * row_tile_count + i;
-
+	const int tile_index = j * col_tile_count + i;
+	
 	if (IsPositionOutsideCanvas(mouse_pos_relative))
 		return;
 	
@@ -414,9 +415,10 @@ void Editor::HandleTilePaint(const ImVec2 canvas_screen_pos)
 
 bool Editor::IsPositionOutsideCanvas(const ImVec2 mouse_pos_relative) const
 {
-	const int canvas_length = row_tile_count * static_cast<int>(tile_size);
-	return  mouse_pos_relative.x < 0 || static_cast<int>(mouse_pos_relative.x) >= canvas_length ||
-		   	mouse_pos_relative.y < 0 || static_cast<int>(mouse_pos_relative.y) >= canvas_length;
+	const int canvas_height = row_tile_count * static_cast<int>(tile_size);
+	const int canvas_width = col_tile_count * static_cast<int>(tile_size);
+	return  mouse_pos_relative.x < 0 || static_cast<int>(mouse_pos_relative.x) >= canvas_width ||
+		   	mouse_pos_relative.y < 0 || static_cast<int>(mouse_pos_relative.y) >= canvas_height;
 }
 
 Editor::~Editor()

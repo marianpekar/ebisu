@@ -43,8 +43,11 @@ private:
 	float tile_size = 64.0f;
 	int new_level_tile_size = 64;
 
-	int new_level_row_tile_count = 32;
+	int new_level_row_tile_count = 16;
 	int row_tile_count = 16;
+
+	int new_level_col_tile_count = 16;
+	int col_tile_count = 16;
 
 	int tilemap_paths_count = 2;
 	std::vector<char*> new_level_tilemap_paths;
@@ -72,7 +75,7 @@ private:
 
 	void DrawCanvas();
 	void DrawCanvasOptions();
-	void DrawTilemap(ImVec2& current_cursor_pos) const;
+	void DrawTilemap(ImVec2& init_canvas_cursor_pos) const;
 	void HandleTilePaint(ImVec2 canvas_screen_pos);
 	bool IsPositionOutsideCanvas(ImVec2 mouse_pos_relative) const;
 	void DeleteBankTextures();
