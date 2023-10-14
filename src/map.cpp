@@ -3,8 +3,10 @@
 #include "camera.h"
 #include <SDL.h>
 
-Map::Map(SDL_Renderer* renderer, const int tile_size, const int map_size, Camera* camera, std::vector<int> collision_map) :
-    renderer(renderer), tile_size(tile_size), map_size(map_size), tiles_in_row(map_size / tile_size),
+Map::Map(SDL_Renderer* renderer, const int tile_size, const int map_width, const int map_height, Camera* camera, std::vector<int> collision_map) :
+    renderer(renderer), tile_size(tile_size),
+    map_width(map_width), map_height(map_height),
+    tiles_in_row(map_height / tile_size), tiles_in_col(map_width / tile_size),
     collision_map(std::move(collision_map)), camera(camera)
 {
     src_rect = new SDL_Rect();
@@ -48,13 +50,13 @@ void Map::Render(const Layer* layer) const
 {
     for (int j = 0; j < tiles_in_row; j++)
     {
-        for (int i = 0; i < tiles_in_row; i++)
+        for (int i = 0; i < tiles_in_col; i++)
         {
-            if (layer->tile_map[j * tiles_in_row + i] == -1)
+            if (layer->tile_map[j * tiles_in_col + i] == -1)
                 continue;
             
-            src_rect->x = (layer->tile_map[j * tiles_in_row + i] % layer->spritesheet_cols) * tile_size;
-            src_rect->y = (layer->tile_map[j * tiles_in_row + i] / layer->spritesheet_cols) * tile_size;
+            src_rect->x = (layer->tile_map[j * tiles_in_col + i] % layer->spritesheet_cols) * tile_size;
+            src_rect->y = (layer->tile_map[j * tiles_in_col + i] / layer->spritesheet_cols) * tile_size;
             src_rect->w = tile_size;
             src_rect->h = tile_size;
 
@@ -70,7 +72,7 @@ void Map::Render(const Layer* layer) const
 
 const int& Map::GetCollisionAt(const int& i, const int& j) const
 {
-    const size_t index = j * tiles_in_row + i;
+    const size_t index = j * tiles_in_col + i;
 
     if (index < 0 || index >= collision_map.size())
     {

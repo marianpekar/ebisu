@@ -97,12 +97,14 @@ void Game::LoadTilemaps(const json& map_data, Transform* transform, const int wi
     camera = new Camera(transform, width, height);
     
     const int tile_size = map_data["TileSize"];
-    const int row_tile_count = map_data["RowTileCount"];
-    const int map_size = tile_size * row_tile_count;
+    const int rows = map_data["Rows"];
+    const int cols = map_data["Columns"];
+    const int map_width = tile_size * cols;
+    const int map_height = tile_size * rows;
 
-    map = new Map(renderer, tile_size, map_size, camera, collision_map);
+    map = new Map(renderer, tile_size, map_width, map_height, camera, collision_map);
 
-    const auto layers = map_data["TileMapLayers"];
+    const auto& layers = map_data["TileMapLayers"];
     for(const auto& layer : layers)
     {
         const std::string tilemap_sheet_path = layer["SpriteSheet"];

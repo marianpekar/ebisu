@@ -21,8 +21,10 @@ private:
     SDL_Rect* dst_rect = nullptr;
     struct SDL_Renderer* renderer;
     int tile_size;
-    int map_size;
+    int map_width;
+    int map_height;
     int tiles_in_row;
+    int tiles_in_col;
     std::vector<Layer*> layers_back;
     std::vector<Layer*> layers_front;
     std::vector<int> collision_map;
@@ -30,12 +32,13 @@ private:
     int zero_index = 0;
     void Render(const Layer* layer) const;
 public:
-    Map(SDL_Renderer* renderer, int tile_size, int map_size, Camera* camera, std::vector<int> collision_map);
+    Map(SDL_Renderer* renderer, int tile_size, int map_width, int map_height, Camera* camera, std::vector<int> collision_map);
     ~Map();
     void AddLayer(const char* sprite_filepath, const std::vector<int>& tile_map, bool is_front);
     void RenderBackLayers() const;
     void RenderFrontLayers() const;
     const int& GetTileSize() const { return tile_size; }
-    const int& GetMapSize() const { return map_size; }
+    const int& GetMapWidth() const { return map_width; }
+    const int& GetMapHeight() const { return map_height; }
     const int& GetCollisionAt(const int& i, const int& j) const;
 };
