@@ -4,7 +4,6 @@
 
 MapCollider::MapCollider(const float width, const float height, Map* map) : width(width), height(height), map(map)
 {
-    map_size = map->GetMapSize();
     map_tile_size = map->GetTileSize();
 }
 

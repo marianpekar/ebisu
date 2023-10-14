@@ -8,7 +8,7 @@ class MapCollider final : public Component
 private:
     Vector2 position; 
     float width, height;
-    int map_size, map_tile_size;
+    int map_tile_size;
     class Map* map;
     bool HasCollisionAt(const Vector2& col_position) const;
 public:
