@@ -68,8 +68,6 @@ private:
 	int select_asset_popup_dir_level = 0;
 	std::string current_assets_relative_subdir_path = "";
 	void DrawSelectAssetPopup();
-
-
 	
 	void DrawAddAndRemoveLayerButtons();
 	void DisposeCurrentLevel();
@@ -81,9 +79,12 @@ private:
 	void DrawSelectedSpriteRect(const int& index, const ImVec2& image_screen_pos, const float& tiles_in_col, const ImColor& color) const;
 
 	void DrawCanvas();
+	void DrawTilemaps(ImVec2& canvas_screen_pos) const;
+	void DrawTilemapLayer(const ImVec2& canvas_screen_pos, ImVec2 current_cursor_pos, size_t i) const;
+	void CalculateSelectedTileUVs(size_t i, int row, int col, ImVec2& uv0, ImVec2& uv1) const;
 	void DrawCanvasOptions();
-	void DrawTilemap(ImVec2& canvas_screen_pos) const;
 	void HandleTilePaint(ImVec2 canvas_screen_pos);
 	bool IsPositionOutsideCanvas(ImVec2 mouse_pos_relative) const;
+	
 	void DeleteBankTextures();
 };

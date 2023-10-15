@@ -358,67 +358,76 @@ void Editor::DrawCanvas()
 	ImGui::Begin("Canvas", nullptr, window_flags);
 
 	ImVec2 canvas_screen_pos;
-	DrawTilemap(canvas_screen_pos);
+	DrawTilemaps(canvas_screen_pos);
 	HandleTilePaint(canvas_screen_pos);
 	
 	ImGui::End();
 }
 
-void Editor::DrawTilemap(ImVec2& canvas_screen_pos) const
+void Editor::DrawTilemaps(ImVec2& canvas_screen_pos) const
 {
 	ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing, ImVec2(0, 0));
 
-	static constexpr auto grey_tint_color = ImVec4(0.33f, 0.33f, 0.33f, 1.0f);
-	static constexpr auto neutral_tint_color = ImVec4(1.0f, 1.0f, 1.0f, 1.0f);
-
-	ImVec2 current_cursor_pos = ImGui::GetCursorScreenPos();
+	const ImVec2 current_cursor_pos = ImGui::GetCursorScreenPos();
 	canvas_screen_pos = ImGui::GetCursorScreenPos();
 	for (size_t i = 0; i < tile_maps.size(); i++)
 	{
-		const auto& tile_map = tile_maps[i];
-		for(int j = 0; j < row_tile_count; j++)
-		{
-			for (int k = 0; k < col_tile_count; k++)
-			{
-				const int tile_index = j * col_tile_count + k;
-				const int tile_value = tile_map.data[tile_index];
-
-				if (tile_value == -1)
-				{
-					current_cursor_pos.x += tile_size;
-					continue;
-				}
-
-				const int num_columns = static_cast<int>(static_cast<float>(bank_textures[i]->width) / tile_size);
-				const int row = tile_value / num_columns;
-				const int col = tile_value % num_columns;
-
-				ImVec2 uv0;
-				ImVec2 uv1;
-				uv0.x = static_cast<float>(col) * (tile_size / static_cast<float>(bank_textures[i]->width));
-				uv0.y = static_cast<float>(row) * (tile_size / static_cast<float>(bank_textures[i]->width));
-				uv1.x = uv0.x + (tile_size / static_cast<float>(bank_textures[i]->width));
-				uv1.y = uv0.y + (tile_size / static_cast<float>(bank_textures[i]->width));
-
-				ImVec4 tint_color = paint_collision_map && collision_map[tile_index] == 1 ? grey_tint_color : neutral_tint_color;
-			
-				ImGui::GetWindowDrawList()->AddImage(reinterpret_cast<ImTextureID>(bank_textures[i]->id), // NOLINT(performance-no-int-to-ptr)
-					current_cursor_pos,
-					ImVec2(current_cursor_pos.x + tile_size, current_cursor_pos.y + tile_size),
-					uv0, uv1,
-					ImColor(tint_color));
-			
-				current_cursor_pos.x += tile_size;
-			}
-
-			current_cursor_pos.y += tile_size;
-			current_cursor_pos.x = canvas_screen_pos.x;
-		}
-		
-		current_cursor_pos.y = canvas_screen_pos.y;
+		DrawTilemapLayer(canvas_screen_pos, current_cursor_pos, i);
 	}
 
 	ImGui::PopStyleVar();
+}
+
+void Editor::DrawTilemapLayer(const ImVec2& canvas_screen_pos, ImVec2 current_cursor_pos, size_t i) const
+{
+	const auto& [data, is_front] = tile_maps[i];
+	for(int j = 0; j < row_tile_count; j++)
+	{
+		for (int k = 0; k < col_tile_count; k++)
+		{
+			const int tile_index = j * col_tile_count + k;
+			const int tile_value = data[tile_index];
+
+			if (tile_value == -1)
+			{
+				current_cursor_pos.x += tile_size;
+				continue;
+			}
+
+			const int num_columns = static_cast<int>(static_cast<float>(bank_textures[i]->width) / tile_size);
+			const int row = tile_value / num_columns;
+			const int col = tile_value % num_columns;
+
+			ImVec2 uv0;
+			ImVec2 uv1;
+			CalculateSelectedTileUVs(i, row, col, uv0, uv1);
+
+			static constexpr auto grey_tint_color = ImVec4(0.33f, 0.33f, 0.33f, 1.0f);
+			static constexpr auto neutral_tint_color = ImVec4(1.0f, 1.0f, 1.0f, 1.0f);
+			ImVec4 tint_color = paint_collision_map && collision_map[tile_index] == 1 ? grey_tint_color : neutral_tint_color;
+			
+			ImGui::GetWindowDrawList()->AddImage(reinterpret_cast<ImTextureID>(bank_textures[i]->id), // NOLINT(performance-no-int-to-ptr)
+												 current_cursor_pos,
+												 ImVec2(current_cursor_pos.x + tile_size, current_cursor_pos.y + tile_size),
+												 uv0, uv1,
+												 ImColor(tint_color));
+			
+			current_cursor_pos.x += tile_size;
+		}
+
+		current_cursor_pos.y += tile_size;
+		current_cursor_pos.x = canvas_screen_pos.x;
+	}
+		
+	current_cursor_pos.y = canvas_screen_pos.y;
+}
+
+void Editor::CalculateSelectedTileUVs(const size_t i, const int row, const int col, ImVec2& uv0, ImVec2& uv1) const
+{
+	uv0.x = static_cast<float>(col) * (tile_size / static_cast<float>(bank_textures[i]->width));
+	uv0.y = static_cast<float>(row) * (tile_size / static_cast<float>(bank_textures[i]->width));
+	uv1.x = uv0.x + (tile_size / static_cast<float>(bank_textures[i]->width));
+	uv1.y = uv0.y + (tile_size / static_cast<float>(bank_textures[i]->width));
 }
 
 void Editor::HandleTilePaint(const ImVec2 canvas_screen_pos)
