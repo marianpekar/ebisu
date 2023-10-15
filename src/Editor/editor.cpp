@@ -18,7 +18,7 @@ const std::string project_path =
 	"./"
 #endif
 
-const std::string assets_path = project_path + "assets/";
+const std::string assets_path = project_path + "assets";
 
 void Editor::LoadTexture(const char* path)
 {
@@ -153,28 +153,55 @@ void Editor::DrawAddAndRemoveLayerButtons()
 	}
 }
 
-//TODO: Add support for subfolders
 void Editor::DrawSelectAssetPopup()
 {
 	ImGui::OpenPopup("Select Asset");
 	if(ImGui::BeginPopupModal("Select Asset", &openSelectAssetPopup))
 	{
-		for (const auto& entry : fs::directory_iterator(assets_path))
+		if (select_asset_popup_dir_level > 0)
 		{
-			std::string filename = entry.path().filename().string();
+			if (ImGui::Button(".."))
+			{
+				const size_t found = current_assets_relative_subdir_path.find_last_of('/');
+				if (found != std::string::npos) {
+					current_assets_relative_subdir_path = current_assets_relative_subdir_path.substr(0, found);
+					select_asset_popup_dir_level--;
+					ImGui::EndPopup();
+					return;
+				}
+			}
+		}
 
-			if (is_regular_file(entry)) {
+		const std::string current_asset_path = assets_path + current_assets_relative_subdir_path;
+		for (const auto& entry : fs::directory_iterator(current_asset_path))
+		{
+			if (is_regular_file(entry))
+			{
+				std::string filename = entry.path().filename().string();
 				if (ImGui::Button(filename.c_str()))
 				{
-					const size_t source_length = strlen(filename.c_str());
+					std::string selected_asset_path = current_assets_relative_subdir_path.empty() ?
+						filename : std::format("{}/{}", current_assets_relative_subdir_path, filename);
+					
+					const size_t source_length = strlen(selected_asset_path.c_str());
 					strncpy_s(new_level_tilemap_paths[selected_tilemap_input_field_index],
 						source_length + 1,
-						filename.c_str(),
+						selected_asset_path.c_str(),
 						source_length);
 					
 					openSelectAssetPopup = false;
 					openNewLevelPopup = true;
 				}
+			}
+			else if (is_directory(entry))
+			{
+				std::string dir_name = entry.path().filename().string();
+				if (ImGui::Button(std::format("[D] {}", dir_name).c_str()))
+				{
+					select_asset_popup_dir_level++;
+					current_assets_relative_subdir_path += std::format("/{}", dir_name);
+				}
+				
 			}
 		}
 		ImGui::EndPopup();		

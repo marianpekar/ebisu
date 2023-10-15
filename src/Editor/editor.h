@@ -1,5 +1,6 @@
 #pragma once
 
+#include <string>
 #include <vector>
 
 #include "imgui.h"
@@ -38,7 +39,6 @@ private:
 	
 	std::vector<Texture*> bank_textures;
 	void LoadTexture(const char* path);
-	void DrawSelectAssetPopup();
 
 	float tile_size = 64.0f;
 	int new_level_tile_size = 64;
@@ -64,6 +64,13 @@ private:
 	int selected_tilemap_input_field_index = 0;
 	
 	void InitTilemapPathsInputFields();
+
+	int select_asset_popup_dir_level = 0;
+	std::string current_assets_relative_subdir_path = "";
+	void DrawSelectAssetPopup();
+
+
+	
 	void DrawAddAndRemoveLayerButtons();
 	void DisposeCurrentLevel();
 	void CreateNewLevel();
@@ -75,7 +82,7 @@ private:
 
 	void DrawCanvas();
 	void DrawCanvasOptions();
-	void DrawTilemap(ImVec2& init_canvas_cursor_pos) const;
+	void DrawTilemap(ImVec2& canvas_screen_pos) const;
 	void HandleTilePaint(ImVec2 canvas_screen_pos);
 	bool IsPositionOutsideCanvas(ImVec2 mouse_pos_relative) const;
 	void DeleteBankTextures();

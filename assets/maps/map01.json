@@ -21,7 +21,7 @@
     ],
     "TileMapLayers": [
         {
-            "SpriteSheet": "./../assets/test_tilemap_4_tiles_128x128.png",
+            "SpriteSheet": "./../assets/tilemaps/test_tilemap_4_tiles_128x128.png",
             "IsFront": false,
             "TileMap":
             [
@@ -42,7 +42,7 @@
             ]
         },
         {
-            "SpriteSheet": "./../assets/test_tilemap_4_tiles_128x128_alpha.png",
+            "SpriteSheet": "./../assets/tilemaps/test_tilemap_4_tiles_128x128_alpha.png",
             "IsFront": true,
             "TileMap":
             [
