@@ -380,17 +380,18 @@ void Editor::DrawTilemap(ImVec2& canvas_screen_pos) const
 		{
 			for (int k = 0; k < col_tile_count; k++)
 			{
-				const int tile_index = tile_map.data[j * col_tile_count + k];
+				const int tile_index = j * col_tile_count + k;
+				const int tile_value = tile_map.data[tile_index];
 
-				if (tile_index == -1)
+				if (tile_value == -1)
 				{
 					current_cursor_pos.x += tile_size;
 					continue;
 				}
 
 				const int num_columns = static_cast<int>(static_cast<float>(bank_textures[i]->width) / tile_size);
-				const int row = tile_index / num_columns;
-				const int col = tile_index % num_columns;
+				const int row = tile_value / num_columns;
+				const int col = tile_value % num_columns;
 
 				ImVec2 uv0;
 				ImVec2 uv1;
@@ -399,7 +400,7 @@ void Editor::DrawTilemap(ImVec2& canvas_screen_pos) const
 				uv1.x = uv0.x + (tile_size / static_cast<float>(bank_textures[i]->width));
 				uv1.y = uv0.y + (tile_size / static_cast<float>(bank_textures[i]->width));
 
-				ImVec4 tint_color = paint_collision_map && collision_map[k] == 1 ? grey_tint_color : neutral_tint_color;
+				ImVec4 tint_color = paint_collision_map && collision_map[tile_index] == 1 ? grey_tint_color : neutral_tint_color;
 			
 				ImGui::GetWindowDrawList()->AddImage(reinterpret_cast<ImTextureID>(bank_textures[i]->id), // NOLINT(performance-no-int-to-ptr)
 					current_cursor_pos,
