@@ -26,7 +26,7 @@ void Editor::LoadTexture(const char* path)
 	
 	int image_width = 0;
 	int image_height = 0;
-	unsigned char* image_data = stbi_load(std::format("{}{}", assets_path.c_str(),  path).c_str(),
+	unsigned char* image_data = stbi_load(std::format("{}/{}", assets_path.c_str(),  path).c_str(),
 		&image_width, &image_height, nullptr, 4);
 	
 	GLuint texture_id;
@@ -182,6 +182,11 @@ void Editor::DrawSelectAssetPopup()
 				{
 					std::string selected_asset_path = current_assets_relative_subdir_path.empty() ?
 						filename : std::format("{}/{}", current_assets_relative_subdir_path, filename);
+
+					if(selected_asset_path[0] == '/')
+					{
+						selected_asset_path = selected_asset_path.substr(1);
+					}
 					
 					const size_t source_length = strlen(selected_asset_path.c_str());
 					strncpy_s(new_level_tilemap_paths[selected_tilemap_input_field_index],
