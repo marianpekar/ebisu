@@ -21,7 +21,7 @@
     ],
     "TileMapLayers": [
         {
-            "SpriteSheet": "./../assets/tilemaps/test_tilemap_4_tiles_128x128.png",
+            "SpriteSheet": "images/tilemaps/test_tilemap_4_tiles_128x128.png",
             "IsFront": false,
             "TileMap":
             [
@@ -42,7 +42,7 @@
             ]
         },
         {
-            "SpriteSheet": "./../assets/tilemaps/test_tilemap_4_tiles_128x128_alpha.png",
+            "SpriteSheet": "images/tilemaps/test_tilemap_4_tiles_128x128_alpha.png",
             "IsFront": true,
             "TileMap":
             [
@@ -81,7 +81,7 @@
                 },
                 {
                     "Type": "SpriteSheet",
-                    "FilePath": "./../assets/test_8dir_movement_animation_spritesheet_512x512.png",
+                    "FilePath": "images/spritesheets/test_8dir_movement_animation_spritesheet_512x512.png",
                     "Width": 64,
                     "Height": 64
                 },
@@ -113,7 +113,7 @@
                 },
                 {
                     "Type": "SpriteSheet",
-                    "FilePath": "./../assets/test_4_frames_transparent_spritesheet_64x256.png",
+                    "FilePath": "images/spritesheets/test_4_frames_transparent_spritesheet_64x256.png",
                     "Width": 64,
                     "Height": 64
                 },
@@ -157,7 +157,7 @@
                 },
                 {
                     "Type": "SpriteSheet",
-                    "FilePath": "./../assets/test_4_frames_transparent_spritesheet_64x256.png",
+                    "FilePath": "images/spritesheets/test_4_frames_transparent_spritesheet_64x256.png",
                     "Width": 64,
                     "Height": 64
                 },

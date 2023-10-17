@@ -16,6 +16,15 @@
 #include "ECS/Components/sprite_sheet.h"
 #include "ECS/Components/transform.h"
 
+const std::string project_path = 
+#if _DEBUG
+    "./../";
+#else
+    "./"
+#endif
+
+const std::string assets_path = project_path + "assets";
+
 int Game::Initialize(const char* title, const int width, const int height, const bool fullscreen)
 {
     if (SDL_Init(SDL_INIT_EVERYTHING) != 0)
@@ -110,7 +119,7 @@ void Game::LoadTilemaps(const json& map_data, Transform* transform, const int wi
         const std::string tilemap_sheet_path = layer["SpriteSheet"];
         const std::vector<int> tile_map = layer["TileMap"];
         const bool is_front = layer["IsFront"];
-        map->AddLayer(tilemap_sheet_path.c_str(), tile_map, is_front);   
+        map->AddLayer(std::format("{}/{}", assets_path, tilemap_sheet_path).c_str(), tile_map, is_front);   
     }
 }
 
@@ -155,7 +164,7 @@ void Game::LoadComponents(const json& component, Entity* game_entity, Transform*
         int width = component["Width"];
         int height = component["Height"];
         std::string file_path = component["FilePath"];
-        game_entity->AddComponent<SpriteSheet>(file_path, renderer, width, height, camera);
+        game_entity->AddComponent<SpriteSheet>(std::format("{}/{}", assets_path, file_path), renderer, width, height, camera);
     }
     if (component_type == "Rigidbody")
     {
