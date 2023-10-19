@@ -31,7 +31,9 @@
     <ClInclude Include="..\..\libs\imgui\imstb_rectpack.h" />
     <ClInclude Include="..\..\libs\imgui\imstb_textedit.h" />
     <ClInclude Include="..\..\libs\imgui\imstb_truetype.h" />
+    <ClInclude Include="..\..\src\Editor\components.h" />
     <ClInclude Include="..\..\src\Editor\editor.h" />
+    <ClInclude Include="..\..\src\Editor\entity.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>15.0</VCProjectVersion>
