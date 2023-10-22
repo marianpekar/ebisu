@@ -67,6 +67,7 @@
     [
        {
             "Name": "Player",
+            "IsActive": true,
             "Components": 
             [
                 { 
@@ -99,6 +100,7 @@
        },
        {
             "Name": "Box",
+            "IsActive": true,
             "Components": 
             [
                 { 
@@ -143,6 +145,7 @@
        },
        {
         "Name": "Box2",
+        "IsActive": false,
         "Components": 
             [
                 { 

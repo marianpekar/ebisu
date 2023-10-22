@@ -17,9 +17,11 @@ public:
     Entity(const char* name, ComponentManager* component_manager) :
         is_active(true), component_manager(component_manager), name(name) {}
     ~Entity() = default;
-    const bool& IsActive() const { return is_active; }
     const char* GetName() const { return name; }
 
+    const bool& IsActive() const { return is_active; }
+    void SetIsActive(const bool is_active) { this->is_active = is_active; }
+    
     template <typename T, typename... TArgs>
     T* AddComponent(TArgs&&... args)
     {

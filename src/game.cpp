@@ -16,7 +16,7 @@
 #include "ECS/Components/sprite_sheet.h"
 #include "ECS/Components/transform.h"
 
-const std::string project_path = 
+const std::string project_path =
 #if _DEBUG
     "./../";
 #else
@@ -32,7 +32,7 @@ int Game::Initialize(const char* title, const int width, const int height, const
         std::cout << "[Game] Failed to initialize SDL subsystems" << std::endl;
         return -1;
     }
-    
+
     window = SDL_CreateWindow(title, SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, width, height, fullscreen ? SDL_WINDOW_FULLSCREEN : 0);
     if (!window)
     {
@@ -48,7 +48,7 @@ int Game::Initialize(const char* title, const int width, const int height, const
     }
 
     SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
-    
+
     component_manager = new ComponentManager();
     collision_solver = new CollisionSolver(0, 0, static_cast<float>(width), static_cast<float>(height));
 
@@ -65,7 +65,7 @@ int Game::Initialize(const char* title, const int width, const int height, const
 
 void Game::Quit()
 {
-    is_running = false;    
+    is_running = false;
 }
 
 bool Game::LoadMap(const int width, const int height)
@@ -73,7 +73,7 @@ bool Game::LoadMap(const int width, const int height)
     std::ifstream map_file("./../assets/maps/map01.json");
     if (!map_file.is_open())
         return false;
-        
+
     json map_data = nlohmann::json::parse(map_file);
 
     const auto player = new Entity("Player", component_manager);
@@ -81,7 +81,7 @@ bool Game::LoadMap(const int width, const int height)
 
     LoadTilemaps(map_data, player_transform, width, height);
 
-    for (auto& entities = map_data["Entities"]; const json& entity : entities) 
+    for (auto& entities = map_data["Entities"]; const json& entity : entities)
     {
         std::string entity_name = entity["Name"];
 
@@ -104,7 +104,7 @@ void Game::LoadTilemaps(const json& map_data, Transform* transform, const int wi
     const std::vector<int> collision_map = map_data["CollisionMap"];
 
     camera = new Camera(transform, width, height);
-    
+
     const int tile_size = map_data["TileSize"];
     const int rows = map_data["Rows"];
     const int cols = map_data["Columns"];
@@ -114,17 +114,20 @@ void Game::LoadTilemaps(const json& map_data, Transform* transform, const int wi
     map = new Map(renderer, tile_size, map_width, map_height, camera, collision_map);
 
     const auto& layers = map_data["TileMapLayers"];
-    for(const auto& layer : layers)
+    for (const auto& layer : layers)
     {
         const std::string tilemap_sheet_path = layer["SpriteSheet"];
         const std::vector<int> tile_map = layer["TileMap"];
         const bool is_front = layer["IsFront"];
-        map->AddLayer(std::format("{}/{}", assets_path, tilemap_sheet_path).c_str(), tile_map, is_front);   
+        map->AddLayer(std::format("{}/{}", assets_path, tilemap_sheet_path).c_str(), tile_map, is_front);
     }
 }
 
 void Game::LoadPlayer(const json& entity, Entity* player, Transform* transform)
 {
+    const bool is_active = entity["IsActive"];
+    player->SetIsActive(is_active);
+
     const auto& components = entity["Components"];
     for (const auto& component : components)
     {
@@ -137,6 +140,9 @@ void Game::LoadPlayer(const json& entity, Entity* player, Transform* transform)
 
 void Game::LoadEntity(const json& entity, Entity* game_entity, Transform* transform)
 {
+    const bool is_active = entity["IsActive"];
+    game_entity->SetIsActive(is_active);
+
     const auto& components = entity["Components"];
     for (const auto& component : components)
     {
@@ -224,4 +230,3 @@ Game::~Game()
     delete camera;
     delete component_manager;
 }
-
