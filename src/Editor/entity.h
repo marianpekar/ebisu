@@ -8,7 +8,7 @@
 class Entity
 {
 public:
-    Entity(const char* name) : name(name), components({})
+    Entity(const char* name) : is_active(true), name(name), components({})
     {
         AddComponent<Transform>(.0f,.0f);
     }
@@ -33,21 +33,12 @@ public:
         }
     }
 
-    std::vector<Component*> GetComponents() const
-    {
-        return components;
-    }
-
-    std::string GetName() const
-    {
-        return name;
-    }
+    std::vector<Component*> GetComponents() const { return components; }
     
-    void SetName(const char* new_name)
-    {
-        name = new_name;
-    }
+    std::string GetName() const { return name; }
+    void SetName(const char* new_name) { name = new_name; }
     
+    bool is_active;
 private:
     std::string name;
     std::vector<Component*> components;

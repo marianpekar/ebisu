@@ -49,12 +49,12 @@ void Editor::LoadTexture(const char* path)
 void Editor::Draw()
 {
     DrawMainMenuBar();
-
+    
     if (openNewLevelPopup)
     {
         DrawNewLevelPopup();
     }
-
+    
     if (openSelectAssetPopup)
     {
         DrawSelectAssetPopup();
@@ -245,15 +245,17 @@ void Editor::DisposeCurrentLevel()
     }
     tile_maps.clear();
     collision_map.clear();
-    DeleteBankTextures();
 
-    row_tile_count = new_level_row_tile_count;
-    col_tile_count = new_level_col_tile_count;
-    tile_size = static_cast<float>(new_level_tile_size);
+    DeleteEntities();
+    DeleteBankTextures();
 }
 
 void Editor::CreateNewLevel()
 {
+    row_tile_count = new_level_row_tile_count;
+    col_tile_count = new_level_col_tile_count;
+    tile_size = static_cast<float>(new_level_tile_size);
+    
     for (const auto& path : new_level_tilemap_paths)
     {
         LoadTexture(path);
@@ -356,9 +358,11 @@ void Editor::DrawCanvasOptions()
     ImGui::SetNextWindowContentSize(ImVec2(256, 128));
     ImGui::Begin("Canvas Options");
 
+    ImGui::SeparatorText("Misc");
     ImGui::Checkbox("Paint Collision Map", &paint_collision_map);
     ImGui::Checkbox("Lock Canvas Position", &lock_canvas_position);
-    ImGui::Text("Layers In Front Of Entities:");
+    
+    ImGui::SeparatorText("Render After Entities");
     for (size_t i = 0; i < tile_maps.size(); i++)
     {
         ImGui::Checkbox(std::format("Layer #{}", i).c_str(), &tile_maps[i].is_front);
@@ -490,6 +494,13 @@ void Editor::DrawEntityList()
 {
     ImGui::Begin("Entities");
 
+    if (ImGui::Button("Create Entity"))
+    {
+        const auto entity = new Entity("Entity");
+        entities.push_back(entity);
+    }
+
+    ImGui::SeparatorText("Entities");
     for (size_t i = 0; i < entities.size(); i++)
     {
         if (ImGui::Button(std::format("{}###{}", entities[i]->GetName(), i).c_str()))
@@ -498,20 +509,14 @@ void Editor::DrawEntityList()
         }
     }
 
-    if (ImGui::Button("Add Entity"))
-    {
-        const auto entity = new Entity("Entity");
-        entities.push_back(entity);
-    }
-
     ImGui::End();
+
+    //TODO: Remove entity (destroy incl. all its components)
 }
 
 void Editor::DrawSelectedEntityComponentsList() const
 {
     ImGui::Begin("Components");
-
-    //TODO: List each component with tunable properties
 
     if (selected_entity_index == -1)
     {
@@ -519,22 +524,51 @@ void Editor::DrawSelectedEntityComponentsList() const
         ImGui::End();
         return;
     }
-
+    
     Entity* entity = entities[selected_entity_index];
-    const std::string current_name = entity->GetName();
 
+    ImGui::SeparatorText("General");
+    
+    ImGui::Checkbox(std::format("{}###{}", "Is Active", entity->GetName()).c_str(), &entity->is_active);
+    
+    const std::string current_name = entity->GetName();
     char new_name_buffer[256];
     strncpy_s(new_name_buffer, current_name.c_str(), sizeof(new_name_buffer));
-
     ImGui::InputText("Name", new_name_buffer, IM_ARRAYSIZE(new_name_buffer));
-
-    if (ImGui::IsKeyPressed(ImGuiKey_Enter)) {
+    if (ImGui::IsKeyPressed(ImGuiKey_Enter))
+    {
         entity->SetName(new_name_buffer);
     }
+    
+    DrawAddComponentDropdownAndAddButton();
+    
+    ImGui::SeparatorText("Components");
+    for (auto& component : entity->GetComponents())
+    {
+        if (ImGui::CollapsingHeader(std::format("{}###{}", component->GetName(), entity->GetName()).c_str()))
+        {
+            // TODO: Add tune section for each component
+            // TODO: Add remove component button
+        }
+    }
+    
+    
+    ImGui::End();
+}
 
-    static const char* components[] = { "TODO" };
+void Editor::DrawAddComponentDropdownAndAddButton() const
+{
+    static const char* components[] = {
+        "Map Collider",
+        "Box Collider",
+        "Sprite Sheet",
+        "Rigidbody",
+        "Animator",
+    };
     const char* current_item = components[0];
 
+    ImGui::SeparatorText("Add Component");
+    
     if (ImGui::BeginCombo("##components", current_item))
     {
         for (auto& component : components)
@@ -551,18 +585,19 @@ void Editor::DrawSelectedEntityComponentsList() const
         }
         ImGui::EndCombo();
     }
+    
+    ImGui::SameLine();
 
-    if (ImGui::Button("Add Component"))
+    if (ImGui::Button("Add"))
     {
         // TODO: Add component to selected entity
     }
-
-    ImGui::End();
 }
 
 Editor::~Editor()
 {
     DeleteBankTextures();
+    DeleteEntities();
 }
 
 void Editor::DeleteBankTextures()
@@ -573,9 +608,14 @@ void Editor::DeleteBankTextures()
         delete texture;
     }
     bank_textures.clear();
+}
 
+void Editor::DeleteEntities()
+{
     for (const auto entity : entities)
     {
         delete entity;
     }
+    entities.clear();
+    selected_entity_index = -1;
 }
