@@ -71,10 +71,10 @@ private:
     void DrawSelectAssetPopup();
 
     void DrawAddAndRemoveLayerButtons();
-    
+
     void DisposeCurrentLevel();
     void CreateNewLevel();
-    
+
     void DrawSpriteBank(const size_t& tile_map_index);
     void HandleSpriteSelection(const ImVec2& image_screen_pos, const float& tiles_in_col, const size_t& tile_map_index);
     bool IsPositionOutsideSpriteBank(ImVec2 mouse_pos_relative, const size_t& tile_map_index) const;
@@ -92,11 +92,13 @@ private:
     std::vector<Entity*> entities;
     size_t selected_entity_index = -1;
 
-    void DrawEntityList();
-    
-    void DrawSelectedEntityComponentsList() const;
-    void DrawAddComponentDropdownAndAddButton(Entity* selected_entity) const;
-    
+    void DrawEntitiesWindow();
+    static void DrawSelectedEntityGeneralProperties(Entity* entity);
+
+    void DrawSelectedEntityComponentsWindow() const;
+    static void DrawSelectedEntityComponentProperties(Entity* entity);
+    static void DrawAddComponentDropdownAndAddButton(Entity* selected_entity);
+
     void DeleteBankTextures();
     void DeleteEntities();
 };

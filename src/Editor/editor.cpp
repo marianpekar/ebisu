@@ -71,8 +71,8 @@ void Editor::Draw()
     DrawCanvas();
     DrawCanvasOptions();
 
-    DrawEntityList();
-    DrawSelectedEntityComponentsList();
+    DrawEntitiesWindow();
+    DrawSelectedEntityComponentsWindow();
 }
 
 void Editor::DrawMainMenuBar()
@@ -373,6 +373,8 @@ void Editor::DrawCanvasOptions()
 
 void Editor::DrawCanvas()
 {
+    //TODO: Draw only when Canvas window is in focus
+    
     const ImGuiWindowFlags window_flags = (lock_canvas_position ? ImGuiWindowFlags_NoMove : 0) |
         ImGuiWindowFlags_AlwaysVerticalScrollbar | ImGuiWindowFlags_AlwaysHorizontalScrollbar;
 
@@ -490,7 +492,7 @@ bool Editor::IsPositionOutsideCanvas(const ImVec2 mouse_pos_relative) const
         mouse_pos_relative.y < 0 || static_cast<int>(mouse_pos_relative.y) >= canvas_height;
 }
 
-void Editor::DrawEntityList()
+void Editor::DrawEntitiesWindow()
 {
     ImGui::Begin("Entities");
 
@@ -509,12 +511,12 @@ void Editor::DrawEntityList()
         }
     }
 
-    ImGui::End();
+    //TODO: UI element for removing entity (destroy incl. all its components)
 
-    //TODO: Remove entity (destroy incl. all its components)
+    ImGui::End();
 }
 
-void Editor::DrawSelectedEntityComponentsList() const
+void Editor::DrawSelectedEntityComponentsWindow() const
 {
     ImGui::Begin("Components");
 
@@ -526,7 +528,15 @@ void Editor::DrawSelectedEntityComponentsList() const
     }
 
     Entity* entity = entities[selected_entity_index];
+    DrawSelectedEntityGeneralProperties(entity);
+    DrawAddComponentDropdownAndAddButton(entity);
+    DrawSelectedEntityComponentProperties(entity);
 
+    ImGui::End();
+}
+
+void Editor::DrawSelectedEntityGeneralProperties(Entity* entity)
+{
     ImGui::SeparatorText("General");
 
     ImGui::Checkbox(std::format("{}##{}", "Is Active", entity->GetName()).c_str(), &entity->is_active);
@@ -539,31 +549,76 @@ void Editor::DrawSelectedEntityComponentsList() const
     {
         entity->SetName(new_name_buffer);
     }
+}
 
-    DrawAddComponentDropdownAndAddButton(entity);
-
+void Editor::DrawSelectedEntityComponentProperties(Entity* entity)
+{
     ImGui::SeparatorText("Components");
     const auto components = entity->GetComponents();
     for (size_t i = 0; i < components.size(); i++)
     {
-        if (ImGui::CollapsingHeader(std::format("{}##{}", components[i]->GetName(),i).c_str()))
+        Component* component = components[i];
+        if (ImGui::CollapsingHeader(std::format("{}##{}", component->GetName(), i).c_str()))
         {
             ImGui::Indent();
-            // TODO: Add tune section for each component
-
-            if (ImGui::Button(std::format("{}##{}", "Remove Component",i).c_str()))
+            for (auto& [name, value] : component->float_properties)
             {
-                entity->RemoveComponent(i);
+                const std::string current_value = std::to_string(value);
+                char new_value_buffer[256];
+                strncpy_s(new_value_buffer, current_value.c_str(), sizeof(new_value_buffer));
+                ImGui::InputText(std::format("{}##{}{}", name, component->GetName(), i).c_str(),
+                                 new_value_buffer, IM_ARRAYSIZE(new_value_buffer));
+                if (ImGui::IsKeyPressed(ImGuiKey_Enter))
+                {
+                    value = std::stof(new_value_buffer);
+                }
+            }
+
+            for (auto& [name, value] : component->int_properties)
+            {
+                const std::string current_value = std::to_string(value);
+                char new_value_buffer[256];
+                strncpy_s(new_value_buffer, current_value.c_str(), sizeof(new_value_buffer));
+                ImGui::InputText(std::format("{}##{}{}", name, component->GetName(), i).c_str(),
+                                 new_value_buffer, IM_ARRAYSIZE(new_value_buffer));
+                if (ImGui::IsKeyPressed(ImGuiKey_Enter))
+                {
+                    value = std::stoi(new_value_buffer);
+                }
+            }
+
+            for (auto& [name, value] : component->string_properties)
+            {
+                const std::string current_value = value;
+                char new_value_buffer[256];
+                strncpy_s(new_value_buffer, current_value.c_str(), sizeof(new_value_buffer));
+                ImGui::InputText(std::format("{}##{}{}", name, component->GetName(), i).c_str(),
+                                 new_value_buffer, IM_ARRAYSIZE(new_value_buffer));
+                if (ImGui::IsKeyPressed(ImGuiKey_Enter))
+                {
+                    value = new_value_buffer;
+                }
+            }
+
+            for (auto& [name, value] : component->bool_properties)
+            {
+                ImGui::Checkbox(std::format("{}##{}{}", name, component->GetName(), i).c_str(), &value);
+            }
+
+            if (strcmp(components[i]->GetName(), "Transform") != 0)
+            {
+                if (ImGui::Button(std::format("{}##{}", "Remove Component", i).c_str()))
+                {
+                    entity->RemoveComponent(i);
+                }
             }
 
             ImGui::Unindent();
         }
     }
-    
-    ImGui::End();
 }
 
-void Editor::DrawAddComponentDropdownAndAddButton(Entity* selected_entity) const
+void Editor::DrawAddComponentDropdownAndAddButton(Entity* selected_entity)
 {
     // Don't change the order of items! (see switch below)
     static const char* components[] = {
@@ -571,7 +626,7 @@ void Editor::DrawAddComponentDropdownAndAddButton(Entity* selected_entity) const
         "BoxCollider",
         "SpriteSheet",
         "Rigidbody",
-        "Animator",
+        "Animation",
     };
     static int current_item_index = 0;
 
@@ -601,19 +656,19 @@ void Editor::DrawAddComponentDropdownAndAddButton(Entity* selected_entity) const
         switch (current_item_index)
         {
         case 0:
-            selected_entity->AddComponent<MapCollider>(.0f,.0f);
+            selected_entity->AddComponent<MapCollider>(.0f, .0f);
             break;
         case 1:
-            selected_entity->AddComponent<BoxCollider>(.0f,.0f);
+            selected_entity->AddComponent<BoxCollider>(.0f, .0f);
             break;
         case 2:
-            selected_entity->AddComponent<SpriteSheet>("",1.0f,1.0f);
+            selected_entity->AddComponent<SpriteSheet>("", 1.0f, 1.0f);
             break;
         case 3:
-            selected_entity->AddComponent<Rigidbody>(1.0f,0.1f);            
+            selected_entity->AddComponent<Rigidbody>(1.0f, 0.1f);
             break;
         case 4:
-            selected_entity->AddComponent<Animator>(0,0,0,1000,true, true);
+            selected_entity->AddComponent<Animation>(0, 0, 0, 1000, true, true);
             break;
         default:
             break;

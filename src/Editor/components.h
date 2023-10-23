@@ -1,118 +1,84 @@
 ﻿#pragma once
+#include <unordered_map>
 
 class Component
 {
 public:
     Component(const char* name) : name(name) {}
     const char* GetName() const { return name; }
-private:
-    const char* name;
-};
 
-template<typename T>
-class ComponentProperty
-{
-public:
-    ComponentProperty() = default;
-    ComponentProperty(const char* name, T value) : name(name), value(value) {}
-    T& GetValue() const { return value; }
-    void SetValue(T& value) { this->value = value; }
+    float GetFloat(const char* property_name) { return float_properties[property_name]; }
+    int GetInt(const char* property_name) { return int_properties[property_name]; }
+    bool GetBool(const char* property_name) { return bool_properties[property_name]; }
+    std::string GetString(const char* property_name) { return string_properties[property_name]; }
     
 private:
     const char* name;
-    T value;
+public:
+    std::unordered_map<const char*, float> float_properties;
+    std::unordered_map<const char*, int> int_properties;
+    std::unordered_map<const char*, bool> bool_properties;
+    std::unordered_map<const char*, std::string> string_properties;
 };
 
 struct Transform : Component
 {
     Transform(const float x, const float y) : Component("Transform")
     {
-        this->x = ComponentProperty("X", x);
-        this->y = ComponentProperty("Y", y);
+        float_properties.insert({"X", x});
+        float_properties.insert({"Y", y});
     }
-    
-    ComponentProperty<float> x;
-    ComponentProperty<float> y;
 };
 
 struct MapCollider : Component
 {
     MapCollider(const float width, const float height) : Component("MapCollider")
     {
-        this->width = ComponentProperty("Width", width);
-        this->height = ComponentProperty("Height", height);
+        float_properties.insert({"Width", width});
+        float_properties.insert({"Height", height});
     }
-    
-    ComponentProperty<float> width;
-    ComponentProperty<float> height;
 };
 
 struct BoxCollider : Component
 {
     BoxCollider(const float width, const float height) : Component("BoxCollider")
     {
-        this->width = ComponentProperty("Width", width);
-        this->height = ComponentProperty("Height", height);
+        float_properties.insert({"Width", width});
+        float_properties.insert({"Height", height});
     }
-    
-    ComponentProperty<float> width;
-    ComponentProperty<float> height;
 };
 
 struct SpriteSheet : Component
 {
     SpriteSheet(const std::string& sprite_file_path, const float width, const float height) : Component("SpriteSheet")
     {
-        this->sprite_file_path = ComponentProperty("FilePath", sprite_file_path);
-        this->width = ComponentProperty("Width", width);
-        this->height = ComponentProperty("Height", height);
+        string_properties.insert({"FilePath", sprite_file_path});
+        float_properties.insert({"Width", width});
+        float_properties.insert({"Height", height});
     }
-
-    ComponentProperty<std::string> sprite_file_path;
-    ComponentProperty<float> width;
-    ComponentProperty<float> height;
 };
 
 struct Rigidbody : Component
 {
     Rigidbody(const float mass, const float drag) : Component("Rigidbody")
     {
-        this->mass = ComponentProperty("Mass", mass);
-        this->drag = ComponentProperty("Drag", drag);
+        float_properties.insert({"Mass", mass});
+        float_properties.insert({"Drag", drag});
     }
-    
-    ComponentProperty<float> mass;
-    ComponentProperty<float> drag;
 };
 
-struct Animation
+// TODO: When serializing animations, nest them per entity under Animator component (see example map1.json)
+struct Animation : Component
 {
-    Animation() = default;
-    Animation(const int sprite_sheet_fow, const int start_frame, const int end_frame, const int frame_time, const bool is_loop, const bool play_on_setup)
+    Animation(const int sprite_sheet_fow,
+        const int start_frame, const int end_frame, const int frame_time,
+        const bool is_loop, const bool play_on_setup) : Component("Animation")
     {
-        this->sprite_sheet_fow = ComponentProperty("SpriteSheetRow", sprite_sheet_fow);
-        this->start_frame = ComponentProperty("StartFrame", start_frame);
-        this->end_frame = ComponentProperty("EndFrame", end_frame); 
-        this->frame_time = ComponentProperty("FrameTime", frame_time);
-        this->is_loop = ComponentProperty("IsLoop", is_loop);
-        this->play_on_setup = ComponentProperty("PlayOnSetup", play_on_setup);
+        int_properties.insert({"SpriteSheetRow", sprite_sheet_fow});
+        int_properties.insert({"StartFrame", start_frame});
+        int_properties.insert({"EndFrame", end_frame}); 
+        int_properties.insert({"FrameTime", frame_time});
+        bool_properties.insert({"IsLoop", is_loop});
+        bool_properties.insert({"PlayOnSetup", play_on_setup});
     }
-    
-    ComponentProperty<int> sprite_sheet_fow;
-    ComponentProperty<int> start_frame;
-    ComponentProperty<int> end_frame;
-    ComponentProperty<int> frame_time;
-    ComponentProperty<bool> is_loop;
-    ComponentProperty<bool> play_on_setup;
-};
-
-struct Animator : Component
-{
-    Animator(const int sprite_sheet_fow, const int start_frame, const int end_frame, const int frame_time, const bool is_loop, const bool play_on_setup) : Component("Animator")
-    {
-        this->animation = ComponentProperty("Animation", 
-            new Animation(0,0,0,1000,true, true));
-    }
-    
-    ComponentProperty<Animation*> animation;
 };
