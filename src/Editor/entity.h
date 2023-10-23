@@ -20,17 +20,9 @@ public:
         components.push_back(component);
     }
 
-    template <typename T>
-    void RemoveComponent()
+    void RemoveComponent(const int index)
     {
-        for (auto it = components.begin(); it != components.end(); ++it)
-        {
-            if (dynamic_cast<T*>(*it) != nullptr)
-            {
-                components.erase(it);
-                break;
-            }
-        }
+        components.erase(components.begin() + index);
     }
 
     std::vector<Component*> GetComponents() const { return components; }

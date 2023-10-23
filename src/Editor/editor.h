@@ -95,8 +95,8 @@ private:
     void DrawEntityList();
     
     void DrawSelectedEntityComponentsList() const;
-    void DrawAddComponentDropdownAndAddButton() const;
-
+    void DrawAddComponentDropdownAndAddButton(Entity* selected_entity) const;
+    
     void DeleteBankTextures();
     void DeleteEntities();
 };

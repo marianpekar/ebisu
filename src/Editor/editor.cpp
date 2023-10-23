@@ -49,12 +49,12 @@ void Editor::LoadTexture(const char* path)
 void Editor::Draw()
 {
     DrawMainMenuBar();
-    
+
     if (openNewLevelPopup)
     {
         DrawNewLevelPopup();
     }
-    
+
     if (openSelectAssetPopup)
     {
         DrawSelectAssetPopup();
@@ -109,7 +109,7 @@ void Editor::DrawNewLevelPopup()
 
         for (int i = 0; i < tilemap_paths_count; ++i)
         {
-            if (ImGui::Button(std::format("...###{}", i).c_str()))
+            if (ImGui::Button(std::format("...##{}", i).c_str()))
             {
                 selected_tilemap_input_field_index = i;
                 openNewLevelPopup = false;
@@ -255,7 +255,7 @@ void Editor::CreateNewLevel()
     row_tile_count = new_level_row_tile_count;
     col_tile_count = new_level_col_tile_count;
     tile_size = static_cast<float>(new_level_tile_size);
-    
+
     for (const auto& path : new_level_tilemap_paths)
     {
         LoadTexture(path);
@@ -361,7 +361,7 @@ void Editor::DrawCanvasOptions()
     ImGui::SeparatorText("Misc");
     ImGui::Checkbox("Paint Collision Map", &paint_collision_map);
     ImGui::Checkbox("Lock Canvas Position", &lock_canvas_position);
-    
+
     ImGui::SeparatorText("Render After Entities");
     for (size_t i = 0; i < tile_maps.size(); i++)
     {
@@ -503,7 +503,7 @@ void Editor::DrawEntityList()
     ImGui::SeparatorText("Entities");
     for (size_t i = 0; i < entities.size(); i++)
     {
-        if (ImGui::Button(std::format("{}###{}", entities[i]->GetName(), i).c_str()))
+        if (ImGui::Button(std::format("{}##{}", entities[i]->GetName(), i).c_str()))
         {
             selected_entity_index = i;
         }
@@ -524,13 +524,13 @@ void Editor::DrawSelectedEntityComponentsList() const
         ImGui::End();
         return;
     }
-    
+
     Entity* entity = entities[selected_entity_index];
 
     ImGui::SeparatorText("General");
-    
-    ImGui::Checkbox(std::format("{}###{}", "Is Active", entity->GetName()).c_str(), &entity->is_active);
-    
+
+    ImGui::Checkbox(std::format("{}##{}", "Is Active", entity->GetName()).c_str(), &entity->is_active);
+
     const std::string current_name = entity->GetName();
     char new_name_buffer[256];
     strncpy_s(new_name_buffer, current_name.c_str(), sizeof(new_name_buffer));
@@ -539,44 +539,52 @@ void Editor::DrawSelectedEntityComponentsList() const
     {
         entity->SetName(new_name_buffer);
     }
-    
-    DrawAddComponentDropdownAndAddButton();
-    
+
+    DrawAddComponentDropdownAndAddButton(entity);
+
     ImGui::SeparatorText("Components");
-    for (auto& component : entity->GetComponents())
+    const auto components = entity->GetComponents();
+    for (size_t i = 0; i < components.size(); i++)
     {
-        if (ImGui::CollapsingHeader(std::format("{}###{}", component->GetName(), entity->GetName()).c_str()))
+        if (ImGui::CollapsingHeader(std::format("{}##{}", components[i]->GetName(),i).c_str()))
         {
+            ImGui::Indent();
             // TODO: Add tune section for each component
-            // TODO: Add remove component button
+
+            if (ImGui::Button(std::format("{}##{}", "Remove Component",i).c_str()))
+            {
+                entity->RemoveComponent(i);
+            }
+
+            ImGui::Unindent();
         }
     }
-    
     
     ImGui::End();
 }
 
-void Editor::DrawAddComponentDropdownAndAddButton() const
+void Editor::DrawAddComponentDropdownAndAddButton(Entity* selected_entity) const
 {
+    // Don't change the order of items! (see switch below)
     static const char* components[] = {
-        "Map Collider",
-        "Box Collider",
-        "Sprite Sheet",
+        "MapCollider",
+        "BoxCollider",
+        "SpriteSheet",
         "Rigidbody",
         "Animator",
     };
-    const char* current_item = components[0];
+    static int current_item_index = 0;
 
     ImGui::SeparatorText("Add Component");
-    
-    if (ImGui::BeginCombo("##components", current_item))
+
+    if (ImGui::BeginCombo("##components", components[current_item_index]))
     {
-        for (auto& component : components)
+        for (int i = 0; i < IM_ARRAYSIZE(components); i++)
         {
-            const bool is_selected = current_item == component;
-            if (ImGui::Selectable(component, is_selected))
+            const bool is_selected = (current_item_index == i);
+            if (ImGui::Selectable(components[i], is_selected))
             {
-                current_item = component;
+                current_item_index = i;
             }
             if (is_selected)
             {
@@ -585,12 +593,31 @@ void Editor::DrawAddComponentDropdownAndAddButton() const
         }
         ImGui::EndCombo();
     }
-    
+
     ImGui::SameLine();
 
     if (ImGui::Button("Add"))
     {
-        // TODO: Add component to selected entity
+        switch (current_item_index)
+        {
+        case 0:
+            selected_entity->AddComponent<MapCollider>(.0f,.0f);
+            break;
+        case 1:
+            selected_entity->AddComponent<BoxCollider>(.0f,.0f);
+            break;
+        case 2:
+            selected_entity->AddComponent<SpriteSheet>("",1.0f,1.0f);
+            break;
+        case 3:
+            selected_entity->AddComponent<Rigidbody>(1.0f,0.1f);            
+            break;
+        case 4:
+            selected_entity->AddComponent<Animator>(0,0,0,1000,true, true);
+            break;
+        default:
+            break;
+        }
     }
 }
 
