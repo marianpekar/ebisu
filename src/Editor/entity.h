@@ -20,9 +20,9 @@ public:
         components.push_back(component);
     }
 
-    void RemoveComponent(const int index)
+    void RemoveComponent(const size_t index)
     {
-        components.erase(components.begin() + index);
+        components.erase(components.begin() + static_cast<int>(index));
     }
 
     std::vector<Component*> GetComponents() const { return components; }

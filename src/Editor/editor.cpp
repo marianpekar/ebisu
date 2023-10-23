@@ -262,7 +262,7 @@ void Editor::CreateNewLevel()
         tile_maps.emplace_back();
     }
 
-    for (int j = 0; j < tile_maps.size(); j++)
+    for (int j = 0; j < static_cast<int>(tile_maps.size()); j++)
     {
         int initial_tile_index = j == 0 ? 0 : -1;
         for (int i = 0; i < row_tile_count * col_tile_count; i++)
@@ -295,8 +295,7 @@ void Editor::DrawSpriteBank(const size_t& tile_map_index)
                             static_cast<float>(bank_textures[tile_map_index]->height));
     const ImVec2 image_screen_pos = ImGui::GetCursorScreenPos();
 
-    ImGui::Image(reinterpret_cast<ImTextureID>(bank_textures[tile_map_index]->id), image_size);
-    // NOLINT(performance-no-int-to-ptr)
+    ImGui::Image(reinterpret_cast<ImTextureID>(bank_textures[tile_map_index]->id), image_size); // NOLINT(performance-no-int-to-ptr)
 
     const float tiles_in_col = static_cast<float>(bank_textures[tile_map_index]->height) / tile_size;
     HandleSpriteSelection(image_screen_pos, tiles_in_col, tile_map_index);
@@ -434,8 +433,7 @@ void Editor::DrawTilemapLayer(const ImVec2& canvas_screen_pos, ImVec2 current_cu
                                     ? grey_tint_color
                                     : neutral_tint_color;
 
-            ImGui::GetWindowDrawList()->AddImage(reinterpret_cast<ImTextureID>(bank_textures[i]->id),
-                                                 // NOLINT(performance-no-int-to-ptr)
+            ImGui::GetWindowDrawList()->AddImage(reinterpret_cast<ImTextureID>(bank_textures[i]->id), // NOLINT(performance-no-int-to-ptr)
                                                  current_cursor_pos,
                                                  ImVec2(current_cursor_pos.x + tile_size,
                                                         current_cursor_pos.y + tile_size),
@@ -520,7 +518,7 @@ void Editor::DrawSelectedEntityComponentsWindow() const
 {
     ImGui::Begin("Components");
 
-    if (selected_entity_index == -1)
+    if (selected_entity_index == static_cast<size_t>(-1))
     {
         ImGui::Text("No entity selected...");
         ImGui::End();
