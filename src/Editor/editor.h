@@ -60,8 +60,8 @@ private:
     void DrawMainMenuBar();
     void DrawNewLevelPopup();
 
-    bool openNewLevelPopup = false;
-    bool openSelectAssetPopup = false;
+    bool open_new_level_popup = false;
+    bool open_select_asset_popup = false;
     int selected_tilemap_input_field_index = 0;
 
     void InitTilemapPathsInputFields();
@@ -91,10 +91,10 @@ private:
 
     std::vector<Entity*> entities;
     size_t selected_entity_index = -1;
-
+    
     void DrawEntitiesWindow();
     static void DrawSelectedEntityGeneralProperties(Entity* entity);
-
+    
     void DrawSelectedEntityComponentsWindow() const;
     static void DrawSelectedEntityComponentProperties(Entity* entity);
     static void DrawAddComponentDropdownAndAddButton(Entity* selected_entity);

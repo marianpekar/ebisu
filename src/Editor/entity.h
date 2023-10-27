@@ -22,6 +22,7 @@ public:
 
     void RemoveComponent(const size_t index)
     {
+        delete components[index];
         components.erase(components.begin() + static_cast<int>(index));
     }
 

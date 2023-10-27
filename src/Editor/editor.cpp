@@ -50,12 +50,12 @@ void Editor::Draw()
 {
     DrawMainMenuBar();
 
-    if (openNewLevelPopup)
+    if (open_new_level_popup)
     {
         DrawNewLevelPopup();
     }
 
-    if (openSelectAssetPopup)
+    if (open_select_asset_popup)
     {
         DrawSelectAssetPopup();
     }
@@ -83,7 +83,7 @@ void Editor::DrawMainMenuBar()
         {
             if (ImGui::MenuItem("New Level"))
             {
-                openNewLevelPopup = true;
+                open_new_level_popup = true;
             }
             ImGui::EndMenu();
         }
@@ -94,7 +94,7 @@ void Editor::DrawMainMenuBar()
 void Editor::DrawNewLevelPopup()
 {
     ImGui::OpenPopup("Create New Level");
-    if (ImGui::BeginPopupModal("Create New Level", &openNewLevelPopup))
+    if (ImGui::BeginPopupModal("Create New Level", &open_new_level_popup))
     {
         ImGui::SliderInt("Rows", &new_level_row_tile_count, 1, 256);
         ImGui::SliderInt("Columns", &new_level_col_tile_count, 1, 256);
@@ -112,8 +112,8 @@ void Editor::DrawNewLevelPopup()
             if (ImGui::Button(std::format("...##{}", i).c_str()))
             {
                 selected_tilemap_input_field_index = i;
-                openNewLevelPopup = false;
-                openSelectAssetPopup = true;
+                open_new_level_popup = false;
+                open_select_asset_popup = true;
             }
             ImGui::SameLine();
             ImGui::InputText(std::format("Tilemap Path {}", i).c_str(), new_level_tilemap_paths[i], 256);
@@ -123,14 +123,14 @@ void Editor::DrawNewLevelPopup()
         {
             DisposeCurrentLevel();
             CreateNewLevel();
-            openNewLevelPopup = false;
+            open_new_level_popup = false;
         }
 
         ImGui::SameLine();
 
         if (ImGui::Button("Cancel"))
         {
-            openNewLevelPopup = false;
+            open_new_level_popup = false;
         }
 
         ImGui::EndPopup();
@@ -159,7 +159,7 @@ void Editor::DrawAddAndRemoveLayerButtons()
 void Editor::DrawSelectAssetPopup()
 {
     ImGui::OpenPopup("Select Asset");
-    if (ImGui::BeginPopupModal("Select Asset", &openSelectAssetPopup))
+    if (ImGui::BeginPopupModal("Select Asset", &open_select_asset_popup))
     {
         if (select_asset_popup_dir_level > 0)
         {
@@ -200,8 +200,8 @@ void Editor::DrawSelectAssetPopup()
                               selected_asset_path.c_str(),
                               source_length);
 
-                    openSelectAssetPopup = false;
-                    openNewLevelPopup = true;
+                    open_select_asset_popup = false;
+                    open_new_level_popup = true;
                 }
             }
             else if (is_directory(entry))
@@ -507,9 +507,25 @@ void Editor::DrawEntitiesWindow()
         {
             selected_entity_index = i;
         }
-    }
 
-    //TODO: UI element for removing entity (destroy incl. all its components)
+        ImGui::SameLine();
+
+        if (ImGui::Button(std::format("[X]##{}{}", entities[i]->GetName(), i).c_str()))
+        {
+            if (selected_entity_index == i)
+            {
+                selected_entity_index = -1;
+            }
+            
+            for (size_t j = 0; j < entities[i]->GetComponents().size(); j++)
+            {
+                entities[i]->RemoveComponent(j);
+            }
+
+            delete entities[i];
+            entities.erase(entities.begin() + static_cast<int>(i));
+        }
+    }
 
     ImGui::End();
 }
@@ -518,7 +534,7 @@ void Editor::DrawSelectedEntityComponentsWindow() const
 {
     ImGui::Begin("Components");
 
-    if (selected_entity_index == static_cast<size_t>(-1))
+    if (selected_entity_index == static_cast<size_t>(-1) || entities.empty())
     {
         ImGui::Text("No entity selected...");
         ImGui::End();
@@ -528,8 +544,8 @@ void Editor::DrawSelectedEntityComponentsWindow() const
     Entity* entity = entities[selected_entity_index];
     DrawSelectedEntityGeneralProperties(entity);
     DrawAddComponentDropdownAndAddButton(entity);
-    DrawSelectedEntityComponentProperties(entity);
-
+    DrawSelectedEntityComponentProperties(entity);        
+    
     ImGui::End();
 }
 
