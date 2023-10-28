@@ -218,6 +218,9 @@ void Game::Render() const
     map->RenderBackLayers();
     component_manager->Render();
     map->RenderFrontLayers();
+    
+    map->Debug_RenderPathNodes();
+    
     SDL_RenderPresent(renderer);
 }
 

@@ -31,7 +31,10 @@ private:
     class Camera* camera;
     int zero_index = 0;
     void Render(const Layer* layer) const;
+    
+    std::vector<class PathNode*> path_nodes;
 public:
+    
     Map(SDL_Renderer* renderer, int tile_size, int map_width, int map_height, Camera* camera, std::vector<int> collision_map);
     ~Map();
     void AddLayer(const char* sprite_filepath, const std::vector<int>& tile_map, bool is_front);
@@ -40,5 +43,9 @@ public:
     const int& GetTileSize() const { return tile_size; }
     const int& GetMapWidth() const { return map_width; }
     const int& GetMapHeight() const { return map_height; }
-    const int& GetCollisionAt(const int& i, const int& j) const;
+    const int& GetCollisionAt(const int& x, const int& y) const;
+    
+    std::vector<PathNode*> GetPathNodes() { return path_nodes; }
+    
+    void Debug_RenderPathNodes() const;
 };

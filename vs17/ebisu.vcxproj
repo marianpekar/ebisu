@@ -179,6 +179,7 @@ xcopy /y $(ProjectDir)..\libs\SDL2_image\lib\x64\SDL2_image.dll $(TargetDir)</Co
     <ClInclude Include="..\src\game.h" />
     <ClInclude Include="..\src\map.h" />
     <ClInclude Include="..\src\Math\vector2.h" />
+    <ClInclude Include="..\src\path_node.h" />
     <ClInclude Include="..\src\quadtree.h" />
     <ClInclude Include="..\src\texture_loader.h" />
   </ItemGroup>
