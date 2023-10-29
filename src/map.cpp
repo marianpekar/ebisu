@@ -24,7 +24,7 @@ Map::Map(SDL_Renderer* renderer, const int tile_size, const int map_width, const
                                            static_cast<float>(x * tile_size) + static_cast<float>(tile_size) / 2.0f,
                                            static_cast<float>(y * tile_size) + static_cast<float>(tile_size) / 2.0f,
                                            x, y);
-            
+
             path_nodes.emplace_back(path_node);
         }
     }
@@ -91,7 +91,7 @@ std::vector<PathNode*> Map::FindPath(const Vector2& start, const Vector2& end)
 
     PathNode* start_node = GetPathNodeFromWorldPosition(start);
     PathNode* end_node = GetPathNodeFromWorldPosition(end);
-    
+
     std::vector<PathNode*> open_set;
     std::unordered_set<PathNode*> closed_set;
     open_set.emplace_back(start_node);
@@ -101,16 +101,13 @@ std::vector<PathNode*> Map::FindPath(const Vector2& start, const Vector2& end)
         PathNode* current_node = open_set[0];
         for (size_t i = 1; i < open_set.size(); i++)
         {
-            if (open_set[i]->GetFCost() <= current_node->GetFCost())
+            if (open_set[i]->GetFCost() < current_node->GetFCost())
             {
-                if (open_set[i]->GetHCost() < current_node->GetHCost())
-                {
-                    current_node = open_set[i];
-                }
+                current_node = open_set[i];
             }
         }
 
-        open_set.erase(open_set.begin());
+        open_set.erase(std::remove(open_set.begin(), open_set.end(), current_node), open_set.end());
         closed_set.emplace(current_node);
 
         if (current_node == end_node)
@@ -139,16 +136,17 @@ std::vector<PathNode*> Map::FindPath(const Vector2& start, const Vector2& end)
             }
         }
     }
-    
+
     return path;
 }
+
 
 PathNode* Map::GetPathNodeFromWorldPosition(const Vector2& world_position) const
 {
     const int x = static_cast<int>(world_position.x / static_cast<float>(tile_size));
     const int y = static_cast<int>(world_position.y / static_cast<float>(tile_size));
     const size_t index = y * tiles_in_row + x;
-    
+
     return path_nodes[index];
 }
 
@@ -163,7 +161,7 @@ std::vector<PathNode*> Map::RetracePath(PathNode* start_node, PathNode* end_node
         current_node = current_node->GetParent();
     }
     path.emplace_back(start_node);
-    
+
     std::reverse(path.begin(), path.end());
 
     return path;
@@ -174,9 +172,7 @@ int Map::GetDistance(const PathNode& node_a, const PathNode& node_b)
     const int dist_x = abs(node_a.GetMapX() - node_b.GetMapX());
     const int dist_y = abs(node_a.GetMapY() - node_b.GetMapY());
 
-    return dist_x > dist_y ?
-        14 * dist_y + 10 * (dist_x - dist_y) :
-        14 * dist_x + 10 * (dist_y - dist_x);
+    return dist_x > dist_y ? 14 * dist_y + 10 * (dist_x - dist_y) : 14 * dist_x + 10 * (dist_y - dist_x);
 }
 
 void Map::Debug_RenderPathNodes() const
@@ -184,7 +180,7 @@ void Map::Debug_RenderPathNodes() const
     Uint8 r, g, b, a;
     SDL_GetRenderDrawColor(renderer, &r, &g, &b, &a);
     const int quarter_of_tile_size = tile_size / 4;
-    
+
     for (auto& node : path_nodes)
     {
         if (node->GetIsWalkable())
@@ -199,19 +195,23 @@ void Map::Debug_RenderPathNodes() const
         const auto* rect = new SDL_Rect{
             static_cast<int>(node->GetWorldPosition().x - camera->GetPosition().x) - quarter_of_tile_size / 2,
             static_cast<int>(node->GetWorldPosition().y - camera->GetPosition().y) - quarter_of_tile_size / 2,
-            quarter_of_tile_size, quarter_of_tile_size 
+            quarter_of_tile_size, quarter_of_tile_size
         };
         SDL_RenderDrawRect(renderer, rect);
     }
 
     SDL_SetRenderDrawColor(renderer, 0, 0, 255, 255);
-    for(size_t i = 0; i < debug_current_path.size() - 1; i++)
+    for (size_t i = 0; i < debug_current_path.size() - 1; i++)
     {
         SDL_RenderDrawLine(renderer,
-            debug_current_path[i]->GetWorldPosition().x - camera->GetPosition().x, debug_current_path[i]->GetWorldPosition().y - camera->GetPosition().y - quarter_of_tile_size / 2,
-            debug_current_path[i + 1]->GetWorldPosition().x - camera->GetPosition().x, debug_current_path[i + 1]->GetWorldPosition().y - camera->GetPosition().y - quarter_of_tile_size / 2);
+                           debug_current_path[i]->GetWorldPosition().x - camera->GetPosition().x,
+                           debug_current_path[i]->GetWorldPosition().y - camera->GetPosition().y - quarter_of_tile_size
+                           / 2,
+                           debug_current_path[i + 1]->GetWorldPosition().x - camera->GetPosition().x,
+                           debug_current_path[i + 1]->GetWorldPosition().y - camera->GetPosition().y -
+                           quarter_of_tile_size / 2);
     }
-    
+
     SDL_SetRenderDrawColor(renderer, r, g, b, a);
 }
 
