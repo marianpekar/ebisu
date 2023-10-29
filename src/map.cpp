@@ -103,7 +103,7 @@ std::vector<PathNode*> Map::FindPath(const Vector2& start, const Vector2& end)
         {
             if (open_set[i]->GetFCost() <= current_node->GetFCost())
             {
-                if (open_set[i]->GetHCost() < current_node->GetFCost())
+                if (open_set[i]->GetHCost() < current_node->GetHCost())
                 {
                     current_node = open_set[i];
                 }
@@ -124,7 +124,6 @@ std::vector<PathNode*> Map::FindPath(const Vector2& start, const Vector2& end)
         {
             if (!neighbour->GetIsWalkable() || closed_set.contains(neighbour))
                 continue;
-
 
             const int new_g_cost = current_node->GetGCost() + GetDistance(*current_node, *neighbour);
             if (new_g_cost < neighbour->GetGCost() || std::ranges::find(open_set, neighbour) == open_set.end())
