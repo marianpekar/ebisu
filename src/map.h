@@ -2,6 +2,8 @@
 
 #include <vector>
 
+#include "path_node.h"
+
 struct Layer
 {
     struct SDL_Texture* sprite = nullptr;
@@ -33,8 +35,10 @@ private:
     void Render(const Layer* layer) const;
     
     std::vector<class PathNode*> path_nodes;
+    static int GetDistance(const PathNode& node_a, const PathNode& node_b);
+    PathNode* GetPathNodeFromWorldPosition(const Vector2& world_position) const;
+    static std::vector<PathNode*> RetracePath(PathNode* start_node, PathNode* end_node);
 public:
-    
     Map(SDL_Renderer* renderer, int tile_size, int map_width, int map_height, Camera* camera, std::vector<int> collision_map);
     ~Map();
     void AddLayer(const char* sprite_filepath, const std::vector<int>& tile_map, bool is_front);
@@ -45,7 +49,8 @@ public:
     const int& GetMapHeight() const { return map_height; }
     const int& GetCollisionAt(const int& x, const int& y) const;
     
-    std::vector<PathNode*> GetPathNodes() { return path_nodes; }
+    std::vector<PathNode*> FindPath(const struct Vector2& start, const Vector2& end);
     
     void Debug_RenderPathNodes() const;
+    std::vector<PathNode*> debug_current_path;
 };

@@ -28,4 +28,5 @@ private:
     class Camera* camera = nullptr;
     struct SDL_Window* window = nullptr;
     struct SDL_Renderer* renderer = nullptr;
+    class EntityPool* entity_pool;
 };

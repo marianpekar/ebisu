@@ -28,8 +28,18 @@ public:
     std::vector<PathNode*>& GetNeighbours() { return neighbours; }
 
     bool GetIsWalkable() const { return is_walkable; }
-    const Vector2& GetWorldPosition() const { return world_position; } 
-    int GetHCost() const { return g_cost + h_cost; }
+    const Vector2& GetWorldPosition() const { return world_position; }
+
+    void SetGCost(const int cost) { g_cost = cost; }
+    void SetHCost(const int cost) { h_cost = cost; }
+
+    int GetGCost() const { return g_cost; }
+    int GetHCost() const { return h_cost; }
+    int GetFCost() const { return g_cost + h_cost; }
+    
     int GetMapX() const { return map_x; }
     int GetMapY() const { return map_y; }
+
+    void SetParent(PathNode* parent_node) { parent = parent_node; }
+    PathNode* GetParent() const { return parent; }
 };

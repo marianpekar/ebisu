@@ -8,6 +8,8 @@
 #include "ECS/collision_solver.h"
 #include "ECS/component_manager.h"
 #include "ECS/entity.h"
+#include "ECS/entity_pool.h"
+#include "ECS/Components/agent.h"
 #include "ECS/Components/animator.h"
 #include "ECS/Components/box_collider.h"
 #include "ECS/Components/map_collider.h"
@@ -52,6 +54,8 @@ int Game::Initialize(const char* title, const int width, const int height, const
     component_manager = new ComponentManager();
     collision_solver = new CollisionSolver(0, 0, static_cast<float>(width), static_cast<float>(height));
 
+    entity_pool = new EntityPool();
+    
     if (const bool success = LoadMap(width, height); !success)
     {
         std::cout << "[Game] Failed to load map" << std::endl;
@@ -75,8 +79,8 @@ bool Game::LoadMap(const int width, const int height)
         return false;
 
     json map_data = nlohmann::json::parse(map_file);
-
-    const auto player = new Entity("Player", component_manager);
+    
+    const auto player = new Entity(component_manager, entity_pool);
     const auto player_transform = player->AddComponent<Transform>();
 
     LoadTilemaps(map_data, player_transform, width, height);
@@ -84,18 +88,24 @@ bool Game::LoadMap(const int width, const int height)
     for (auto& entities = map_data["Entities"]; const json& entity : entities)
     {
         std::string entity_name = entity["Name"];
-
+        const int entity_id = entity["Id"];
+        
         if (entity_name == "Player")
         {
+            player->SetName(entity_name.c_str());
+            player->SetId(entity_id);
             LoadPlayer(entity, player, player_transform);
             continue;
         }
 
-        const auto game_entity = new Entity(entity_name.c_str(), component_manager);
+        const auto game_entity = new Entity(component_manager, entity_pool);
+        game_entity->SetName(entity_name.c_str());
+        game_entity->SetId(entity_id);
         const auto entity_transform = game_entity->AddComponent<Transform>();
+        entity_pool->AddEntity(game_entity);
         LoadEntity(entity, game_entity, entity_transform);
     }
-
+    
     return true;
 }
 
@@ -198,6 +208,14 @@ void Game::LoadComponents(const json& component, Entity* game_entity, Transform*
         const bool play_on_setup = animation["PlayOnSetup"];
         animator->AddAnimation(row, start_frame, end_frame, frame_time, is_loop, play_on_setup);
     }
+    if (component_type == "Agent")
+    {
+        const auto agent = game_entity->AddComponent<Agent>(map);
+        const int target_entity_name = component["TargetEntityId"];
+        const auto target_entity = entity_pool->GetEntityById(target_entity_name);
+        const auto target_transform = target_entity->GetComponent<Transform>();
+        agent->SetTarget(target_transform);
+    }
 }
 
 void Game::Setup() const
@@ -232,4 +250,5 @@ Game::~Game()
     delete map;
     delete camera;
     delete component_manager;
+    delete entity_pool;
 }

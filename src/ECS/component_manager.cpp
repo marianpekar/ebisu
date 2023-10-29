@@ -16,7 +16,6 @@ void ComponentManager::Setup() const
     }
 }
 
-
 void ComponentManager::Update(const float delta_time) const
 {
     for (auto& component : components)

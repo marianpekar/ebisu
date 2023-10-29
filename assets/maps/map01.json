@@ -66,9 +66,10 @@
     "Entities":
     [
        {
+            "Id": 0,
             "Name": "Player",
             "IsActive": true,
-            "Components": 
+            "Components":
             [
                 { 
                     "Type": "MapCollider",
@@ -99,6 +100,7 @@
             ]
        },
        {
+            "Id": 1,
             "Name": "Box",
             "IsActive": true,
             "Components": 
@@ -144,10 +146,15 @@
             ]
        },
        {
-        "Name": "Box2",
-        "IsActive": false,
-        "Components": 
+            "Id": 2,
+            "Name": "Box2",
+            "IsActive": true,
+            "Components": 
             [
+                {
+                    "Type":"Agent",
+                    "TargetEntityId": 1
+                },
                 { 
                     "Type": "MapCollider",
                     "Width": 64,

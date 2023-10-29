@@ -150,7 +150,7 @@ void PlayerController::Update(float delta_time)
             break;
     }
 
-    Vector2 move_force = move_dir * move_speed;
+    const Vector2 move_force = move_dir * move_speed;
     rigidbody->AddForce(move_force);
     
     while(!other_colliders.empty())

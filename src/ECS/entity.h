@@ -12,17 +12,22 @@ private:
     bool is_active;
     std::unordered_map<std::type_index, Component*> component_map;
     ComponentManager* component_manager;
-    const char* name;
+    int id = -1;
+    const char* name = nullptr;
 public:
-    Entity(const char* name, ComponentManager* component_manager) :
-        is_active(true), component_manager(component_manager), name(name) {}
+    Entity(ComponentManager* component_manager, class EntityPool* entity_pool);
     ~Entity() = default;
+    
     const char* GetName() const { return name; }
+    void SetName(const char* entity_name) { this->name = entity_name; }
+    
+    int GetId() const { return id; }
+    void SetId(const int entity_id) { this->id = entity_id; }
 
     const bool& IsActive() const { return is_active; }
-    void SetIsActive(const bool is_active) { this->is_active = is_active; }
+    void SetIsActive(const bool active) { this->is_active = active; }
     
-    template <typename T, typename... TArgs>
+    template <typename T, typename ... TArgs>
     T* AddComponent(TArgs&&... args)
     {
         T* component = new T(std::forward<TArgs>(args)...);  // NOLINT(clang-diagnostic-implicit-int-float-conversion)
