@@ -198,6 +198,7 @@ void Map::Debug_RenderPathNodes() const
             quarter_of_tile_size, quarter_of_tile_size
         };
         SDL_RenderDrawRect(renderer, rect);
+        delete rect;
     }
 
     SDL_SetRenderDrawColor(renderer, 0, 0, 255, 255);
