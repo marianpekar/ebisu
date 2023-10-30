@@ -50,7 +50,10 @@ public:
     const int& GetCollisionAt(const int& x, const int& y) const;
     
     std::vector<PathNode*> FindPath(const struct Vector2& start, const Vector2& end);
-    
+
+#if _DEBUG
     void Debug_RenderPathNodes() const;
+#endif
+    
     std::vector<PathNode*> debug_current_path;
 };

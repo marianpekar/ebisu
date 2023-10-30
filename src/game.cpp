@@ -22,7 +22,7 @@ const std::string project_path =
 #if _DEBUG
     "./../";
 #else
-    "./"
+    "./";
 #endif
 
 const std::string assets_path = project_path + "assets";
@@ -236,9 +236,10 @@ void Game::Render() const
     map->RenderBackLayers();
     component_manager->Render();
     map->RenderFrontLayers();
-    
+
+#if _DEBUG    
     map->Debug_RenderPathNodes();
-    
+#endif
     SDL_RenderPresent(renderer);
 }
 

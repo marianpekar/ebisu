@@ -15,7 +15,7 @@ const std::string project_path =
 #if _DEBUG
     "./../../";
 #else
-	"./"
+	"./";
 #endif
 
 const std::string assets_path = project_path + "assets";

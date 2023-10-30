@@ -175,47 +175,6 @@ int Map::GetDistance(const PathNode& node_a, const PathNode& node_b)
     return dist_x > dist_y ? 14 * dist_y + 10 * (dist_x - dist_y) : 14 * dist_x + 10 * (dist_y - dist_x);
 }
 
-void Map::Debug_RenderPathNodes() const
-{
-    Uint8 r, g, b, a;
-    SDL_GetRenderDrawColor(renderer, &r, &g, &b, &a);
-    const int quarter_of_tile_size = tile_size / 4;
-
-    for (auto& node : path_nodes)
-    {
-        if (node->GetIsWalkable())
-        {
-            SDL_SetRenderDrawColor(renderer, 0, 255, 0, 255);
-        }
-        else
-        {
-            SDL_SetRenderDrawColor(renderer, 255, 0, 0, 255);
-        }
-
-        const auto* rect = new SDL_Rect{
-            static_cast<int>(node->GetWorldPosition().x - camera->GetPosition().x) - quarter_of_tile_size / 2,
-            static_cast<int>(node->GetWorldPosition().y - camera->GetPosition().y) - quarter_of_tile_size / 2,
-            quarter_of_tile_size, quarter_of_tile_size
-        };
-        SDL_RenderDrawRect(renderer, rect);
-        delete rect;
-    }
-
-    SDL_SetRenderDrawColor(renderer, 0, 0, 255, 255);
-    for (size_t i = 0; i < debug_current_path.size() - 1; i++)
-    {
-        SDL_RenderDrawLine(renderer,
-                           debug_current_path[i]->GetWorldPosition().x - camera->GetPosition().x,
-                           debug_current_path[i]->GetWorldPosition().y - camera->GetPosition().y - quarter_of_tile_size
-                           / 2,
-                           debug_current_path[i + 1]->GetWorldPosition().x - camera->GetPosition().x,
-                           debug_current_path[i + 1]->GetWorldPosition().y - camera->GetPosition().y -
-                           quarter_of_tile_size / 2);
-    }
-
-    SDL_SetRenderDrawColor(renderer, r, g, b, a);
-}
-
 void Map::Render(const Layer* layer) const
 {
     for (int y = 0; y < tiles_in_col; y++)
@@ -280,3 +239,46 @@ Layer::~Layer()
 {
     SDL_DestroyTexture(sprite);
 }
+
+#if _DEBUG
+void Map::Debug_RenderPathNodes() const
+{
+    Uint8 r, g, b, a;
+    SDL_GetRenderDrawColor(renderer, &r, &g, &b, &a);
+    const int quarter_of_tile_size = tile_size / 4;
+
+    for (auto& node : path_nodes)
+    {
+        if (node->GetIsWalkable())
+        {
+            SDL_SetRenderDrawColor(renderer, 0, 255, 0, 255);
+        }
+        else
+        {
+            SDL_SetRenderDrawColor(renderer, 255, 0, 0, 255);
+        }
+
+        const auto* rect = new SDL_Rect{
+            static_cast<int>(node->GetWorldPosition().x - camera->GetPosition().x) - quarter_of_tile_size / 2,
+            static_cast<int>(node->GetWorldPosition().y - camera->GetPosition().y) - quarter_of_tile_size / 2,
+            quarter_of_tile_size, quarter_of_tile_size
+        };
+        SDL_RenderDrawRect(renderer, rect);
+        delete rect;
+    }
+
+    SDL_SetRenderDrawColor(renderer, 0, 0, 255, 255);
+    for (size_t i = 0; i < debug_current_path.size() - 1; i++)
+    {
+        SDL_RenderDrawLine(renderer,
+                           debug_current_path[i]->GetWorldPosition().x - camera->GetPosition().x,
+                           debug_current_path[i]->GetWorldPosition().y - camera->GetPosition().y - quarter_of_tile_size
+                           / 2,
+                           debug_current_path[i + 1]->GetWorldPosition().x - camera->GetPosition().x,
+                           debug_current_path[i + 1]->GetWorldPosition().y - camera->GetPosition().y -
+                           quarter_of_tile_size / 2);
+    }
+
+    SDL_SetRenderDrawColor(renderer, r, g, b, a);
+}
+#endif
