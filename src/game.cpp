@@ -210,7 +210,10 @@ void Game::LoadComponents(const json& component, Entity* game_entity, Transform*
     }
     if (component_type == "Agent")
     {
-        const auto agent = game_entity->AddComponent<Agent>(map);
+        const float speed = component["Speed"];
+        const float stopping_distance = component["StoppingDistance"];
+        const auto agent = game_entity->AddComponent<Agent>(map, speed, stopping_distance);
+        
         const int target_entity_name = component["TargetEntityId"];
         const auto target_entity = entity_pool->GetEntityById(target_entity_name);
         const auto target_transform = target_entity->GetComponent<Transform>();
