@@ -32,14 +32,16 @@ private:
     std::vector<int> collision_map;
     class Camera* camera;
     int zero_index = 0;
+    const Vector2 zero_vector = Vector2(0.f,0.f);
     void Render(const Layer* layer) const;
     
-    std::vector<class PathNode*> path_nodes;
+    std::vector<PathNode*> path_nodes;
     static int GetDistance(const PathNode& node_a, const PathNode& node_b);
     PathNode* GetPathNodeFromWorldPosition(const Vector2& world_position) const;
     static std::vector<PathNode*> RetracePath(PathNode* start_node, PathNode* end_node);
+    const Vector2& TryGetCameraPosition() const;
 public:
-    Map(SDL_Renderer* renderer, int tile_size, int map_width, int map_height, Camera* camera, std::vector<int> collision_map);
+    Map(SDL_Renderer* renderer, int tile_size, int map_width, int map_height, std::vector<int> collision_map);
     ~Map();
     void AddLayer(const char* sprite_filepath, const std::vector<int>& tile_map, bool is_front);
     void RenderBackLayers() const;
@@ -48,6 +50,7 @@ public:
     const int& GetMapWidth() const { return map_width; }
     const int& GetMapHeight() const { return map_height; }
     const int& GetCollisionAt(const int& x, const int& y) const;
+    void SetCamera(Camera* new_camera) { this->camera = new_camera; }
     
     std::vector<PathNode*> FindPath(const struct Vector2& start, const Vector2& end);
 

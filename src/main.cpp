@@ -4,7 +4,7 @@
 int main(int argc, char*[])
 {
     Game game;
-    if (game.Initialize("Ebisu", 1024, 768, false) != 0)
+    if (!game.Initialize("Ebisu", 1024, 768, false))
         return -1;
 
     game.Setup();

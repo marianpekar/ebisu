@@ -96,6 +96,7 @@
     <ClCompile Include="..\src\ECS\Components\agent.cpp" />
     <ClCompile Include="..\src\ECS\Components\animator.cpp" />
     <ClCompile Include="..\src\ECS\Components\box_collider.cpp" />
+    <ClCompile Include="..\src\ECS\Components\camera.cpp" />
     <ClCompile Include="..\src\ECS\Components\map_collider.cpp" />
     <ClCompile Include="..\src\ECS\Components\player_controller.cpp" />
     <ClCompile Include="..\src\ECS\Components\rigidbody.cpp" />
@@ -108,13 +109,11 @@
     <ClCompile Include="..\src\map.cpp" />
     <ClCompile Include="..\src\quadtree.cpp" />
     <ClCompile Include="..\src\texture_loader.cpp" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="..\src\camera.h" />
     <ClInclude Include="..\src\ECS\collision_solver.h" />
     <ClInclude Include="..\src\ECS\Components\agent.h" />
     <ClInclude Include="..\src\ECS\Components\animator.h" />
     <ClInclude Include="..\src\ECS\Components\box_collider.h" />
+    <ClInclude Include="..\src\ECS\Components\camera.h" />
     <ClInclude Include="..\src\ECS\Components\component.h" />
     <ClInclude Include="..\src\ECS\Components\map_collider.h" />
     <ClInclude Include="..\src\ECS\Components\player_controller.h" />

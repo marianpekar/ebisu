@@ -1,16 +1,15 @@
 #include "map.h"
 #include "texture_loader.h"
-#include "camera.h"
+#include "ECS/Components/camera.h"
 #include "path_node.h"
 #include <unordered_set>
 #include <SDL.h>
 
-Map::Map(SDL_Renderer* renderer, const int tile_size, const int map_width, const int map_height, Camera* camera,
-         std::vector<int> collision_map) :
+Map::Map(SDL_Renderer* renderer, const int tile_size, const int map_width, const int map_height, std::vector<int> collision_map) :
     renderer(renderer), tile_size(tile_size),
     map_width(map_width), map_height(map_height),
     tiles_in_row(map_width / tile_size), tiles_in_col(map_height / tile_size),
-    collision_map(std::move(collision_map)), camera(camera)
+    collision_map(std::move(collision_map)), camera(nullptr)
 {
     src_rect = new SDL_Rect();
     dst_rect = new SDL_Rect();
@@ -140,7 +139,6 @@ std::vector<PathNode*> Map::FindPath(const Vector2& start, const Vector2& end)
     return path;
 }
 
-
 PathNode* Map::GetPathNodeFromWorldPosition(const Vector2& world_position) const
 {
     const int x = static_cast<int>(world_position.x / static_cast<float>(tile_size));
@@ -167,6 +165,14 @@ std::vector<PathNode*> Map::RetracePath(PathNode* start_node, PathNode* end_node
     return path;
 }
 
+const Vector2& Map::TryGetCameraPosition() const
+{
+    if(camera == nullptr)
+        return zero_vector;
+
+    return camera->GetPosition();
+}
+
 int Map::GetDistance(const PathNode& node_a, const PathNode& node_b)
 {
     const int dist_x = abs(node_a.GetMapX() - node_b.GetMapX());
@@ -189,8 +195,8 @@ void Map::Render(const Layer* layer) const
             src_rect->w = tile_size;
             src_rect->h = tile_size;
 
-            dst_rect->x = x * tile_size - static_cast<int>(camera->GetPosition().x);
-            dst_rect->y = y * tile_size - static_cast<int>(camera->GetPosition().y);
+            dst_rect->x = x * tile_size - static_cast<int>(TryGetCameraPosition().x);
+            dst_rect->y = y * tile_size - static_cast<int>(TryGetCameraPosition().y);
             dst_rect->w = tile_size;
             dst_rect->h = tile_size;
 
@@ -259,8 +265,8 @@ void Map::Debug_RenderPathNodes() const
         }
 
         const auto* rect = new SDL_Rect{
-            static_cast<int>(node->GetWorldPosition().x - camera->GetPosition().x) - quarter_of_tile_size / 2,
-            static_cast<int>(node->GetWorldPosition().y - camera->GetPosition().y) - quarter_of_tile_size / 2,
+            static_cast<int>(node->GetWorldPosition().x - TryGetCameraPosition().x) - quarter_of_tile_size / 2,
+            static_cast<int>(node->GetWorldPosition().y - TryGetCameraPosition().y) - quarter_of_tile_size / 2,
             quarter_of_tile_size, quarter_of_tile_size
         };
         SDL_RenderDrawRect(renderer, rect);
@@ -271,11 +277,11 @@ void Map::Debug_RenderPathNodes() const
     for (size_t i = 0; i < debug_current_path.size() - 1; i++)
     {
         SDL_RenderDrawLine(renderer,
-                           debug_current_path[i]->GetWorldPosition().x - camera->GetPosition().x,
-                           debug_current_path[i]->GetWorldPosition().y - camera->GetPosition().y - quarter_of_tile_size
+                           debug_current_path[i]->GetWorldPosition().x - TryGetCameraPosition().x,
+                           debug_current_path[i]->GetWorldPosition().y - TryGetCameraPosition().y - quarter_of_tile_size
                            / 2,
-                           debug_current_path[i + 1]->GetWorldPosition().x - camera->GetPosition().x,
-                           debug_current_path[i + 1]->GetWorldPosition().y - camera->GetPosition().y -
+                           debug_current_path[i + 1]->GetWorldPosition().x - TryGetCameraPosition().x,
+                           debug_current_path[i + 1]->GetWorldPosition().y - TryGetCameraPosition().y -
                            quarter_of_tile_size / 2);
     }
 

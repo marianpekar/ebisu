@@ -1,9 +1,8 @@
-#include "game.h"
 #include <fstream>
 #include <iostream>
-#include <SDL.h>
 #include <string>
-#include "camera.h"
+#include <SDL.h>
+#include "game.h"
 #include "map.h"
 #include "ECS/collision_solver.h"
 #include "ECS/component_manager.h"
@@ -17,6 +16,7 @@
 #include "ECS/Components/rigidbody.h"
 #include "ECS/Components/sprite_sheet.h"
 #include "ECS/Components/transform.h"
+#include "ECS/Components/camera.h"
 
 const std::string project_path =
 #if _DEBUG
@@ -27,93 +27,74 @@ const std::string project_path =
 
 const std::string assets_path = project_path + "assets";
 
-int Game::Initialize(const char* title, const int width, const int height, const bool fullscreen)
+bool Game::Initialize(const char* title, const int screen_width, const int screen_height, const bool fullscreen)
+{
+    if (!InitializeSDL(title, screen_width, screen_height, fullscreen))
+        return false;
+
+    InitializeGameLogicEssentials(screen_width, screen_height);
+    
+    if (!LoadLevel())
+    {
+        std::cout << "[Game] Failed to load level" << std::endl;
+        return false;
+    }
+
+    is_running = true;
+    return true;
+}
+
+bool Game::InitializeSDL(const char* title, const int screen_width, const int screen_height, const bool fullscreen)
 {
     if (SDL_Init(SDL_INIT_EVERYTHING) != 0)
     {
         std::cout << "[Game] Failed to initialize SDL subsystems" << std::endl;
-        return -1;
+        return false;
     }
 
-    window = SDL_CreateWindow(title, SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, width, height, fullscreen ? SDL_WINDOW_FULLSCREEN : 0);
+    window = SDL_CreateWindow(title, SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, screen_width, screen_height, fullscreen ? SDL_WINDOW_FULLSCREEN : 0);
     if (!window)
     {
         std::cout << "[Game] Failed to create SDL Window" << std::endl;
-        return -1;
+        return false;
     }
 
     renderer = SDL_CreateRenderer(window, -1, 0);
     if (!window)
     {
         std::cout << "[Game] Failed to create SDL Renderer" << std::endl;
-        return -1;
+        return false;
     }
 
     SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
+    return true;
+}
 
+void Game::InitializeGameLogicEssentials(const int screen_width, const int screen_height)
+{
     component_manager = new ComponentManager();
-    collision_solver = new CollisionSolver(0, 0, static_cast<float>(width), static_cast<float>(height));
+    collision_solver = new CollisionSolver(0, 0, static_cast<float>(screen_width), static_cast<float>(screen_height));
 
+    main_camera = new Camera(screen_width, screen_height);
     entity_pool = new EntityPool();
-    
-    if (const bool success = LoadMap(width, height); !success)
-    {
-        std::cout << "[Game] Failed to load map" << std::endl;
-        return -1;
-    }
-
-    is_running = true;
-
-    return 0;
 }
 
-void Game::Quit()
+bool Game::LoadLevel()
 {
-    is_running = false;
-}
-
-bool Game::LoadMap(const int width, const int height)
-{
-    std::ifstream map_file("./../assets/maps/map01.json");
+    std::ifstream map_file(std::format("{}/maps/map01.json", assets_path));
     if (!map_file.is_open())
         return false;
 
-    json map_data = nlohmann::json::parse(map_file);
-    
-    const auto player = new Entity(component_manager, entity_pool);
-    const auto player_transform = player->AddComponent<Transform>();
-
-    LoadTilemaps(map_data, player_transform, width, height);
-
-    for (auto& entities = map_data["Entities"]; const json& entity : entities)
-    {
-        std::string entity_name = entity["Name"];
-        const int entity_id = entity["Id"];
-        
-        if (entity_name == "Player")
-        {
-            player->SetName(entity_name.c_str());
-            player->SetId(entity_id);
-            LoadPlayer(entity, player, player_transform);
-            continue;
-        }
-
-        const auto game_entity = new Entity(component_manager, entity_pool);
-        game_entity->SetName(entity_name.c_str());
-        game_entity->SetId(entity_id);
-        const auto entity_transform = game_entity->AddComponent<Transform>();
-        entity_pool->AddEntity(game_entity);
-        LoadEntity(entity, game_entity, entity_transform);
-    }
+    const json map_data = nlohmann::json::parse(map_file);
+    LoadMap(map_data);
+    LoadEntities(map_data);
     
     return true;
 }
 
-void Game::LoadTilemaps(const json& map_data, Transform* transform, const int width, const int height)
+void Game::LoadMap(const json& map_data)
 {
     const std::vector<int> collision_map = map_data["CollisionMap"];
-
-    camera = new Camera(transform, width, height);
 
     const int tile_size = map_data["TileSize"];
     const int rows = map_data["Rows"];
@@ -121,8 +102,9 @@ void Game::LoadTilemaps(const json& map_data, Transform* transform, const int wi
     const int map_width = tile_size * cols;
     const int map_height = tile_size * rows;
 
-    map = new Map(renderer, tile_size, map_width, map_height, camera, collision_map);
-
+    map = new Map(renderer, tile_size, map_width, map_height, collision_map);
+    map->SetCamera(main_camera);
+    
     const auto& layers = map_data["TileMapLayers"];
     for (const auto& layer : layers)
     {
@@ -133,30 +115,27 @@ void Game::LoadTilemaps(const json& map_data, Transform* transform, const int wi
     }
 }
 
-void Game::LoadPlayer(const json& entity, Entity* player, Transform* transform)
+void Game::LoadEntities(const json& map_data)
 {
-    const bool is_active = entity["IsActive"];
-    player->SetIsActive(is_active);
-
-    const auto& components = entity["Components"];
-    for (const auto& component : components)
+    for (auto& entities = map_data["Entities"]; const json& entity : entities)
     {
-        LoadComponents(component, player, transform);
-    }
+        std::string entity_name = entity["Name"];
+        const int entity_id = entity["Id"];
 
-    player->AddComponent<Animator>();
-    player->AddComponent<PlayerController>(this);
-}
+        const auto game_entity = new Entity(component_manager, entity_pool);
+        game_entity->SetName(entity_name.c_str());
+        game_entity->SetId(entity_id);
+        const auto entity_transform = game_entity->AddComponent<Transform>();
+        entity_pool->AddEntity(game_entity);
+        
+        const bool is_active = entity["IsActive"];
+        game_entity->SetIsActive(is_active);
 
-void Game::LoadEntity(const json& entity, Entity* game_entity, Transform* transform)
-{
-    const bool is_active = entity["IsActive"];
-    game_entity->SetIsActive(is_active);
-
-    const auto& components = entity["Components"];
-    for (const auto& component : components)
-    {
-        LoadComponents(component, game_entity, transform);
+        const auto& components = entity["Components"];
+        for (const auto& component : components)
+        {
+            LoadComponents(component, game_entity, entity_transform);
+        }
     }
 }
 
@@ -180,7 +159,8 @@ void Game::LoadComponents(const json& component, Entity* game_entity, Transform*
         int width = component["Width"];
         int height = component["Height"];
         std::string file_path = component["FilePath"];
-        game_entity->AddComponent<SpriteSheet>(std::format("{}/{}", assets_path, file_path), renderer, width, height, camera);
+        const auto sprite_sheet = game_entity->AddComponent<SpriteSheet>(std::format("{}/{}", assets_path, file_path), renderer, width, height);
+        sprite_sheet->SetCamera(main_camera);
     }
     if (component_type == "Rigidbody")
     {
@@ -199,14 +179,18 @@ void Game::LoadComponents(const json& component, Entity* game_entity, Transform*
     if (component_type == "Animator")
     {
         const auto animator = game_entity->AddComponent<Animator>();
-        const auto& animation = component["Animation"];
-        const int row = animation["SpriteSheetRow"];
-        const int start_frame = animation["StartFrame"];
-        const int end_frame = animation["EndFrame"];
-        const int frame_time = animation["FrameTime"];
-        const bool is_loop = animation["IsLoop"];
-        const bool play_on_setup = animation["PlayOnSetup"];
-        animator->AddAnimation(row, start_frame, end_frame, frame_time, is_loop, play_on_setup);
+
+        if (component.contains("Animation"))
+        {
+            const auto& animation = component["Animation"];
+            const int row = animation["SpriteSheetRow"];
+            const int start_frame = animation["StartFrame"];
+            const int end_frame = animation["EndFrame"];
+            const int frame_time = animation["FrameTime"];
+            const bool is_loop = animation["IsLoop"];
+            const bool play_on_setup = animation["PlayOnSetup"];
+            animator->AddAnimation(row, start_frame, end_frame, frame_time, is_loop, play_on_setup);         
+        }
     }
     if (component_type == "Agent")
     {
@@ -219,6 +203,14 @@ void Game::LoadComponents(const json& component, Entity* game_entity, Transform*
         const auto target_transform = target_entity->GetComponent<Transform>();
         agent->SetTarget(target_transform);
     }
+    if (component_type == "PlayerController")
+    {
+        game_entity->AddComponent<PlayerController>(this);
+    }
+    if (component_type == "MainCamera")
+    {
+        game_entity->AssignComponent<Camera>(main_camera);
+    }
 }
 
 void Game::Setup() const
@@ -230,7 +222,6 @@ void Game::Update(const float delta_time) const
 {
     component_manager->Update(delta_time);
     collision_solver->Update();
-    camera->Update();
 }
 
 void Game::Render() const
@@ -246,13 +237,17 @@ void Game::Render() const
     SDL_RenderPresent(renderer);
 }
 
+void Game::Quit()
+{
+    is_running = false;
+}
+
 Game::~Game()
 {
     SDL_DestroyWindow(window);
     SDL_DestroyRenderer(renderer);
     SDL_Quit();
     delete map;
-    delete camera;
     delete component_manager;
     delete entity_pool;
 }

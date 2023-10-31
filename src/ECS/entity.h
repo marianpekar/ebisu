@@ -38,6 +38,14 @@ public:
     }
 
     template <typename T>
+    void AssignComponent(T* component)
+    {
+        component->owner = this;
+        component_map[typeid(T)] = component;
+        component_manager->AddComponent(component);
+    }
+
+    template <typename T>
     T* GetComponent()
     {
         if (auto component = component_map[typeid(T)]; component != nullptr)

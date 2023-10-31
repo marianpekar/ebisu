@@ -1,5 +1,5 @@
 #include "../../texture_loader.h"
-#include "../../camera.h"
+#include "camera.h"
 #include "../entity.h"
 #include "transform.h"
 #include "sprite.h"
@@ -8,6 +8,7 @@
 void Sprite::Setup()
 {
     transform = owner->GetComponent<Transform>();
+    camera = owner->GetComponent<Camera>();
     sprite = TextureLoader::LoadTexture(filepath, renderer, width, height);
     dst_rect = new SDL_Rect();
 }
