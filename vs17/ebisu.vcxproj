@@ -125,6 +125,7 @@
     <ClInclude Include="..\src\ECS\component_manager.h" />
     <ClInclude Include="..\src\ECS\entity_pool.h" />
     <ClInclude Include="..\src\game.h" />
+    <ClInclude Include="..\src\heap.h" />
     <ClInclude Include="..\src\map.h" />
     <ClInclude Include="..\src\Math\vector2.h" />
     <ClInclude Include="..\src\path_node.h" />

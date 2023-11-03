@@ -4,6 +4,7 @@
 #include "path_node.h"
 #include <unordered_set>
 #include <SDL.h>
+#include "heap.h"
 
 Map::Map(SDL_Renderer* renderer, const int tile_size, const int map_width, const int map_height, std::vector<int> collision_map) :
     renderer(renderer), tile_size(tile_size),
@@ -91,22 +92,13 @@ std::vector<PathNode*> Map::FindPath(const Vector2& start, const Vector2& end)
     PathNode* start_node = GetPathNodeFromWorldPosition(start);
     PathNode* end_node = GetPathNodeFromWorldPosition(end);
 
-    std::vector<PathNode*> open_set;
+    Heap<PathNode*> open_set(map_width * map_height);
     std::unordered_set<PathNode*> closed_set;
-    open_set.emplace_back(start_node);
+    open_set.Add(start_node);
 
-    while (!open_set.empty())
+    while (open_set.Count() > 0)
     {
-        PathNode* current_node = open_set[0];
-        for (size_t i = 1; i < open_set.size(); i++)
-        {
-            if (open_set[i]->GetFCost() < current_node->GetFCost())
-            {
-                current_node = open_set[i];
-            }
-        }
-
-        open_set.erase(std::remove(open_set.begin(), open_set.end(), current_node), open_set.end());
+        PathNode* current_node = open_set.RemoveFirst();
         closed_set.emplace(current_node);
 
         if (current_node == end_node)
@@ -122,15 +114,15 @@ std::vector<PathNode*> Map::FindPath(const Vector2& start, const Vector2& end)
                 continue;
 
             const int new_g_cost = current_node->GetGCost() + GetDistance(*current_node, *neighbour);
-            if (new_g_cost < neighbour->GetGCost() || std::ranges::find(open_set, neighbour) == open_set.end())
+            if (new_g_cost < neighbour->GetGCost() || !open_set.Contains(neighbour))
             {
                 neighbour->SetGCost(new_g_cost);
                 neighbour->SetHCost(GetDistance(*neighbour, *end_node));
                 neighbour->SetParent(current_node);
 
-                if (std::ranges::find(open_set, neighbour) == open_set.end())
+                if (!open_set.Contains(neighbour))
                 {
-                    open_set.emplace_back(neighbour);
+                    open_set.Add(neighbour);
                 }
             }
         }
