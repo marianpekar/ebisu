@@ -10,9 +10,9 @@ private:
     int current_item_count;
 
 public:
-    Heap(int maxHeapSize)
+    Heap(int max_heap_size)
     {
-        items.resize(maxHeapSize);
+        items.resize(max_heap_size);
         current_item_count = 0;
     }
 
