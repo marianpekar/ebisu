@@ -215,8 +215,20 @@ void Game::LoadComponents(const json& component, Entity* game_entity, Transform*
         {
             animator = game_entity->AddComponent<Animator>();
         }
+
+        const float idle_to_move_anim_threshold = component["IdleToMoveAnimationThreshold"];
         
-        game_entity->AddComponent<CharacterAnimator>(animator);
+        const int move_anim_start_frame = component["MoveAnimationStartFrame"];
+        const int move_anim_end_frame = component["MoveAnimationEndFrame"];
+        const float move_anim_frame_time = component["MoveAnimationFrameTime"];
+        
+        const int idle_anim_start_frame = component["IdleAnimationStartFrame"];
+        const int idle_anim_end_frame = component["IdleAnimationEndFrame"];
+        const float idle_anim_frame_time = component["IdleAnimationFrameTime"];
+        
+        game_entity->AddComponent<CharacterAnimator>(animator, idle_to_move_anim_threshold,
+            move_anim_start_frame, move_anim_end_frame, move_anim_frame_time,
+            idle_anim_start_frame, idle_anim_end_frame, idle_anim_frame_time);
     }
     if (component_type == "MainCamera")
     {

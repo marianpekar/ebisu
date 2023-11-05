@@ -98,7 +98,14 @@
                     "Y": 25.0
                 },
                 {
-                    "Type": "CharacterAnimator"
+                    "Type": "CharacterAnimator",
+                    "IdleAnimationFrameTime": 600,
+                    "IdleAnimationStartFrame": 0,
+                    "IdleAnimationEndFrame": 1,
+                    "IdleToMoveAnimationThreshold": 100,
+                    "MoveAnimationFrameTime": 500,
+                    "MoveAnimationStartFrame": 2,
+                    "MoveAnimationEndFrame": 5
                 },
                 {
                     "Type": "PlayerController"
@@ -193,7 +200,14 @@
                     "Y": 480.0
                 },
                 {
-                    "Type":"CharacterAnimator"
+                    "Type": "CharacterAnimator",
+                    "IdleAnimationFrameTime": 600,
+                    "IdleAnimationStartFrame": 0,
+                    "IdleAnimationEndFrame": 1,
+                    "IdleToMoveAnimationThreshold": 100,
+                    "MoveAnimationFrameTime": 500,
+                    "MoveAnimationStartFrame": 2,
+                    "MoveAnimationEndFrame": 5
                 }
             ]
         }
