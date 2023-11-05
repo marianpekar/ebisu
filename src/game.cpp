@@ -10,6 +10,7 @@
 #include "ECS/entity_pool.h"
 #include "ECS/Components/agent.h"
 #include "ECS/Components/animator.h"
+#include "ECS/Components/character_animator.h"
 #include "ECS/Components/box_collider.h"
 #include "ECS/Components/map_collider.h"
 #include "ECS/Components/player_controller.h"
@@ -206,6 +207,16 @@ void Game::LoadComponents(const json& component, Entity* game_entity, Transform*
     if (component_type == "PlayerController")
     {
         game_entity->AddComponent<PlayerController>(this);
+    }
+    if (component_type == "CharacterAnimator")
+    {
+        auto animator = game_entity->GetComponent<Animator>();
+        if (animator == nullptr)
+        {
+            animator = game_entity->AddComponent<Animator>();
+        }
+        
+        game_entity->AddComponent<CharacterAnimator>(animator);
     }
     if (component_type == "MainCamera")
     {

@@ -98,7 +98,7 @@
                     "Y": 25.0
                 },
                 {
-                    "Type": "Animator"
+                    "Type": "CharacterAnimator"
                 },
                 {
                     "Type": "PlayerController"
