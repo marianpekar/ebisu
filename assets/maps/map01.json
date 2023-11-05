@@ -178,7 +178,7 @@
                 },
                 {
                     "Type": "SpriteSheet",
-                    "FilePath": "images/spritesheets/test_4_frames_transparent_spritesheet_64x256.png",
+                    "FilePath": "images/spritesheets/test_8dir_movement_animation_spritesheet_512x512.png",
                     "Width": 64,
                     "Height": 64
                 },
@@ -193,16 +193,7 @@
                     "Y": 480.0
                 },
                 {
-                    "Type":"Animator",
-                    "Animation": 
-                    {
-                        "SpriteSheetRow": 0,
-                        "StartFrame": 0,
-                        "EndFrame": 3,
-                        "FrameTime": 1000,
-                        "IsLoop": true,
-                        "PlayOnSetup": true
-                    }
+                    "Type":"CharacterAnimator"
                 }
             ]
         }
