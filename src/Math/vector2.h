@@ -68,6 +68,12 @@ struct Vector2
         y /= scalar;
         return *this;
     }
+    
+    bool operator==(const Vector2& other) const
+    {
+        constexpr float epsilon = 1e-6f;
+        return std::abs(this->x - other.x) < epsilon && std::abs(this->y - other.y) < epsilon;
+    }
 
     float Dot(const Vector2& other) const 
     {

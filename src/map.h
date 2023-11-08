@@ -39,6 +39,7 @@ private:
     static int GetDistance(const PathNode& node_a, const PathNode& node_b);
     PathNode* GetPathNodeFromWorldPosition(const Vector2& world_position) const;
     static std::vector<PathNode*> RetracePath(PathNode* start_node, PathNode* end_node);
+    static std::vector<PathNode*> SimplifyPath(std::vector<PathNode*> path);
     const Vector2& TryGetCameraPosition() const;
 public:
     Map(SDL_Renderer* renderer, int tile_size, int map_width, int map_height, std::vector<int> collision_map);

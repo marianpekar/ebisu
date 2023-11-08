@@ -150,11 +150,30 @@ std::vector<PathNode*> Map::RetracePath(PathNode* start_node, PathNode* end_node
         path.emplace_back(current_node);
         current_node = current_node->GetParent();
     }
+    
+    path = SimplifyPath(path);
+    
     path.emplace_back(start_node);
-
+    
     std::reverse(path.begin(), path.end());
-
+    
     return path;
+}
+
+std::vector<PathNode*> Map::SimplifyPath(std::vector<PathNode*> path)
+{
+    std::vector<PathNode*> simplified_path;
+    auto current_direction = Vector2(0.f,0.f);
+    for (size_t i = 1; i < path.size(); i++)
+    {
+        auto next_direction = Vector2(path[i-1]->GetWorldPosition().x - path[i]->GetWorldPosition().x,path[i-1]->GetWorldPosition().y - path[i]->GetWorldPosition().y);
+        if (next_direction != current_direction)
+        {
+            simplified_path.emplace_back(path[i]);
+        }
+        current_direction = next_direction;
+    }
+    return simplified_path;
 }
 
 const Vector2& Map::TryGetCameraPosition() const
