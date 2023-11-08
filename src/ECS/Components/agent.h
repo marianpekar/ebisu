@@ -11,7 +11,6 @@ private:
     class Transform* transform = nullptr;
     class Rigidbody* rigidbody = nullptr;
     Transform* target_transform = nullptr;
-    std::vector<Vector2> current_path;
     float speed;
     float stopping_distance;
 public:

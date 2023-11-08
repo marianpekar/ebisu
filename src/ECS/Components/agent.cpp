@@ -1,8 +1,12 @@
 #include "agent.h"
+
+#include <__msvc_filebuf.hpp>
+
 #include "rigidbody.h"
 #include "transform.h"
 #include "../entity.h"
 #include "../../map.h"
+#include "../../path.h"
 
 void Agent::Setup()
 {
@@ -12,14 +16,17 @@ void Agent::Setup()
 
 void Agent::Update(float delta_time)
 {
-    current_path = map->FindPath(transform->GetPosition(), target_transform->GetPosition());
-
+    const std::vector<Vector2> current_path = map->FindPath(transform->GetPosition(), target_transform->GetPosition());
+    const auto smooth_path = new Path(current_path, transform->GetPosition(), 5.0f);
+    
     if ((target_transform->GetPosition() - transform->GetPosition()).Length() <= stopping_distance ||
         current_path.size() < 2)
         return;
 
-    const Vector2 direction = (current_path[1] - current_path[0]).Normalized();
+    const Vector2 direction = (smooth_path->path[1] - smooth_path->path[0]).Normalized();
     rigidbody->AddForce(direction * speed);
+
+    delete smooth_path;
 }
 
 void Agent::SetTarget(Transform* target)

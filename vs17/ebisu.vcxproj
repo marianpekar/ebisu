@@ -133,6 +133,9 @@
     <ClInclude Include="..\src\path_node.h" />
     <ClInclude Include="..\src\quadtree.h" />
     <ClInclude Include="..\src\texture_loader.h" />
+    <ClInclude Include="..\src\line.h" />
+    <ClCompile Include="..\src\line.cpp" />
+    <ClInclude Include="..\src\path.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
