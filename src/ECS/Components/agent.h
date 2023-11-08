@@ -1,8 +1,7 @@
 #pragma once
 
 #include <vector>
-
-#include "../../path_node.h"
+#include "../../Math/vector2.h"
 #include "component.h"
 
 class Agent final : public Component
@@ -12,7 +11,7 @@ private:
     class Transform* transform = nullptr;
     class Rigidbody* rigidbody = nullptr;
     Transform* target_transform = nullptr;
-    std::vector<PathNode*> current_path;
+    std::vector<Vector2> current_path;
     float speed;
     float stopping_distance;
 public:

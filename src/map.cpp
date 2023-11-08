@@ -85,9 +85,9 @@ void Map::RenderFrontLayers() const
     }
 }
 
-std::vector<PathNode*> Map::FindPath(const Vector2& start, const Vector2& end)
+std::vector<Vector2> Map::FindPath(const Vector2& start, const Vector2& end)
 {
-    std::vector<PathNode*> path;
+    std::vector<Vector2> path;
 
     PathNode* start_node = GetPathNodeFromWorldPosition(start);
     PathNode* end_node = GetPathNodeFromWorldPosition(end);
@@ -140,33 +140,33 @@ PathNode* Map::GetPathNodeFromWorldPosition(const Vector2& world_position) const
     return path_nodes[index];
 }
 
-std::vector<PathNode*> Map::RetracePath(PathNode* start_node, PathNode* end_node)
+std::vector<Vector2> Map::RetracePath(const PathNode* start_node, PathNode* end_node)
 {
-    std::vector<PathNode*> path;
+    std::vector<Vector2> path;
     PathNode* current_node = end_node;
 
     while (current_node != start_node)
     {
-        path.emplace_back(current_node);
+        path.emplace_back(current_node->GetWorldPosition());
         current_node = current_node->GetParent();
     }
     
     path = SimplifyPath(path);
     
-    path.emplace_back(start_node);
+    path.emplace_back(start_node->GetWorldPosition());
     
     std::reverse(path.begin(), path.end());
     
     return path;
 }
 
-std::vector<PathNode*> Map::SimplifyPath(std::vector<PathNode*> path)
+std::vector<Vector2> Map::SimplifyPath(std::vector<Vector2> path)
 {
-    std::vector<PathNode*> simplified_path;
+    std::vector<Vector2> simplified_path;
     auto current_direction = Vector2(0.f,0.f);
     for (size_t i = 1; i < path.size(); i++)
     {
-        auto next_direction = Vector2(path[i-1]->GetWorldPosition().x - path[i]->GetWorldPosition().x,path[i-1]->GetWorldPosition().y - path[i]->GetWorldPosition().y);
+        auto next_direction = Vector2(path[i-1].x - path[i].x,path[i-1].y - path[i].y);
         if (next_direction != current_direction)
         {
             simplified_path.emplace_back(path[i]);
@@ -288,11 +288,11 @@ void Map::Debug_RenderPathNodes() const
     for (size_t i = 0; i < debug_current_path.size() - 1; i++)
     {
         SDL_RenderDrawLine(renderer,
-                           debug_current_path[i]->GetWorldPosition().x - TryGetCameraPosition().x,
-                           debug_current_path[i]->GetWorldPosition().y - TryGetCameraPosition().y - quarter_of_tile_size
+                           debug_current_path[i].x - TryGetCameraPosition().x,
+                           debug_current_path[i].y - TryGetCameraPosition().y - quarter_of_tile_size
                            / 2,
-                           debug_current_path[i + 1]->GetWorldPosition().x - TryGetCameraPosition().x,
-                           debug_current_path[i + 1]->GetWorldPosition().y - TryGetCameraPosition().y -
+                           debug_current_path[i + 1].x - TryGetCameraPosition().x,
+                           debug_current_path[i + 1].y - TryGetCameraPosition().y -
                            quarter_of_tile_size / 2);
     }
 

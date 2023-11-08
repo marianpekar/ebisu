@@ -18,7 +18,7 @@ void Agent::Update(float delta_time)
         current_path.size() < 2)
         return;
 
-    const Vector2 direction = (current_path[1]->GetWorldPosition() - current_path[0]->GetWorldPosition()).Normalized();
+    const Vector2 direction = (current_path[1] - current_path[0]).Normalized();
     rigidbody->AddForce(direction * speed);
 }
 

@@ -38,8 +38,8 @@ private:
     std::vector<PathNode*> path_nodes;
     static int GetDistance(const PathNode& node_a, const PathNode& node_b);
     PathNode* GetPathNodeFromWorldPosition(const Vector2& world_position) const;
-    static std::vector<PathNode*> RetracePath(PathNode* start_node, PathNode* end_node);
-    static std::vector<PathNode*> SimplifyPath(std::vector<PathNode*> path);
+    static std::vector<Vector2> SimplifyPath(std::vector<Vector2> path);
+    static std::vector<Vector2> RetracePath(const PathNode* start_node, PathNode* end_node);
     const Vector2& TryGetCameraPosition() const;
 public:
     Map(SDL_Renderer* renderer, int tile_size, int map_width, int map_height, std::vector<int> collision_map);
@@ -53,11 +53,11 @@ public:
     const int& GetCollisionAt(const int& x, const int& y) const;
     void SetCamera(Camera* new_camera) { this->camera = new_camera; }
     
-    std::vector<PathNode*> FindPath(const struct Vector2& start, const Vector2& end);
+    std::vector<Vector2> FindPath(const struct Vector2& start, const Vector2& end);
 
 #if _DEBUG
     void Debug_RenderPathNodes() const;
 #endif
     
-    std::vector<PathNode*> debug_current_path;
+    std::vector<Vector2> debug_current_path;
 };
