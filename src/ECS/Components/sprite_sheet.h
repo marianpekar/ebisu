@@ -10,7 +10,6 @@ class SpriteSheet final : public Component
 private:
     int sheet_width, sheet_height, rect_width, rect_height;
     struct SDL_Texture* sprite = nullptr;
-    struct SDL_Renderer* renderer;
     struct SDL_Rect* src_rect = nullptr;
     SDL_Rect* dst_rect = nullptr;
     std::string filepath;
@@ -19,7 +18,7 @@ private:
     const Vector2 zero_vector = Vector2(0.f,0.f);
     const Vector2& TryGetCameraPosition() const;
 public:
-    SpriteSheet(std::string filepath, SDL_Renderer* renderer, int rect_width, int rect_height);
+    SpriteSheet(std::string filepath, int rect_width, int rect_height);
     ~SpriteSheet() override;
     void Setup() override;
     void Render() override;

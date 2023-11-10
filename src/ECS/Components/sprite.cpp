@@ -4,12 +4,13 @@
 #include "transform.h"
 #include "sprite.h"
 #include <SDL.h>
+#include "../../renderer.h"
 
 void Sprite::Setup()
 {
     transform = owner->GetComponent<Transform>();
     camera = owner->GetComponent<Camera>();
-    sprite = TextureLoader::LoadTexture(filepath, renderer, width, height);
+    sprite = TextureLoader::LoadTexture(filepath, Renderer::GetRenderer(), width, height);
     dst_rect = new SDL_Rect();
 }
 
@@ -20,5 +21,5 @@ void Sprite::Render()
     dst_rect->w = width * static_cast<int>(transform->GetScale().x);
     dst_rect->h = height * static_cast<int>(transform->GetScale().y);
 
-    SDL_RenderCopy(renderer, sprite, nullptr, dst_rect);
+    SDL_RenderCopy(Renderer::GetRenderer(), sprite, nullptr, dst_rect);
 }

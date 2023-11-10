@@ -5,10 +5,10 @@
 #include <unordered_set>
 #include <SDL.h>
 #include "heap.h"
+#include "renderer.h"
 
-Map::Map(SDL_Renderer* renderer, const int tile_size, const int map_width, const int map_height, std::vector<int> collision_map) :
-    renderer(renderer), tile_size(tile_size),
-    map_width(map_width), map_height(map_height),
+Map::Map(const int tile_size, const int map_width, const int map_height, std::vector<int> collision_map) :
+    tile_size(tile_size), map_width(map_width), map_height(map_height),
     tiles_in_row(map_width / tile_size), tiles_in_col(map_height / tile_size),
     collision_map(std::move(collision_map)), camera(nullptr)
 {
@@ -55,7 +55,7 @@ Map::Map(SDL_Renderer* renderer, const int tile_size, const int map_width, const
 void Map::AddLayer(const char* sprite_filepath, const std::vector<int>& tile_map, bool is_front)
 {
     int image_width, image_height;
-    SDL_Texture* sprite = TextureLoader::LoadTexture(sprite_filepath, renderer, image_width, image_height);
+    SDL_Texture* sprite = TextureLoader::LoadTexture(sprite_filepath, Renderer::GetRenderer(), image_width, image_height);
     const int spritesheet_cols = image_width / tile_size;
     auto layer = new Layer(sprite, tile_map, tiles_in_row, spritesheet_cols);
 
@@ -85,7 +85,7 @@ void Map::RenderFrontLayers() const
     }
 }
 
-std::vector<Vector2> Map::FindPath(const Vector2& start, const Vector2& end)
+std::vector<Vector2> Map::FindPath(const Vector2& start, const Vector2& end) const
 {
     std::vector<Vector2> path;
 
@@ -210,7 +210,7 @@ void Map::Render(const Layer* layer) const
             dst_rect->w = tile_size;
             dst_rect->h = tile_size;
 
-            SDL_RenderCopy(renderer, layer->sprite, src_rect, dst_rect);
+            SDL_RenderCopy(Renderer::GetRenderer(), layer->sprite, src_rect, dst_rect);
         }
     }
 }
@@ -260,7 +260,7 @@ Layer::~Layer()
 void Map::Debug_RenderPathNodes() const
 {
     Uint8 r, g, b, a;
-    SDL_GetRenderDrawColor(renderer, &r, &g, &b, &a);
+    SDL_GetRenderDrawColor(Renderer::GetRenderer(), &r, &g, &b, &a);
     
     static const int quarter_of_tile_size = tile_size / 4;
 
@@ -268,11 +268,11 @@ void Map::Debug_RenderPathNodes() const
     {
         if (node->GetIsWalkable())
         {
-            SDL_SetRenderDrawColor(renderer, 0, 255, 0, 255);
+            SDL_SetRenderDrawColor(Renderer::GetRenderer(), 0, 255, 0, 255);
         }
         else
         {
-            SDL_SetRenderDrawColor(renderer, 255, 0, 0, 255);
+            SDL_SetRenderDrawColor(Renderer::GetRenderer(), 255, 0, 0, 255);
         }
 
         const auto* rect = new SDL_Rect{
@@ -280,10 +280,10 @@ void Map::Debug_RenderPathNodes() const
             static_cast<int>(node->GetWorldPosition().y - TryGetCameraPosition().y) - quarter_of_tile_size / 2,
             quarter_of_tile_size, quarter_of_tile_size
         };
-        SDL_RenderDrawRect(renderer, rect);
+        SDL_RenderDrawRect(Renderer::GetRenderer(), rect);
         delete rect;
     }
     
-    SDL_SetRenderDrawColor(renderer, r, g, b, a);
+    SDL_SetRenderDrawColor(Renderer::GetRenderer(), r, g, b, a);
 }
 #endif

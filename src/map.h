@@ -21,7 +21,6 @@ class Map
 private:
     struct SDL_Rect* src_rect = nullptr;
     SDL_Rect* dst_rect = nullptr;
-    struct SDL_Renderer* renderer;
     int tile_size;
     int map_width;
     int map_height;
@@ -42,7 +41,7 @@ private:
     static std::vector<Vector2> RetracePath(const PathNode* start_node, PathNode* end_node);
     const Vector2& TryGetCameraPosition() const;
 public:
-    Map(SDL_Renderer* renderer, int tile_size, int map_width, int map_height, std::vector<int> collision_map);
+    Map(int tile_size, int map_width, int map_height, std::vector<int> collision_map);
     ~Map();
     void AddLayer(const char* sprite_filepath, const std::vector<int>& tile_map, bool is_front);
     void RenderBackLayers() const;
@@ -53,7 +52,7 @@ public:
     const int& GetCollisionAt(const int& x, const int& y) const;
     void SetCamera(Camera* new_camera) { this->camera = new_camera; }
     
-    std::vector<Vector2> FindPath(const struct Vector2& start, const Vector2& end);
+    std::vector<Vector2> FindPath(const struct Vector2& start, const Vector2& end) const;
 
 #if _DEBUG
     void Debug_RenderPathNodes() const;

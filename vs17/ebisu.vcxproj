@@ -109,6 +109,7 @@
     <ClCompile Include="..\src\main.cpp" />
     <ClCompile Include="..\src\map.cpp" />
     <ClCompile Include="..\src\quadtree.cpp" />
+    <ClCompile Include="..\src\renderer.cpp" />
     <ClCompile Include="..\src\texture_loader.cpp" />
     <ClInclude Include="..\src\ECS\collision_solver.h" />
     <ClInclude Include="..\src\ECS\Components\agent.h" />
@@ -132,6 +133,7 @@
     <ClInclude Include="..\src\Math\vector2.h" />
     <ClInclude Include="..\src\path_node.h" />
     <ClInclude Include="..\src\quadtree.h" />
+    <ClInclude Include="..\src\renderer.h" />
     <ClInclude Include="..\src\texture_loader.h" />
     <ClInclude Include="..\src\line.h" />
     <ClCompile Include="..\src\line.cpp" />

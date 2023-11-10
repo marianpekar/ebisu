@@ -4,10 +4,10 @@
 #include "transform.h"
 #include "sprite_sheet.h"
 #include <SDL.h>
+#include "../../renderer.h"
 
-SpriteSheet::SpriteSheet(std::string filepath, SDL_Renderer* renderer, const int rect_width, const int rect_height) :
-    sheet_width(0), sheet_height(0), rect_width(rect_width), rect_height(rect_height),
-    renderer(renderer), filepath(std::move(filepath))
+SpriteSheet::SpriteSheet(std::string filepath, const int rect_width, const int rect_height) :
+    sheet_width(0), sheet_height(0), rect_width(rect_width), rect_height(rect_height), filepath(std::move(filepath))
 {
     src_rect = new SDL_Rect();
     dst_rect = new SDL_Rect();
@@ -21,7 +21,7 @@ SpriteSheet::SpriteSheet(std::string filepath, SDL_Renderer* renderer, const int
 void SpriteSheet::Setup()
 {
     transform = owner->GetComponent<Transform>();
-    sprite = TextureLoader::LoadTexture(filepath.c_str(), renderer, sheet_width, sheet_height);
+    sprite = TextureLoader::LoadTexture(filepath.c_str(), Renderer::GetRenderer(), sheet_width, sheet_height);
 }
 
 void SpriteSheet::Render()
@@ -31,7 +31,7 @@ void SpriteSheet::Render()
     dst_rect->w = rect_width * static_cast<int>(transform->GetScale().x);
     dst_rect->h = rect_height * static_cast<int>(transform->GetScale().y);
 
-    SDL_RenderCopy(renderer, sprite, src_rect, dst_rect);
+    SDL_RenderCopy(Renderer::GetRenderer(), sprite, src_rect, dst_rect);
 }
 
 const Vector2& SpriteSheet::TryGetCameraPosition() const

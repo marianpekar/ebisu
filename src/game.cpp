@@ -4,6 +4,7 @@
 #include <SDL.h>
 #include "game.h"
 #include "map.h"
+#include "renderer.h"
 #include "ECS/collision_solver.h"
 #include "ECS/component_manager.h"
 #include "ECS/entity.h"
@@ -30,7 +31,7 @@ const std::string assets_path = project_path + "assets";
 
 bool Game::Initialize(const char* title, const int screen_width, const int screen_height, const bool fullscreen)
 {
-    if (!InitializeSDL(title, screen_width, screen_height, fullscreen))
+    if (!Renderer::Initialize(title, screen_width, screen_height, fullscreen))
         return false;
 
     InitializeGameLogicEssentials(screen_width, screen_height);
@@ -42,32 +43,6 @@ bool Game::Initialize(const char* title, const int screen_width, const int scree
     }
 
     is_running = true;
-    return true;
-}
-
-bool Game::InitializeSDL(const char* title, const int screen_width, const int screen_height, const bool fullscreen)
-{
-    if (SDL_Init(SDL_INIT_EVERYTHING) != 0)
-    {
-        std::cout << "[Game] Failed to initialize SDL subsystems" << std::endl;
-        return false;
-    }
-
-    window = SDL_CreateWindow(title, SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, screen_width, screen_height, fullscreen ? SDL_WINDOW_FULLSCREEN : 0);
-    if (!window)
-    {
-        std::cout << "[Game] Failed to create SDL Window" << std::endl;
-        return false;
-    }
-
-    renderer = SDL_CreateRenderer(window, -1, 0);
-    if (!window)
-    {
-        std::cout << "[Game] Failed to create SDL Renderer" << std::endl;
-        return false;
-    }
-
-    SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
     return true;
 }
 
@@ -103,7 +78,7 @@ void Game::LoadMap(const json& map_data)
     const int map_width = tile_size * cols;
     const int map_height = tile_size * rows;
 
-    map = new Map(renderer, tile_size, map_width, map_height, collision_map);
+    map = new Map(tile_size, map_width, map_height, collision_map);
     map->SetCamera(main_camera);
     
     const auto& layers = map_data["TileMapLayers"];
@@ -160,7 +135,7 @@ void Game::LoadComponents(const json& component, Entity* game_entity, Transform*
         int width = component["Width"];
         int height = component["Height"];
         std::string file_path = component["FilePath"];
-        const auto sprite_sheet = game_entity->AddComponent<SpriteSheet>(std::format("{}/{}", assets_path, file_path), renderer, width, height);
+        const auto sprite_sheet = game_entity->AddComponent<SpriteSheet>(std::format("{}/{}", assets_path, file_path), width, height);
         sprite_sheet->SetCamera(main_camera);
     }
     if (component_type == "Rigidbody")
@@ -249,7 +224,7 @@ void Game::Update(const float delta_time) const
 
 void Game::Render() const
 {
-    SDL_RenderClear(renderer);
+    SDL_RenderClear(Renderer::GetRenderer());
     map->RenderBackLayers();
     component_manager->Render();
     map->RenderFrontLayers();
@@ -257,7 +232,7 @@ void Game::Render() const
 #if _DEBUG    
     map->Debug_RenderPathNodes();
 #endif
-    SDL_RenderPresent(renderer);
+    SDL_RenderPresent(Renderer::GetRenderer());
 }
 
 void Game::Quit()
@@ -267,8 +242,7 @@ void Game::Quit()
 
 Game::~Game()
 {
-    SDL_DestroyWindow(window);
-    SDL_DestroyRenderer(renderer);
+    Renderer::Destroy();
     SDL_Quit();
     delete map;
     delete component_manager;
