@@ -1,7 +1,4 @@
 #include "agent.h"
-
-#include <__msvc_filebuf.hpp>
-
 #include "rigidbody.h"
 #include "transform.h"
 #include "../entity.h"
