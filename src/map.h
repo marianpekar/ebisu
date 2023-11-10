@@ -58,6 +58,4 @@ public:
 #if _DEBUG
     void Debug_RenderPathNodes() const;
 #endif
-    
-    std::vector<Vector2> debug_current_path;
 };

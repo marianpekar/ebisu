@@ -103,8 +103,7 @@ std::vector<Vector2> Map::FindPath(const Vector2& start, const Vector2& end)
 
         if (current_node == end_node)
         {
-            debug_current_path = RetracePath(start_node, end_node);
-            path = debug_current_path; // TODO: This is temporary, later debug draw path in Agent instead
+            path = RetracePath(start_node, end_node);
             return path;
         }
 
@@ -262,7 +261,8 @@ void Map::Debug_RenderPathNodes() const
 {
     Uint8 r, g, b, a;
     SDL_GetRenderDrawColor(renderer, &r, &g, &b, &a);
-    const int quarter_of_tile_size = tile_size / 4;
+    
+    static const int quarter_of_tile_size = tile_size / 4;
 
     for (auto& node : path_nodes)
     {
@@ -283,19 +283,7 @@ void Map::Debug_RenderPathNodes() const
         SDL_RenderDrawRect(renderer, rect);
         delete rect;
     }
-
-    SDL_SetRenderDrawColor(renderer, 0, 0, 255, 255);
-    for (size_t i = 0; i < debug_current_path.size() - 1; i++)
-    {
-        SDL_RenderDrawLine(renderer,
-                           debug_current_path[i].x - TryGetCameraPosition().x,
-                           debug_current_path[i].y - TryGetCameraPosition().y - quarter_of_tile_size
-                           / 2,
-                           debug_current_path[i + 1].x - TryGetCameraPosition().x,
-                           debug_current_path[i + 1].y - TryGetCameraPosition().y -
-                           quarter_of_tile_size / 2);
-    }
-
+    
     SDL_SetRenderDrawColor(renderer, r, g, b, a);
 }
 #endif
