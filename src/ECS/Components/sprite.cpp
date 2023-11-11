@@ -14,8 +14,8 @@ void Sprite::Setup()
 
 void Sprite::Render()
 {
-    dst_rect->x = static_cast<int>(transform->GetPosition().x - Renderer::TryGetCameraPosition()->x);
-    dst_rect->y = static_cast<int>(transform->GetPosition().y - Renderer::TryGetCameraPosition()->x);
+    dst_rect->x = static_cast<int>(transform->GetPosition().x - Renderer::TryGetCameraPosition().x);
+    dst_rect->y = static_cast<int>(transform->GetPosition().y - Renderer::TryGetCameraPosition().x);
     dst_rect->w = width * static_cast<int>(transform->GetScale().x);
     dst_rect->h = height * static_cast<int>(transform->GetScale().y);
 

@@ -223,6 +223,7 @@ void Game::Update(const float delta_time) const
 void Game::Render() const
 {
     SDL_RenderClear(Renderer::GetRenderer());
+    
     map->RenderBackLayers();
     component_manager->Render();
     map->RenderFrontLayers();
@@ -230,6 +231,7 @@ void Game::Render() const
 #if _DEBUG    
     map->Debug_RenderPathNodes();
 #endif
+    
     SDL_RenderPresent(Renderer::GetRenderer());
 }
 

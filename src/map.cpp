@@ -196,8 +196,8 @@ void Map::Render(const Layer* layer) const
             src_rect->w = tile_size;
             src_rect->h = tile_size;
 
-            dst_rect->x = x * tile_size - static_cast<int>(Renderer::TryGetCameraPosition()->x);
-            dst_rect->y = y * tile_size - static_cast<int>(Renderer::TryGetCameraPosition()->y);
+            dst_rect->x = x * tile_size - static_cast<int>(Renderer::TryGetCameraPosition().x);
+            dst_rect->y = y * tile_size - static_cast<int>(Renderer::TryGetCameraPosition().y);
             dst_rect->w = tile_size;
             dst_rect->h = tile_size;
 
@@ -267,8 +267,8 @@ void Map::Debug_RenderPathNodes() const
         }
 
         const auto* rect = new SDL_Rect{
-            static_cast<int>(node->GetWorldPosition().x - Renderer::TryGetCameraPosition()->x) - quarter_of_tile_size / 2,
-            static_cast<int>(node->GetWorldPosition().y - Renderer::TryGetCameraPosition()->y) - quarter_of_tile_size / 2,
+            static_cast<int>(node->GetWorldPosition().x - Renderer::TryGetCameraPosition().x) - quarter_of_tile_size / 2,
+            static_cast<int>(node->GetWorldPosition().y - Renderer::TryGetCameraPosition().y) - quarter_of_tile_size / 2,
             quarter_of_tile_size, quarter_of_tile_size
         };
         SDL_RenderDrawRect(Renderer::GetRenderer(), rect);

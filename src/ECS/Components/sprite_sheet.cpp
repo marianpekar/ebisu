@@ -25,8 +25,8 @@ void SpriteSheet::Setup()
 
 void SpriteSheet::Render()
 {
-    dst_rect->x = static_cast<int>(transform->GetPosition().x - Renderer::TryGetCameraPosition()->x);
-    dst_rect->y = static_cast<int>(transform->GetPosition().y - Renderer::TryGetCameraPosition()->y);
+    dst_rect->x = static_cast<int>(transform->GetPosition().x - Renderer::TryGetCameraPosition().x);
+    dst_rect->y = static_cast<int>(transform->GetPosition().y - Renderer::TryGetCameraPosition().y);
     dst_rect->w = rect_width * static_cast<int>(transform->GetScale().x);
     dst_rect->h = rect_height * static_cast<int>(transform->GetScale().y);
 

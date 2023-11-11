@@ -25,5 +25,11 @@ void Rigidbody::Update(float delta_time)
     transform->SetPosition(target_pos);
     force *= drag;
 }
+
+void Rigidbody::ResetForces()
+{
+    force = Vector2::Zero();
+}
+
 void Rigidbody::SetMass(const float& new_mass) { this->mass = new_mass; }
 void Rigidbody::SetDrag(const float& new_drag) { this->drag = 1.0f - new_drag; }

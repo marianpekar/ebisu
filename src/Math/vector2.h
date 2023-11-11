@@ -94,4 +94,10 @@ struct Vector2
         
         return { 0.0f, 0.0f };
     }
+    
+    static const Vector2& Zero()
+    {
+        static const Vector2 zero_vector{ 0.0f, 0.0f };
+        return zero_vector;
+    }
 };
