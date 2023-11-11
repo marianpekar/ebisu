@@ -16,7 +16,6 @@ public:
     void Render() const;
     const bool& IsRunning() const { return is_running; }
     void Quit();
-
 private:
     bool LoadLevel();
     void LoadMap(const json& map_data);
@@ -27,5 +26,4 @@ private:
     class CollisionSolver* collision_solver = nullptr;
     class Map* map = nullptr;
     class EntityPool* entity_pool;
-    class Camera* main_camera;
 };

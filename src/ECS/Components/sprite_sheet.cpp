@@ -1,5 +1,4 @@
 #include "../../texture_loader.h"
-#include "camera.h"
 #include "../entity.h"
 #include "transform.h"
 #include "sprite_sheet.h"
@@ -26,20 +25,12 @@ void SpriteSheet::Setup()
 
 void SpriteSheet::Render()
 {
-    dst_rect->x = static_cast<int>(transform->GetPosition().x - TryGetCameraPosition().x);
-    dst_rect->y = static_cast<int>(transform->GetPosition().y - TryGetCameraPosition().y);
+    dst_rect->x = static_cast<int>(transform->GetPosition().x - Renderer::TryGetCameraPosition()->x);
+    dst_rect->y = static_cast<int>(transform->GetPosition().y - Renderer::TryGetCameraPosition()->y);
     dst_rect->w = rect_width * static_cast<int>(transform->GetScale().x);
     dst_rect->h = rect_height * static_cast<int>(transform->GetScale().y);
 
     SDL_RenderCopy(Renderer::GetRenderer(), sprite, src_rect, dst_rect);
-}
-
-const Vector2& SpriteSheet::TryGetCameraPosition() const
-{
-    if(camera == nullptr)
-        return zero_vector;
-
-    return camera->GetPosition();
 }
 
 void SpriteSheet::SelectSprite(const int& row, const int& col) const

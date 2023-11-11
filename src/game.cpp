@@ -51,7 +51,7 @@ void Game::InitializeGameLogicEssentials(const int screen_width, const int scree
     component_manager = new ComponentManager();
     collision_solver = new CollisionSolver(0, 0, static_cast<float>(screen_width), static_cast<float>(screen_height));
 
-    main_camera = new Camera(screen_width, screen_height);
+    Renderer::SetMainCamera(new Camera(screen_width, screen_height));
     entity_pool = new EntityPool();
 }
 
@@ -79,7 +79,6 @@ void Game::LoadMap(const json& map_data)
     const int map_height = tile_size * rows;
 
     map = new Map(tile_size, map_width, map_height, collision_map);
-    map->SetCamera(main_camera);
     
     const auto& layers = map_data["TileMapLayers"];
     for (const auto& layer : layers)
@@ -135,8 +134,7 @@ void Game::LoadComponents(const json& component, Entity* game_entity, Transform*
         int width = component["Width"];
         int height = component["Height"];
         std::string file_path = component["FilePath"];
-        const auto sprite_sheet = game_entity->AddComponent<SpriteSheet>(std::format("{}/{}", assets_path, file_path), width, height);
-        sprite_sheet->SetCamera(main_camera);
+        game_entity->AddComponent<SpriteSheet>(std::format("{}/{}", assets_path, file_path), width, height);
     }
     if (component_type == "Rigidbody")
     {
@@ -207,7 +205,7 @@ void Game::LoadComponents(const json& component, Entity* game_entity, Transform*
     }
     if (component_type == "MainCamera")
     {
-        game_entity->AssignComponent<Camera>(main_camera);
+        game_entity->AssignComponent<Camera>(Renderer::GetMainCamera());
     }
 }
 

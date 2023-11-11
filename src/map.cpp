@@ -1,16 +1,15 @@
-#include "map.h"
-#include "texture_loader.h"
-#include "ECS/Components/camera.h"
-#include "path_node.h"
 #include <unordered_set>
 #include <SDL.h>
+#include "map.h"
+#include "texture_loader.h"
+#include "path_node.h"
 #include "heap.h"
 #include "renderer.h"
 
 Map::Map(const int tile_size, const int map_width, const int map_height, std::vector<int> collision_map) :
     tile_size(tile_size), map_width(map_width), map_height(map_height),
     tiles_in_row(map_width / tile_size), tiles_in_col(map_height / tile_size),
-    collision_map(std::move(collision_map)), camera(nullptr)
+    collision_map(std::move(collision_map))
 {
     src_rect = new SDL_Rect();
     dst_rect = new SDL_Rect();
@@ -175,14 +174,6 @@ std::vector<Vector2> Map::SimplifyPath(std::vector<Vector2> path)
     return simplified_path;
 }
 
-const Vector2& Map::TryGetCameraPosition() const
-{
-    if(camera == nullptr)
-        return zero_vector;
-
-    return camera->GetPosition();
-}
-
 int Map::GetDistance(const PathNode& node_a, const PathNode& node_b)
 {
     const int dist_x = abs(node_a.GetMapX() - node_b.GetMapX());
@@ -205,8 +196,8 @@ void Map::Render(const Layer* layer) const
             src_rect->w = tile_size;
             src_rect->h = tile_size;
 
-            dst_rect->x = x * tile_size - static_cast<int>(TryGetCameraPosition().x);
-            dst_rect->y = y * tile_size - static_cast<int>(TryGetCameraPosition().y);
+            dst_rect->x = x * tile_size - static_cast<int>(Renderer::TryGetCameraPosition()->x);
+            dst_rect->y = y * tile_size - static_cast<int>(Renderer::TryGetCameraPosition()->y);
             dst_rect->w = tile_size;
             dst_rect->h = tile_size;
 
@@ -276,8 +267,8 @@ void Map::Debug_RenderPathNodes() const
         }
 
         const auto* rect = new SDL_Rect{
-            static_cast<int>(node->GetWorldPosition().x - TryGetCameraPosition().x) - quarter_of_tile_size / 2,
-            static_cast<int>(node->GetWorldPosition().y - TryGetCameraPosition().y) - quarter_of_tile_size / 2,
+            static_cast<int>(node->GetWorldPosition().x - Renderer::TryGetCameraPosition()->x) - quarter_of_tile_size / 2,
+            static_cast<int>(node->GetWorldPosition().y - Renderer::TryGetCameraPosition()->y) - quarter_of_tile_size / 2,
             quarter_of_tile_size, quarter_of_tile_size
         };
         SDL_RenderDrawRect(Renderer::GetRenderer(), rect);

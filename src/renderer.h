@@ -4,8 +4,13 @@ class Renderer
 {
     static struct SDL_Renderer* s_renderer;
     static struct SDL_Window* s_window;
+    static class Camera* s_main_camera;
+    static struct Vector2* s_zero_vector;
 public:
-    static bool Initialize(const char* title, const int screen_width, const int screen_height, const bool fullscreen);
+    static bool Initialize(const char* title, int screen_width, int screen_height, bool fullscreen);
     static SDL_Renderer* GetRenderer();
     static void Destroy();
+    static void SetMainCamera(Camera* camera);
+    static Camera* GetMainCamera();
+    static const Vector2* TryGetCameraPosition();
 };

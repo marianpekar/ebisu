@@ -2,9 +2,13 @@
 
 #include <iostream>
 #include <SDL.h>
+#include "ECS/Components/camera.h"
+#include "Math/vector2.h"
 
 SDL_Renderer* Renderer::s_renderer;
 SDL_Window* Renderer::s_window;
+Camera* Renderer::s_main_camera;
+Vector2* Renderer::s_zero_vector = new Vector2(0,0);
 
 bool Renderer::Initialize(const char* title, const int screen_width, const int screen_height, const bool fullscreen)
 {
@@ -39,6 +43,25 @@ SDL_Renderer* Renderer::GetRenderer()
 
 void Renderer::Destroy()
 {
-    SDL_DestroyRenderer(s_renderer);
     SDL_DestroyWindow(s_window);
+    SDL_DestroyRenderer(s_renderer);
+    delete s_zero_vector;
+}
+
+void Renderer::SetMainCamera(Camera* camera)
+{
+    s_main_camera = camera;
+}
+
+Camera* Renderer::GetMainCamera()
+{
+    return s_main_camera;
+}
+
+const Vector2* Renderer::TryGetCameraPosition()
+{
+    if(s_main_camera == nullptr)
+        return s_zero_vector;
+
+    return &s_main_camera->GetPosition();
 }
