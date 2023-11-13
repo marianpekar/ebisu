@@ -63,3 +63,15 @@ const Vector2& Renderer::TryGetCameraPosition()
 
     return s_main_camera->GetPosition();
 }
+
+void Renderer::DrawLine(const Vector2& a, const Vector2& b)
+{
+    const auto camera_pos = TryGetCameraPosition();
+    SDL_RenderDrawLine(s_renderer,
+        static_cast<int>(a.x - camera_pos.x),
+        static_cast<int>(a.y - camera_pos.y),
+        static_cast<int>(b.x - camera_pos.x),
+        static_cast<int>(b.y - camera_pos.y));
+}
+
+

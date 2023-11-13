@@ -3,8 +3,7 @@
 #include <vector>
 
 #include "component.h"
-
-struct Vector2;
+#include "../../Math/vector2.h"
 
 class Agent final : public Component
 {
@@ -17,6 +16,7 @@ private:
     float stopping_distance;
     std::vector<Vector2> current_path;
     
+    Vector2 current_direction; 
 public:
     Agent(Map* map, float speed, float stopping_distance) : map(map), speed(speed), stopping_distance(stopping_distance) {}
     void Setup() override;

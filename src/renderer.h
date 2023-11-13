@@ -12,4 +12,5 @@ public:
     static void SetMainCamera(Camera* camera);
     static Camera* GetMainCamera();
     static const struct Vector2& TryGetCameraPosition();
+    static void DrawLine(const Vector2& a, const Vector2& b);
 };
