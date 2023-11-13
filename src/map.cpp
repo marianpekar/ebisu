@@ -47,7 +47,7 @@ Map::Map(const int tile_size, const int map_width, const int map_height, std::ve
 
                     if (this->collision_map[neighbour_index] == 1)
                     {
-                        node->SetIsWalkable(false);
+                        node->SetPCost(1e6);
                     }
                     
                     node->AddNeighbours(path_nodes[neighbour_index]);

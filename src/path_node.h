@@ -11,6 +11,7 @@ private:
 
     int g_cost;
     int h_cost;
+    int p_cost;
 
     PathNode* parent;
     std::vector<PathNode*> neighbours;
@@ -18,7 +19,7 @@ private:
 public:
     PathNode(const bool is_walkable, const float world_x, const float world_y, const int map_x, const int map_y) :
         is_walkable(is_walkable), world_position(world_x, world_y), map_x(map_x), map_y(map_y),
-        g_cost(0), h_cost(0), parent(nullptr)
+        g_cost(0), h_cost(0), p_cost(0), parent(nullptr)
     {
     }
 
@@ -36,10 +37,11 @@ public:
 
     void SetGCost(const int cost) { g_cost = cost; }
     void SetHCost(const int cost) { h_cost = cost; }
+    void SetPCost(const int cost) { p_cost = cost; }
 
     int GetGCost() const { return g_cost; }
     int GetHCost() const { return h_cost; }
-    int GetFCost() const { return g_cost + h_cost; }
+    int GetFCost() const { return g_cost + h_cost + p_cost; }
 
     int GetMapX() const { return map_x; }
     int GetMapY() const { return map_y; }
