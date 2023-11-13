@@ -30,6 +30,8 @@ public:
     std::vector<PathNode*>& GetNeighbours() { return neighbours; }
 
     bool GetIsWalkable() const { return is_walkable; }
+    void SetIsWalkable(bool walkable) { is_walkable = walkable; }
+    
     const Vector2& GetWorldPosition() const { return world_position; }
 
     void SetGCost(const int cost) { g_cost = cost; }

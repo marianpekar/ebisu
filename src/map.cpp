@@ -44,6 +44,12 @@ Map::Map(const int tile_size, const int map_width, const int map_height, std::ve
                     neighbour_map_y >= 0 && neighbour_map_y < tiles_in_col)
                 {
                     const int neighbour_index = neighbour_map_y * tiles_in_row + neighbour_map_x;
+
+                    if (this->collision_map[neighbour_index] == 1)
+                    {
+                        node->SetIsWalkable(false);
+                    }
+                    
                     node->AddNeighbours(path_nodes[neighbour_index]);
                 }
             }
@@ -141,7 +147,7 @@ PathNode* Map::GetPathNodeFromWorldPosition(const Vector2& world_position) const
 std::vector<Vector2> Map::RetracePath(const PathNode* start_node, PathNode* end_node)
 {
     std::vector<Vector2> path;
-    PathNode* current_node = end_node;
+    const PathNode* current_node = end_node;
 
     while (current_node != start_node)
     {
@@ -149,29 +155,11 @@ std::vector<Vector2> Map::RetracePath(const PathNode* start_node, PathNode* end_
         current_node = current_node->GetParent();
     }
     
-    path = SimplifyPath(path);
-    
     path.emplace_back(start_node->GetWorldPosition());
     
     std::reverse(path.begin(), path.end());
     
     return path;
-}
-
-std::vector<Vector2> Map::SimplifyPath(std::vector<Vector2> path)
-{
-    std::vector<Vector2> simplified_path;
-    auto current_direction = Vector2(0.f,0.f);
-    for (size_t i = 1; i < path.size(); i++)
-    {
-        auto next_direction = Vector2(path[i-1].x - path[i].x,path[i-1].y - path[i].y);
-        if (next_direction != current_direction)
-        {
-            simplified_path.emplace_back(path[i]);
-        }
-        current_direction = next_direction;
-    }
-    return simplified_path;
 }
 
 int Map::GetDistance(const PathNode& node_a, const PathNode& node_b)

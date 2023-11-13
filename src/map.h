@@ -39,7 +39,6 @@ private:
     
     static int GetDistance(const PathNode& node_a, const PathNode& node_b);
     PathNode* GetPathNodeFromWorldPosition(const Vector2& world_position) const;
-    static std::vector<Vector2> SimplifyPath(std::vector<Vector2> path);
     static std::vector<Vector2> RetracePath(const PathNode* start_node, PathNode* end_node);
 public:
     Map(int tile_size, int map_width, int map_height, std::vector<int> collision_map);
