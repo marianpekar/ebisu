@@ -641,6 +641,8 @@ void Editor::DrawAddComponentDropdownAndAddButton(Entity* selected_entity)
         "SpriteSheet",
         "Rigidbody",
         "Animation",
+        "CharacterAnimator",
+        "Agent"
     };
     static int current_item_index = 0;
 
@@ -683,6 +685,12 @@ void Editor::DrawAddComponentDropdownAndAddButton(Entity* selected_entity)
             break;
         case 4:
             selected_entity->AddComponent<Animation>(0, 0, 0, 1000, true, true);
+            break;
+        case 5:
+            selected_entity->AddComponent<CharacterAnimator>(.0f, 0, 0, .0f, .0f, 0, 0);
+            break;
+        case 6:
+            selected_entity->AddComponent<Agent>(0, .0f, .0f);
             break;
         default:
             break;

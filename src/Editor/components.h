@@ -82,3 +82,31 @@ struct Animation : Component
         bool_properties.insert({"PlayOnSetup", play_on_setup});
     }
 };
+
+struct CharacterAnimator : Component
+{
+    CharacterAnimator(const float idle_animation_frame_time,
+        const int idle_animation_start_frame, const int idle_animation_end_frame,
+        const float idle_to_move_animation_threshold,
+        const float move_animation_frame_time,
+        const int move_animation_start_frame, const int move_animation_end_frame) : Component("CharacterAnimator")
+    {
+        float_properties.insert({"IdleAnimationFrameTime", idle_animation_frame_time});
+        int_properties.insert({"IdleAnimationStartFrame", idle_animation_start_frame});
+        int_properties.insert({"IdleAnimationEndFrame", idle_animation_end_frame});
+        float_properties.insert({"IdleToMoveAnimationThreshold", idle_to_move_animation_threshold});
+        float_properties.insert({"MoveAnimationFrameTime", move_animation_frame_time});
+        int_properties.insert({"MoveAnimationStartFrame", move_animation_start_frame});
+        int_properties.insert({"MoveAnimationEndFrame", move_animation_end_frame});
+    }
+};
+
+struct Agent : Component
+{
+    Agent(const int target_entity_id, const float speed, const float stopping_distance) : Component("Agent")
+    {
+        int_properties.insert({"TargetEntityId", target_entity_id});
+        float_properties.insert({"Speed", speed});
+        float_properties.insert({"StoppingDistance", stopping_distance});
+    }
+};
