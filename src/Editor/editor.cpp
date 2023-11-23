@@ -5,6 +5,8 @@
 
 #include <format>
 #include <filesystem>
+
+#include "json_writer.h"
 namespace fs = std::filesystem;
 
 #include <SDL_opengl.h>
@@ -55,6 +57,11 @@ void Editor::Draw()
         DrawNewLevelPopup();
     }
 
+    if (open_save_as_popup)
+    {
+        DrawSaveAsPopup();
+    }
+    
     if (open_select_asset_popup)
     {
         DrawSelectAssetPopup();
@@ -84,6 +91,10 @@ void Editor::DrawMainMenuBar()
             if (ImGui::MenuItem("New Level"))
             {
                 open_new_level_popup = true;
+            }
+            if (ImGui::MenuItem("Save As..."))
+            {
+                open_save_as_popup = true;
             }
             ImGui::EndMenu();
         }
@@ -274,6 +285,21 @@ void Editor::CreateNewLevel()
     for (int i = 0; i < row_tile_count * col_tile_count; i++)
     {
         collision_map.push_back(0);
+    }
+}
+
+void Editor::DrawSaveAsPopup()
+{
+    ImGui::OpenPopup("Save Level As");
+    if (ImGui::BeginPopupModal("Save Level As", &open_save_as_popup))
+    {
+        char file_name_buffer[256] = { '\0' };
+        ImGui::InputText("Filename", file_name_buffer, IM_ARRAYSIZE(file_name_buffer));
+        if(ImGui::Button("Save"))
+        {
+            JsonWriter::SaveLevelToFile(file_name_buffer, this);
+        }
+        ImGui::EndPopup();
     }
 }
 

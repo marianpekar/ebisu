@@ -29,6 +29,14 @@ public:
     ~Editor();
     void Draw();
 
+    float GetTileSize() const { return tile_size; }
+    int GetRowTileCount() const { return row_tile_count; }
+    int GetColumnTileCount() const { return col_tile_count; }
+    std::vector<int> GetCollisionMap() { return collision_map; } 
+    std::vector<TilemapLayer> GetTilemapLayers() { return tile_maps; }
+    std::vector<char*> GetTilemapPaths() { return new_level_tilemap_paths; }
+    std::vector<Entity*> GetEntities() { return entities; }
+    
 private:
     bool is_bank_window_init_size_set = false;
 
@@ -59,11 +67,14 @@ private:
 
     void DrawMainMenuBar();
     void DrawNewLevelPopup();
+    void DrawSaveAsPopup();
 
     bool open_new_level_popup = false;
     bool open_select_asset_popup = false;
     int selected_tilemap_input_field_index = 0;
 
+    bool open_save_as_popup = false;
+    
     void InitTilemapPathsInputFields();
 
     int select_asset_popup_dir_level = 0;
@@ -78,8 +89,7 @@ private:
     void DrawSpriteBank(const size_t& tile_map_index);
     void HandleSpriteSelection(const ImVec2& image_screen_pos, const float& tiles_in_col, const size_t& tile_map_index);
     bool IsPositionOutsideSpriteBank(ImVec2 mouse_pos_relative, const size_t& tile_map_index) const;
-    void DrawSelectedSpriteRect(const int& index, const ImVec2& image_screen_pos, const float& tiles_in_col,
-                                const ImColor& color) const;
+    void DrawSelectedSpriteRect(const int& index, const ImVec2& image_screen_pos, const float& tiles_in_col, const ImColor& color) const;
 
     void DrawCanvas();
     void DrawTilemaps(ImVec2& canvas_screen_pos) const;

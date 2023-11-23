@@ -19,6 +19,7 @@
     <ClCompile Include="..\..\libs\imgui\imgui_tables.cpp" />
     <ClCompile Include="..\..\libs\imgui\imgui_widgets.cpp" />
     <ClCompile Include="..\..\src\Editor\editor.cpp" />
+    <ClCompile Include="..\..\src\Editor\json_writer.cpp" />
     <ClCompile Include="..\..\src\Editor\main.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -34,6 +35,7 @@
     <ClInclude Include="..\..\src\Editor\components.h" />
     <ClInclude Include="..\..\src\Editor\editor.h" />
     <ClInclude Include="..\..\src\Editor\entity.h" />
+    <ClInclude Include="..\..\src\Editor\json_writer.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>15.0</VCProjectVersion>
