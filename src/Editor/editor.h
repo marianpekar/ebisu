@@ -32,11 +32,11 @@ public:
     float GetTileSize() const { return tile_size; }
     int GetRowTileCount() const { return row_tile_count; }
     int GetColumnTileCount() const { return col_tile_count; }
-    std::vector<int> GetCollisionMap() { return collision_map; } 
-    std::vector<TilemapLayer> GetTilemapLayers() { return tile_maps; }
-    std::vector<char*> GetTilemapPaths() { return new_level_tilemap_paths; }
-    std::vector<Entity*> GetEntities() { return entities; }
-    
+    std::vector<int> GetCollisionMap() const { return collision_map; }
+    std::vector<TilemapLayer> GetTilemapLayers() const { return tile_maps; }
+    std::vector<char*> GetTilemapPaths() const { return new_level_tilemap_paths; }
+    std::vector<Entity*> GetEntities() const { return entities; }
+
 private:
     bool is_bank_window_init_size_set = false;
 
@@ -74,7 +74,8 @@ private:
     int selected_tilemap_input_field_index = 0;
 
     bool open_save_as_popup = false;
-    
+    char* level_file_name = new char[256]();
+
     void InitTilemapPathsInputFields();
 
     int select_asset_popup_dir_level = 0;
@@ -89,7 +90,8 @@ private:
     void DrawSpriteBank(const size_t& tile_map_index);
     void HandleSpriteSelection(const ImVec2& image_screen_pos, const float& tiles_in_col, const size_t& tile_map_index);
     bool IsPositionOutsideSpriteBank(ImVec2 mouse_pos_relative, const size_t& tile_map_index) const;
-    void DrawSelectedSpriteRect(const int& index, const ImVec2& image_screen_pos, const float& tiles_in_col, const ImColor& color) const;
+    void DrawSelectedSpriteRect(const int& index, const ImVec2& image_screen_pos, const float& tiles_in_col,
+                                const ImColor& color) const;
 
     void DrawCanvas();
     void DrawTilemaps(ImVec2& canvas_screen_pos) const;
@@ -101,10 +103,10 @@ private:
 
     std::vector<Entity*> entities;
     size_t selected_entity_index = -1;
-    
+
     void DrawEntitiesWindow();
     static void DrawSelectedEntityGeneralProperties(Entity* entity);
-    
+
     void DrawSelectedEntityComponentsWindow() const;
     static void DrawSelectedEntityComponentProperties(Entity* entity);
     static void DrawAddComponentDropdownAndAddButton(Entity* selected_entity);

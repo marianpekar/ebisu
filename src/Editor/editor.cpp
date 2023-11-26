@@ -293,11 +293,10 @@ void Editor::DrawSaveAsPopup()
     ImGui::OpenPopup("Save Level As");
     if (ImGui::BeginPopupModal("Save Level As", &open_save_as_popup))
     {
-        char file_name_buffer[256] = { '\0' };
-        ImGui::InputText("Filename", file_name_buffer, IM_ARRAYSIZE(file_name_buffer));
+        ImGui::InputText("Filename", level_file_name,  256);
         if(ImGui::Button("Save"))
         {
-            JsonWriter::SaveLevelToFile(file_name_buffer, this);
+            JsonWriter::SaveLevelToFile(level_file_name, this);
         }
         ImGui::EndPopup();
     }
@@ -728,6 +727,7 @@ Editor::~Editor()
 {
     DeleteBankTextures();
     DeleteEntities();
+    delete[] level_file_name;
 }
 
 void Editor::DeleteBankTextures()
