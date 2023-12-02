@@ -6,6 +6,7 @@
 #include <format>
 #include <filesystem>
 
+#include "json_reader.h"
 #include "json_writer.h"
 namespace fs = std::filesystem;
 
@@ -61,6 +62,11 @@ void Editor::Draw()
     {
         DrawSaveAsPopup();
     }
+
+    if (open_open_popup)
+    {
+        DrawOpenPopup();
+    }
     
     if (open_select_asset_popup)
     {
@@ -96,6 +102,10 @@ void Editor::DrawMainMenuBar()
             {
                 open_save_as_popup = true;
             }
+            if (ImGui::MenuItem("Open"))
+            {
+                open_open_popup = true;
+            }
             ImGui::EndMenu();
         }
         ImGui::EndMainMenuBar();
@@ -124,10 +134,17 @@ void Editor::DrawNewLevelPopup()
             {
                 selected_tilemap_input_field_index = i;
                 open_new_level_popup = false;
+                open_previous_popup = &open_new_level_popup;
                 open_select_asset_popup = true;
             }
             ImGui::SameLine();
             ImGui::InputText(std::format("Tilemap Path {}", i).c_str(), new_level_tilemap_paths[i], 256);
+        }
+
+        if (selected_asset_path_changed)
+        {
+            selected_asset_path_changed = false;
+            UpdateSelectedNewLevelTilemapPath();
         }
 
         if (ImGui::Button("Confirm"))
@@ -146,6 +163,20 @@ void Editor::DrawNewLevelPopup()
 
         ImGui::EndPopup();
     }
+}
+
+void Editor::UpdateSelectedNewLevelTilemapPath()
+{
+    if (selected_asset_path[0] == '/')
+    {
+        selected_asset_path = selected_asset_path.substr(1);
+    }
+
+    const size_t source_length = strlen(selected_asset_path.c_str());
+    strncpy_s(new_level_tilemap_paths[selected_tilemap_input_field_index],
+              source_length + 1,
+              selected_asset_path.c_str(),
+              source_length);
 }
 
 void Editor::DrawAddAndRemoveLayerButtons()
@@ -195,24 +226,17 @@ void Editor::DrawSelectAssetPopup()
                 std::string filename = entry.path().filename().string();
                 if (ImGui::Button(filename.c_str()))
                 {
-                    std::string selected_asset_path = current_assets_relative_subdir_path.empty()
+                    selected_asset_path = current_assets_relative_subdir_path.empty()
                                                           ? filename
                                                           : std::format("{}/{}", current_assets_relative_subdir_path,
                                                                         filename);
 
-                    if (selected_asset_path[0] == '/')
-                    {
-                        selected_asset_path = selected_asset_path.substr(1);
-                    }
-
-                    const size_t source_length = strlen(selected_asset_path.c_str());
-                    strncpy_s(new_level_tilemap_paths[selected_tilemap_input_field_index],
-                              source_length + 1,
-                              selected_asset_path.c_str(),
-                              source_length);
-
                     open_select_asset_popup = false;
-                    open_new_level_popup = true;
+                    selected_asset_path_changed = true;
+                    if (open_previous_popup != nullptr)
+                    {
+                        *open_previous_popup = true;
+                    }
                 }
             }
             else if (is_directory(entry))
@@ -299,6 +323,18 @@ void Editor::DrawSaveAsPopup()
             JsonWriter::SaveLevelToFile(level_file_name, this);
         }
         ImGui::EndPopup();
+    }
+}
+
+void Editor::DrawOpenPopup()
+{
+    open_select_asset_popup = true;
+    open_previous_popup = nullptr;
+
+    if (selected_asset_path_changed)
+    {   
+        JsonReader::LoadLevelFromFile(std::format("{}/{}", assets_path, selected_asset_path.c_str()).c_str(), this);
+        open_open_popup = false;
     }
 }
 

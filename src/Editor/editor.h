@@ -66,8 +66,10 @@ private:
     std::vector<int> collision_map;
 
     void DrawMainMenuBar();
+    void UpdateSelectedNewLevelTilemapPath();
     void DrawNewLevelPopup();
     void DrawSaveAsPopup();
+    void DrawOpenPopup();
 
     bool open_new_level_popup = false;
     bool open_select_asset_popup = false;
@@ -76,10 +78,15 @@ private:
     bool open_save_as_popup = false;
     char* level_file_name = new char[256]();
 
+    bool open_open_popup = false;
+    
     void InitTilemapPathsInputFields();
 
     int select_asset_popup_dir_level = 0;
     std::string current_assets_relative_subdir_path = "";
+    std::string selected_asset_path;
+    bool selected_asset_path_changed;
+    bool* open_previous_popup = nullptr;
     void DrawSelectAssetPopup();
 
     void DrawAddAndRemoveLayerButtons();

@@ -61,7 +61,7 @@ bool Game::LoadLevel()
     if (!map_file.is_open())
         return false;
 
-    const json map_data = nlohmann::json::parse(map_file);
+    const json map_data = json::parse(map_file);
     LoadMap(map_data);
     LoadEntities(map_data);
     
