@@ -701,7 +701,7 @@ void Editor::DrawAddComponentDropdownAndAddButton(Entity* selected_entity)
         "BoxCollider",
         "SpriteSheet",
         "Rigidbody",
-        "Animation",
+        "Animator",
         "CharacterAnimator",
         "Agent"
     };
@@ -745,7 +745,7 @@ void Editor::DrawAddComponentDropdownAndAddButton(Entity* selected_entity)
             selected_entity->AddComponent<Rigidbody>(1.0f, 0.1f);
             break;
         case 4:
-            selected_entity->AddComponent<Animation>(0, 0, 0, 1000, true, true);
+            selected_entity->AddComponent<Animator>(0, 0, 0, 1000, true, true);
             break;
         case 5:
             selected_entity->AddComponent<CharacterAnimator>(.0f, 0, 0, .0f, .0f, 0, 0);

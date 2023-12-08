@@ -67,12 +67,11 @@ struct Rigidbody : Component
     }
 };
 
-// TODO: When serializing animations, nest them per entity under Animator component (see example map1.json)
-struct Animation : Component
+struct Animator : Component
 {
-    Animation(const int sprite_sheet_fow,
+    Animator(const int sprite_sheet_fow,
         const int start_frame, const int end_frame, const int frame_time,
-        const bool is_loop, const bool play_on_setup) : Component("Animation")
+        const bool is_loop, const bool play_on_setup) : Component("Animator")
     {
         int_properties.insert({"SpriteSheetRow", sprite_sheet_fow});
         int_properties.insert({"StartFrame", start_frame});

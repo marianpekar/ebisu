@@ -61,26 +61,16 @@ void JsonWriter::SerializeEntities(const Editor* editor, nlohmann::json& json)
         for (Component* component : entities[i]->GetComponents())
         {
             nlohmann::json component_entry;
+
             component_entry["Name"] = component->GetName();
-
-            for(const auto& [key, value] : component->float_properties)
+            
+            if (component->GetName() == "Animator")
             {
-                component_entry[key] = value;
+                SerializeAnimationProperties(component, component_entry);
             }
-
-            for(const auto& [key, value] : component->int_properties)
+            else
             {
-                component_entry[key] = value;
-            }
-
-            for(const auto& [key, value] : component->bool_properties)
-            {
-                component_entry[key] = value;
-            }
-
-            for(const auto& [key, value] : component->string_properties)
-            {
-                component_entry[key] = value;
+                SerializeProperties(component, component_entry);
             }
 
             entity_entry["Components"] = component_entry;
@@ -90,13 +80,46 @@ void JsonWriter::SerializeEntities(const Editor* editor, nlohmann::json& json)
     }
 }
 
+void JsonWriter::SerializeProperties(Component* component, nlohmann::json& entry)
+{
+    for(const auto& [key, value] : component->float_properties)
+    {
+        entry[key] = value;
+    }
+
+    for(const auto& [key, value] : component->int_properties)
+    {
+        entry[key] = value;
+    }
+
+    for(const auto& [key, value] : component->bool_properties)
+    {
+        entry[key] = value;
+    }
+
+    for(const auto& [key, value] : component->string_properties)
+    {
+        entry[key] = value;
+    }
+}
+
+void JsonWriter::SerializeAnimationProperties(Component* component, nlohmann::json& component_entry)
+{
+    nlohmann::json animation_entry;
+    SerializeProperties(component, animation_entry);
+    component_entry["Animation"] = animation_entry;
+}
+
 void JsonWriter::SaveStringToFile(const char* file_path, const std::string& json_string)
 {
     std::ofstream file_stream(file_path);
-    if (file_stream.is_open()) {
+    if (file_stream.is_open())
+    {
         file_stream << json_string;
         file_stream.close();
-    } else {
+    }
+    else
+    {
         std::cerr << "[JsonWriter::SaveLevelToFile] Error: Unable to save file" << std::endl;
     }
 }
