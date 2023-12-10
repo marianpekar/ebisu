@@ -23,14 +23,29 @@ const std::string project_path =
 
 const std::string assets_path = project_path + "assets";
 
-void Editor::LoadTexture(const char* path)
+size_t Editor::LoadTexture(const char* path)
 {
+    if (strlen(path) == 0)
+    {
+        return -1;
+    }
+    
+    if (texture_indices_cache.contains(path))
+    {
+        return texture_indices_cache[path];
+    }
+
+    const std::string full_path = std::format("{}/{}", assets_path.c_str(), path);
+    if(!std::filesystem::exists(full_path))
+    {
+        return -1;
+    }
+    
     const auto texture = new Texture();
 
     int image_width = 0;
     int image_height = 0;
-    unsigned char* image_data = stbi_load(std::format("{}/{}", assets_path.c_str(), path).c_str(),
-                                          &image_width, &image_height, nullptr, 4);
+    unsigned char* image_data = stbi_load(full_path.c_str(), &image_width, &image_height, nullptr, 4);
 
     GLuint texture_id;
     glGenTextures(1, &texture_id);
@@ -46,7 +61,11 @@ void Editor::LoadTexture(const char* path)
     texture->width = image_width;
     texture->height = image_height;
 
-    bank_textures.emplace_back(texture);
+    textures.emplace_back(texture);
+
+    const size_t texture_index = textures.size() - 1;
+    texture_indices_cache.emplace(path, texture_index);
+    return texture_index;
 }
 
 void Editor::Draw()
@@ -343,21 +362,21 @@ void Editor::DrawSpriteBank(const size_t& tile_map_index)
     {
         constexpr static auto offset_width = 16.0f;
         constexpr static auto offset_height = 40.0f;
-        static auto window_size = ImVec2(static_cast<float>(bank_textures[tile_map_index]->width) + offset_width,
-                                         static_cast<float>(bank_textures[tile_map_index]->height) + offset_height);
+        static auto window_size = ImVec2(static_cast<float>(textures[tile_map_index]->width) + offset_width,
+                                         static_cast<float>(textures[tile_map_index]->height) + offset_height);
         ImGui::SetNextWindowSize(window_size);
         is_bank_window_init_size_set = true;
     }
 
     ImGui::Begin(std::format("Sprite Bank #{}", tile_map_index).c_str(), nullptr);
 
-    const ImVec2 image_size(static_cast<float>(bank_textures[tile_map_index]->width),
-                            static_cast<float>(bank_textures[tile_map_index]->height));
+    const ImVec2 image_size(static_cast<float>(textures[tile_map_index]->width),
+                            static_cast<float>(textures[tile_map_index]->height));
     const ImVec2 image_screen_pos = ImGui::GetCursorScreenPos();
 
-    ImGui::Image(reinterpret_cast<ImTextureID>(bank_textures[tile_map_index]->id), image_size); // NOLINT(performance-no-int-to-ptr)
+    ImGui::Image(reinterpret_cast<ImTextureID>(textures[tile_map_index]->id), image_size); // NOLINT(performance-no-int-to-ptr)
 
-    const float tiles_in_col = static_cast<float>(bank_textures[tile_map_index]->height) / tile_size;
+    const float tiles_in_col = static_cast<float>(textures[tile_map_index]->height) / tile_size;
     HandleSpriteSelection(image_screen_pos, tiles_in_col, tile_map_index);
 
     if (selected_tile_map_index == tile_map_index)
@@ -391,9 +410,9 @@ void Editor::HandleSpriteSelection(const ImVec2& image_screen_pos, const float& 
 
 bool Editor::IsPositionOutsideSpriteBank(const ImVec2 mouse_pos_relative, const size_t& tile_map_index) const
 {
-    return mouse_pos_relative.x < 0 || mouse_pos_relative.x >= static_cast<float>(bank_textures[tile_map_index]->width)
+    return mouse_pos_relative.x < 0 || mouse_pos_relative.x >= static_cast<float>(textures[tile_map_index]->width)
         ||
-        mouse_pos_relative.y < 0 || mouse_pos_relative.y >= static_cast<float>(bank_textures[tile_map_index]->height);
+        mouse_pos_relative.y < 0 || mouse_pos_relative.y >= static_cast<float>(textures[tile_map_index]->height);
 }
 
 void Editor::DrawSelectedSpriteRect(const int& index, const ImVec2& image_screen_pos, const float& tiles_in_col,
@@ -421,6 +440,10 @@ void Editor::DrawCanvasOptions()
     ImGui::Checkbox("Paint Collision Map", &paint_collision_map);
     ImGui::Checkbox("Lock Canvas Position", &lock_canvas_position);
 
+    ImGui::SeparatorText("Entities");
+    ImGui::Checkbox("Show Names", &show_entity_names_on_canvas);
+    ImGui::Checkbox("Show Sprites", &show_entity_sprites);
+
     ImGui::SeparatorText("Render After Entities");
     for (size_t i = 0; i < tile_maps.size(); i++)
     {
@@ -445,6 +468,7 @@ void Editor::DrawCanvas()
     ImVec2 canvas_screen_pos;
     DrawTilemaps(canvas_screen_pos);
     HandleTilePaint(canvas_screen_pos);
+    DrawEntitiesOnCanvas(canvas_screen_pos);
 
     ImGui::End();
 }
@@ -479,7 +503,7 @@ void Editor::DrawTilemapLayer(const ImVec2& canvas_screen_pos, ImVec2 current_cu
                 continue;
             }
 
-            const int num_columns = static_cast<int>(static_cast<float>(bank_textures[i]->width) / tile_size);
+            const int num_columns = static_cast<int>(static_cast<float>(textures[i]->width) / tile_size);
             const int row = tile_value / num_columns;
             const int col = tile_value % num_columns;
 
@@ -493,7 +517,7 @@ void Editor::DrawTilemapLayer(const ImVec2& canvas_screen_pos, ImVec2 current_cu
                                     ? grey_tint_color
                                     : neutral_tint_color;
 
-            ImGui::GetWindowDrawList()->AddImage(reinterpret_cast<ImTextureID>(bank_textures[i]->id), // NOLINT(performance-no-int-to-ptr)
+            ImGui::GetWindowDrawList()->AddImage(reinterpret_cast<ImTextureID>(textures[i]->id), // NOLINT(performance-no-int-to-ptr)
                                                  current_cursor_pos,
                                                  ImVec2(current_cursor_pos.x + tile_size,
                                                         current_cursor_pos.y + tile_size),
@@ -512,10 +536,10 @@ void Editor::DrawTilemapLayer(const ImVec2& canvas_screen_pos, ImVec2 current_cu
 
 void Editor::CalculateSelectedTileUVs(const size_t i, const int row, const int col, ImVec2& uv0, ImVec2& uv1) const
 {
-    uv0.x = static_cast<float>(col) * (tile_size / static_cast<float>(bank_textures[i]->width));
-    uv0.y = static_cast<float>(row) * (tile_size / static_cast<float>(bank_textures[i]->width));
-    uv1.x = uv0.x + (tile_size / static_cast<float>(bank_textures[i]->width));
-    uv1.y = uv0.y + (tile_size / static_cast<float>(bank_textures[i]->width));
+    uv0.x = static_cast<float>(col) * (tile_size / static_cast<float>(textures[i]->width));
+    uv0.y = static_cast<float>(row) * (tile_size / static_cast<float>(textures[i]->width));
+    uv1.x = uv0.x + (tile_size / static_cast<float>(textures[i]->width));
+    uv1.y = uv0.y + (tile_size / static_cast<float>(textures[i]->width));
 }
 
 void Editor::HandleTilePaint(const ImVec2 canvas_screen_pos)
@@ -548,6 +572,48 @@ bool Editor::IsPositionOutsideCanvas(const ImVec2 mouse_pos_relative) const
     const int canvas_width = col_tile_count * static_cast<int>(tile_size);
     return mouse_pos_relative.x < 0 || static_cast<int>(mouse_pos_relative.x) >= canvas_width ||
         mouse_pos_relative.y < 0 || static_cast<int>(mouse_pos_relative.y) >= canvas_height;
+}
+
+void Editor::DrawEntitiesOnCanvas(const ImVec2& canvas_screen_pos) const
+{
+    for (const auto& entity : entities)
+    {
+        const auto transform_component = reinterpret_cast<Transform*>(entity->GetComponent("Transform"));
+        const float x = transform_component->GetFloat("X");
+        const float y = transform_component->GetFloat("Y");
+
+        auto component_on_canvas_pos = ImVec2(canvas_screen_pos.x + x, canvas_screen_pos.y + y);
+        
+        for (const auto& component : entity->GetComponents())
+        {
+            if (component->GetName() == "SpriteSheet" && show_entity_sprites)
+            {
+                const auto* sprite_sheet = reinterpret_cast<SpriteSheet*>(component);
+                if (static_cast<int>(sprite_sheet->texture_index) != -1)
+                {
+                    const Texture* texture = textures[sprite_sheet->texture_index];
+                    
+                    const float width = component->GetFloat("Width");
+                    const float height = component->GetFloat("Height");
+
+                    constexpr ImVec2 uv0(0,0);
+                    ImVec2 uv1;
+                    uv1.x = width / static_cast<float>(texture->width);
+                    uv1.y = height / static_cast<float>(texture->height);
+                    
+                    ImGui::GetWindowDrawList()->AddImage(reinterpret_cast<ImTextureID>(texture->id), // NOLINT(performance-no-int-to-ptr)
+                         component_on_canvas_pos,
+                         ImVec2(component_on_canvas_pos.x + width, component_on_canvas_pos.y + height),
+                         uv0, uv1);   
+                }
+            }
+        }
+
+        if (show_entity_names_on_canvas)
+        {
+            ImGui::GetWindowDrawList()->AddText(component_on_canvas_pos, ImColor(0.0f, 0.0f, 1.0f), entity->GetName().c_str());
+        }
+    }
 }
 
 void Editor::DrawEntitiesWindow()
@@ -699,6 +765,12 @@ void Editor::DrawSelectedEntityComponentProperties(Entity* entity)
                 {
                     value = new_value_buffer;
                 }
+
+                if (component->GetName() == "SpriteSheet")
+                {
+                    auto* sprite_sheet = reinterpret_cast<SpriteSheet*>(component);
+                    sprite_sheet->texture_index = LoadTexture(value.c_str());
+                }
             }
 
             for (auto& [name, value] : component->bool_properties)
@@ -761,25 +833,25 @@ void Editor::DrawAddComponentDropdownAndAddButton(Entity* selected_entity)
         switch (current_item_index)
         {
         case 0:
-            selected_entity->AddComponent<MapCollider>(.0f, .0f);
+            selected_entity->AddComponent<MapCollider>(tile_size, tile_size);
             break;
         case 1:
-            selected_entity->AddComponent<BoxCollider>(.0f, .0f);
+            selected_entity->AddComponent<BoxCollider>(tile_size, tile_size);
             break;
         case 2:
-            selected_entity->AddComponent<SpriteSheet>("", 1.0f, 1.0f);
+            selected_entity->AddComponent<SpriteSheet>("", tile_size, tile_size);
             break;
         case 3:
-            selected_entity->AddComponent<Rigidbody>(1.0f, 0.1f);
+            selected_entity->AddComponent<Rigidbody>(tile_size, tile_size);
             break;
         case 4:
             selected_entity->AddComponent<Animator>(0, 0, 0, 1000, true, true);
             break;
         case 5:
-            selected_entity->AddComponent<CharacterAnimator>(.0f, 0, 0, .0f, .0f, 0, 0);
+            selected_entity->AddComponent<CharacterAnimator>(600.0f, 0, 1, 100.0f, 500.0f, 2, 5);
             break;
         case 6:
-            selected_entity->AddComponent<Agent>(0, .0f, .0f);
+            selected_entity->AddComponent<Agent>(0, 1000.0f, tile_size * 2.0f);
             break;
         case 7:
             selected_entity->AddComponent<PlayerController>();
@@ -802,12 +874,12 @@ Editor::~Editor()
 
 void Editor::DeleteBankTextures()
 {
-    for (const auto texture : bank_textures)
+    for (const auto texture : textures)
     {
         glDeleteTextures(1, &texture->id);
         delete texture;
     }
-    bank_textures.clear();
+    textures.clear();
 }
 
 void Editor::DeleteEntities()

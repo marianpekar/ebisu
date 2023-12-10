@@ -26,6 +26,19 @@ public:
         components.erase(components.begin() + static_cast<int>(index));
     }
 
+    Component* GetComponent(const char* name) const
+    {
+        for (const auto& component : components)
+        {
+            if (component->GetName() == name)
+            {
+                return component;
+            }
+        }
+
+        return nullptr;
+    }
+
     std::vector<Component*> GetComponents() const { return components; }
     
     std::string GetName() const { return name; }

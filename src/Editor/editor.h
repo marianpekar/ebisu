@@ -1,5 +1,6 @@
 #pragma once
 
+#include <map>
 #include <string>
 #include <vector>
 
@@ -42,12 +43,15 @@ private:
 
     bool paint_collision_map = false;
     bool lock_canvas_position = true;
+    bool show_entity_names_on_canvas = true;
+    bool show_entity_sprites = true;
 
     int selected_sprite_index = 0;
     size_t selected_tile_map_index = 0;
-
-    std::vector<Texture*> bank_textures;
-    void LoadTexture(const char* path);
+    
+    std::map<const char*, GLint> texture_indices_cache;
+    std::vector<Texture*> textures;
+    size_t LoadTexture(const char* path);
 
     float tile_size = 64.0f;
     int new_level_tile_size = 64;
@@ -105,6 +109,7 @@ private:
     void DrawTilemapLayer(const ImVec2& canvas_screen_pos, ImVec2 current_cursor_pos, size_t i) const;
     void CalculateSelectedTileUVs(size_t i, int row, int col, ImVec2& uv0, ImVec2& uv1) const;
     void DrawCanvasOptions();
+    void DrawEntitiesOnCanvas(const ImVec2& canvas_screen_pos) const;
     void HandleTilePaint(ImVec2 canvas_screen_pos);
     bool IsPositionOutsideCanvas(ImVec2 mouse_pos_relative) const;
 
@@ -112,11 +117,11 @@ private:
     size_t selected_entity_index = -1;
 
     void DrawEntitiesWindow();
-    static void DrawSelectedEntityGeneralProperties(Entity* entity);
+    void DrawSelectedEntityGeneralProperties(Entity* entity);
 
     void DrawSelectedEntityComponentsWindow();
     void DrawSelectedEntityComponentProperties(Entity* entity);
-    static void DrawAddComponentDropdownAndAddButton(Entity* selected_entity);
+    void DrawAddComponentDropdownAndAddButton(Entity* selected_entity);
 
     void DeleteBankTextures();
     void DeleteEntities();

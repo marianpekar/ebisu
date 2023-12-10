@@ -52,6 +52,8 @@ struct BoxCollider : Component
 
 struct SpriteSheet : Component
 {
+    size_t texture_index = -1;
+    
     SpriteSheet(const std::string& sprite_file_path, const float width, const float height) : Component("SpriteSheet")
     {
         path_properties.insert({"FilePath", sprite_file_path});
