@@ -1,6 +1,5 @@
 #include "../../map.h"
 #include "map_collider.h"
-#include "transform.h"
 
 MapCollider::MapCollider(const float width, const float height, Map* map) : width(width), height(height), map(map)
 {
