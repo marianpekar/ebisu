@@ -228,8 +228,7 @@ void Editor::DrawSelectAssetPopup()
                 {
                     selected_asset_path = current_assets_relative_subdir_path.empty()
                                                           ? filename
-                                                          : std::format("{}/{}", current_assets_relative_subdir_path,
-                                                                        filename);
+                                                          : std::format("{}/{}", current_assets_relative_subdir_path, filename);
 
                     open_select_asset_popup = false;
                     selected_asset_path_changed = true;
@@ -591,7 +590,7 @@ void Editor::DrawEntitiesWindow()
     ImGui::End();
 }
 
-void Editor::DrawSelectedEntityComponentsWindow() const
+void Editor::DrawSelectedEntityComponentsWindow()
 {
     ImGui::Begin("Components");
 
@@ -669,6 +668,33 @@ void Editor::DrawSelectedEntityComponentProperties(Entity* entity)
                 strncpy_s(new_value_buffer, current_value.c_str(), sizeof(new_value_buffer));
                 ImGui::InputText(std::format("{}##{}{}", name, component->GetName(), i).c_str(),
                                  new_value_buffer, IM_ARRAYSIZE(new_value_buffer));
+                if (ImGui::IsKeyPressed(ImGuiKey_Enter))
+                {
+                    value = new_value_buffer;
+                }
+            }
+
+            for (auto& [name, value] : component->path_properties)
+            {
+                if (ImGui::Button(std::format("...##{}", i).c_str()))
+                {
+                    open_previous_popup = nullptr;
+                    open_select_asset_popup = true;
+                }
+
+                if (selected_asset_path_changed)
+                {
+                    selected_asset_path_changed = false;
+                    value = selected_asset_path;
+                }
+
+                ImGui::SameLine();
+                
+                std::string current_value = value;
+                char new_value_buffer[256];
+                strncpy_s(new_value_buffer, current_value.c_str(), sizeof(new_value_buffer));
+                ImGui::InputText(std::format("{}##{}{}", name, component->GetName(), i).c_str(), new_value_buffer, IM_ARRAYSIZE(new_value_buffer));
+                
                 if (ImGui::IsKeyPressed(ImGuiKey_Enter))
                 {
                     value = new_value_buffer;

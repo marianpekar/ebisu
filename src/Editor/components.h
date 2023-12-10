@@ -11,6 +11,7 @@ public:
     int GetInt(const char* property_name) { return int_properties[property_name]; }
     bool GetBool(const char* property_name) { return bool_properties[property_name]; }
     std::string GetString(const char* property_name) { return string_properties[property_name]; }
+    std::string GetPath(const char* property_name) { return path_properties[property_name]; }
     
 private:
     const char* name;
@@ -19,6 +20,7 @@ public:
     std::unordered_map<const char*, int> int_properties;
     std::unordered_map<const char*, bool> bool_properties;
     std::unordered_map<const char*, std::string> string_properties;
+    std::unordered_map<const char*, std::string> path_properties;
 };
 
 struct Transform : Component
@@ -52,7 +54,7 @@ struct SpriteSheet : Component
 {
     SpriteSheet(const std::string& sprite_file_path, const float width, const float height) : Component("SpriteSheet")
     {
-        string_properties.insert({"FilePath", sprite_file_path});
+        path_properties.insert({"FilePath", sprite_file_path});
         float_properties.insert({"Width", width});
         float_properties.insert({"Height", height});
     }

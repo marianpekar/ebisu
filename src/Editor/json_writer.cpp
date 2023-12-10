@@ -101,6 +101,11 @@ void JsonWriter::SerializeProperties(Component* component, nlohmann::json& entry
     {
         entry[key] = value;
     }
+
+    for(const auto& [key, value] : component->path_properties)
+    {
+        entry[key] = value;
+    }
 }
 
 void JsonWriter::SerializeAnimationProperties(Component* component, nlohmann::json& component_entry)

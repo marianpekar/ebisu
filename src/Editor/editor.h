@@ -114,8 +114,8 @@ private:
     void DrawEntitiesWindow();
     static void DrawSelectedEntityGeneralProperties(Entity* entity);
 
-    void DrawSelectedEntityComponentsWindow() const;
-    static void DrawSelectedEntityComponentProperties(Entity* entity);
+    void DrawSelectedEntityComponentsWindow();
+    void DrawSelectedEntityComponentProperties(Entity* entity);
     static void DrawAddComponentDropdownAndAddButton(Entity* selected_entity);
 
     void DeleteBankTextures();
