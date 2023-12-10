@@ -109,3 +109,13 @@ struct Agent : Component
         float_properties.insert({"StoppingDistance", stopping_distance});
     }
 };
+
+struct MainCamera : Component
+{
+    MainCamera() : Component("MainCamera") {}
+};
+
+struct PlayerController : Component
+{
+    PlayerController() : Component("PlayerController") {}
+};

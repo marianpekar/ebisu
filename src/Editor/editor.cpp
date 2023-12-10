@@ -697,13 +697,15 @@ void Editor::DrawAddComponentDropdownAndAddButton(Entity* selected_entity)
 {
     // Don't change the order of items! (see switch below)
     static const char* components[] = {
-        "MapCollider",
-        "BoxCollider",
-        "SpriteSheet",
-        "Rigidbody",
-        "Animator",
-        "CharacterAnimator",
-        "Agent"
+        "MapCollider", // 0
+        "BoxCollider", // 1
+        "SpriteSheet", // 2
+        "Rigidbody", // 3
+        "Animator", // 4
+        "CharacterAnimator", // 5
+        "Agent", // 6
+        "PlayerController", // 7
+        "MainCamera" // 8
     };
     static int current_item_index = 0;
 
@@ -752,6 +754,12 @@ void Editor::DrawAddComponentDropdownAndAddButton(Entity* selected_entity)
             break;
         case 6:
             selected_entity->AddComponent<Agent>(0, .0f, .0f);
+            break;
+        case 7:
+            selected_entity->AddComponent<PlayerController>();
+            break;
+        case 8:
+            selected_entity->AddComponent<MainCamera>();
             break;
         default:
             break;
