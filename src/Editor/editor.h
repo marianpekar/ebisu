@@ -23,6 +23,13 @@ struct Texture
     int height;
 };
 
+enum CanvasMode
+{
+    PaintTiles,
+    PaintCollision,
+    MoveEntities,
+};
+
 class Editor
 {
 public:
@@ -40,8 +47,7 @@ public:
 
 private:
     bool is_bank_window_init_size_set = false;
-
-    bool paint_collision_map = false;
+    int selected_canvas_mode;
     bool lock_canvas_position = true;
     bool show_entity_names_on_canvas = true;
     bool show_entity_sprites = true;
@@ -108,7 +114,9 @@ private:
     void DrawTilemaps(ImVec2& canvas_screen_pos) const;
     void DrawTilemapLayer(const ImVec2& canvas_screen_pos, ImVec2 current_cursor_pos, size_t i) const;
     void CalculateSelectedTileUVs(size_t i, int row, int col, ImVec2& uv0, ImVec2& uv1) const;
+    
     void DrawCanvasOptions();
+    
     void DrawEntitiesOnCanvas(const ImVec2& canvas_screen_pos);
     void HandleTilePaint(ImVec2 canvas_screen_pos);
     bool IsPositionOutsideCanvas(ImVec2 mouse_pos_relative) const;

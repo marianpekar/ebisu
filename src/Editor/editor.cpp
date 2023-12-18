@@ -436,9 +436,15 @@ void Editor::DrawCanvasOptions()
     ImGui::SetNextWindowContentSize(ImVec2(256, 128));
     ImGui::Begin("Canvas Options");
 
+    ImGui::SeparatorText("Modes");
+    ImGui::RadioButton("Paint Tiles", &selected_canvas_mode, PaintTiles);
+    ImGui::RadioButton("Paint Collision", &selected_canvas_mode, PaintCollision);
+    ImGui::RadioButton("Move Entities", &selected_canvas_mode, MoveEntities);
+    
     ImGui::SeparatorText("Misc");
-    ImGui::Checkbox("Paint Collision Map", &paint_collision_map);
     ImGui::Checkbox("Lock Canvas Position", &lock_canvas_position);
+
+    
 
     ImGui::SeparatorText("Entities");
     ImGui::Checkbox("Show Names", &show_entity_names_on_canvas);
@@ -513,7 +519,7 @@ void Editor::DrawTilemapLayer(const ImVec2& canvas_screen_pos, ImVec2 current_cu
 
             static constexpr auto grey_tint_color = ImVec4(0.33f, 0.33f, 0.33f, 1.0f);
             static constexpr auto neutral_tint_color = ImVec4(1.0f, 1.0f, 1.0f, 1.0f);
-            ImVec4 tint_color = paint_collision_map && collision_map[tile_index] == 1
+            ImVec4 tint_color = selected_canvas_mode == CanvasMode::PaintCollision && collision_map[tile_index] == 1
                                     ? grey_tint_color
                                     : neutral_tint_color;
 
@@ -554,15 +560,33 @@ void Editor::HandleTilePaint(const ImVec2 canvas_screen_pos)
     if (IsPositionOutsideCanvas(mouse_pos_relative))
         return;
 
-    if (ImGui::IsMouseDown(0))
+    if (selected_canvas_mode == PaintCollision)
     {
-        paint_collision_map
-            ? collision_map[tile_index] = 1
-            : tile_maps[selected_tile_map_index].data[tile_index] = selected_sprite_index;
+        if (ImGui::IsMouseDown(0))
+        {
+            collision_map[tile_index] = 1;
+        }
+        else if (ImGui::IsMouseDown(1))
+        {
+            collision_map[tile_index] = 0;
+        }   
     }
-    else if (ImGui::IsMouseDown(1))
+
+    if (selected_canvas_mode == PaintTiles)
     {
-        paint_collision_map ? collision_map[tile_index] = 0 : tile_maps[selected_tile_map_index].data[tile_index] = -1;
+        if (ImGui::IsMouseDown(0))
+        {
+            tile_maps[selected_tile_map_index].data[tile_index] = selected_sprite_index;
+        }
+        else if (ImGui::IsMouseDown(1))
+        {
+            tile_maps[selected_tile_map_index].data[tile_index] = -1;
+        } 
+    }
+
+    if (selected_canvas_mode == MoveEntities)
+    {
+        // TODO: Move selected entity with right mouse button
     }
 }
 
