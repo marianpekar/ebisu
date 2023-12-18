@@ -574,7 +574,7 @@ bool Editor::IsPositionOutsideCanvas(const ImVec2 mouse_pos_relative) const
         mouse_pos_relative.y < 0 || static_cast<int>(mouse_pos_relative.y) >= canvas_height;
 }
 
-void Editor::DrawEntitiesOnCanvas(const ImVec2& canvas_screen_pos) const
+void Editor::DrawEntitiesOnCanvas(const ImVec2& canvas_screen_pos)
 {
     for (const auto& entity : entities)
     {
@@ -615,8 +615,14 @@ void Editor::DrawEntitiesOnCanvas(const ImVec2& canvas_screen_pos) const
             constexpr size_t margin = 2;
             const auto bg_min = ImVec2(component_on_canvas_pos.x - margin, component_on_canvas_pos.y - margin);
             const auto bg_max = ImVec2(component_on_canvas_pos.x + text_size.x + margin, component_on_canvas_pos.y + text_size.y + margin);
-            ImGui::GetWindowDrawList()->AddRectFilled(bg_min, bg_max, ImColor(0.f, 0.f, 0.f)); 
+            ImColor label_bg_color = selected_entity_index == entity->GetIndex() ? ImColor(0.f, 0.8f, 0.8f) : ImColor(0.f, 0.f, 0.f);
+            ImGui::GetWindowDrawList()->AddRectFilled(bg_min, bg_max, label_bg_color); 
             ImGui::GetWindowDrawList()->AddText(component_on_canvas_pos, ImColor(1.f, 1.f, 1.f), entity->GetName().c_str());
+
+            if (ImGui::IsMouseHoveringRect(bg_min, bg_max) && ImGui::IsMouseClicked(ImGuiMouseButton_Left))
+            {
+                selected_entity_index = entity->GetIndex();
+            }
         }
     }
 }
@@ -627,7 +633,7 @@ void Editor::DrawEntitiesWindow()
 
     if (ImGui::Button("Create Entity"))
     {
-        const auto entity = new Entity("Entity");
+        const auto entity = new Entity("Entity", entities.size());
         entities.push_back(entity);
     }
 

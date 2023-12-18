@@ -109,7 +109,7 @@ private:
     void DrawTilemapLayer(const ImVec2& canvas_screen_pos, ImVec2 current_cursor_pos, size_t i) const;
     void CalculateSelectedTileUVs(size_t i, int row, int col, ImVec2& uv0, ImVec2& uv1) const;
     void DrawCanvasOptions();
-    void DrawEntitiesOnCanvas(const ImVec2& canvas_screen_pos) const;
+    void DrawEntitiesOnCanvas(const ImVec2& canvas_screen_pos);
     void HandleTilePaint(ImVec2 canvas_screen_pos);
     bool IsPositionOutsideCanvas(ImVec2 mouse_pos_relative) const;
 
