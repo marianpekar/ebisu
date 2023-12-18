@@ -604,14 +604,19 @@ void Editor::DrawEntitiesOnCanvas(const ImVec2& canvas_screen_pos) const
                     ImGui::GetWindowDrawList()->AddImage(reinterpret_cast<ImTextureID>(texture->id), // NOLINT(performance-no-int-to-ptr)
                          component_on_canvas_pos,
                          ImVec2(component_on_canvas_pos.x + width, component_on_canvas_pos.y + height),
-                         uv0, uv1);   
+                         uv0, uv1);
                 }
             }
         }
 
         if (show_entity_names_on_canvas)
         {
-            ImGui::GetWindowDrawList()->AddText(component_on_canvas_pos, ImColor(0.0f, 0.0f, 1.0f), entity->GetName().c_str());
+            const ImVec2 text_size = ImGui::CalcTextSize(entity->GetName().c_str());
+            constexpr size_t margin = 2;
+            const auto bg_min = ImVec2(component_on_canvas_pos.x - margin, component_on_canvas_pos.y - margin);
+            const auto bg_max = ImVec2(component_on_canvas_pos.x + text_size.x + margin, component_on_canvas_pos.y + text_size.y + margin);
+            ImGui::GetWindowDrawList()->AddRectFilled(bg_min, bg_max, ImColor(0.f, 0.f, 0.f)); 
+            ImGui::GetWindowDrawList()->AddText(component_on_canvas_pos, ImColor(1.f, 1.f, 1.f), entity->GetName().c_str());
         }
     }
 }
