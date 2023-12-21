@@ -118,9 +118,10 @@ private:
     void DrawCanvasOptions();
     
     void DrawEntitiesOnCanvas(const ImVec2& canvas_screen_pos);
-    void HandleTilePaint(ImVec2 canvas_screen_pos);
+    void HandleCanvasMouseInteraction(ImVec2 canvas_screen_pos);
     bool IsPositionOutsideCanvas(ImVec2 mouse_pos_relative) const;
-
+    bool IsMouseHoveringOverEntityLabel(const ImVec2& canvas_screen_pos) const;
+    
     std::vector<Entity*> entities;
     size_t selected_entity_index = -1;
 

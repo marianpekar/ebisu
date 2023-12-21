@@ -8,6 +8,8 @@ public:
     const char* GetName() const { return name; }
 
     float GetFloat(const char* property_name) { return float_properties[property_name]; }
+    void SetFloat(const char* property_name, float value) { float_properties[property_name] = value; }
+    
     int GetInt(const char* property_name) { return int_properties[property_name]; }
     bool GetBool(const char* property_name) { return bool_properties[property_name]; }
     std::string GetString(const char* property_name) { return string_properties[property_name]; }

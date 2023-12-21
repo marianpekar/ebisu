@@ -461,8 +461,6 @@ void Editor::DrawCanvasOptions()
 
 void Editor::DrawCanvas()
 {
-    //TODO: Draw only when Canvas window is in focus
-    
     const ImGuiWindowFlags window_flags = (lock_canvas_position ? ImGuiWindowFlags_NoMove : 0) |
         ImGuiWindowFlags_AlwaysVerticalScrollbar | ImGuiWindowFlags_AlwaysHorizontalScrollbar;
 
@@ -473,7 +471,7 @@ void Editor::DrawCanvas()
 
     ImVec2 canvas_screen_pos;
     DrawTilemaps(canvas_screen_pos);
-    HandleTilePaint(canvas_screen_pos);
+    HandleCanvasMouseInteraction(canvas_screen_pos);
     DrawEntitiesOnCanvas(canvas_screen_pos);
 
     ImGui::End();
@@ -548,8 +546,10 @@ void Editor::CalculateSelectedTileUVs(const size_t i, const int row, const int c
     uv1.y = uv0.y + (tile_size / static_cast<float>(textures[i]->width));
 }
 
-void Editor::HandleTilePaint(const ImVec2 canvas_screen_pos)
+void Editor::HandleCanvasMouseInteraction(const ImVec2 canvas_screen_pos)
 {
+    //TODO: Do not interact when Canvas ImGui window is not in focus or mouse cursor is outside its boundaries
+    
     const ImVec2 mouse_position = ImGui::GetMousePos();
     const auto mouse_pos_relative = ImVec2(mouse_position.x - canvas_screen_pos.x,
                                            mouse_position.y - canvas_screen_pos.y);
@@ -584,10 +584,34 @@ void Editor::HandleTilePaint(const ImVec2 canvas_screen_pos)
         } 
     }
 
-    if (selected_canvas_mode == MoveEntities)
+    if (selected_canvas_mode == MoveEntities && static_cast<int>(selected_entity_index) != -1 &&
+        ImGui::IsMouseClicked(ImGuiMouseButton_Left) && !IsMouseHoveringOverEntityLabel(canvas_screen_pos))
     {
-        // TODO: Move selected entity with right mouse button
+        Component* transform = entities[selected_entity_index]->GetComponent("Transform");
+        transform->SetFloat("X", mouse_pos_relative.x);
+        transform->SetFloat("Y", mouse_pos_relative.y);
     }
+}
+
+bool Editor::IsMouseHoveringOverEntityLabel(const ImVec2& canvas_screen_pos) const
+{
+    for (const auto entity : entities)
+    {
+        Component* transform = entity->GetComponent("Transform");
+        const float x = transform->GetFloat("X");
+        const float y = transform->GetFloat("Y");
+        const auto component_on_canvas_pos = ImVec2(canvas_screen_pos.x + x, canvas_screen_pos.y + y);
+        const ImVec2 text_size = ImGui::CalcTextSize(entity->GetName().c_str());
+        constexpr size_t margin = 2;
+        const auto bg_min = ImVec2(component_on_canvas_pos.x - margin, component_on_canvas_pos.y - margin);
+        const auto bg_max = ImVec2(component_on_canvas_pos.x + text_size.x + margin, component_on_canvas_pos.y + text_size.y + margin);
+        if (ImGui::IsMouseHoveringRect(bg_min, bg_max))
+        {
+            return true;
+        }
+    }
+
+    return false;
 }
 
 bool Editor::IsPositionOutsideCanvas(const ImVec2 mouse_pos_relative) const
@@ -602,9 +626,9 @@ void Editor::DrawEntitiesOnCanvas(const ImVec2& canvas_screen_pos)
 {
     for (const auto& entity : entities)
     {
-        const auto transform_component = reinterpret_cast<Transform*>(entity->GetComponent("Transform"));
-        const float x = transform_component->GetFloat("X");
-        const float y = transform_component->GetFloat("Y");
+        Component* transform = entity->GetComponent("Transform");
+        const float x = transform->GetFloat("X");
+        const float y = transform->GetFloat("Y");
 
         auto component_on_canvas_pos = ImVec2(canvas_screen_pos.x + x, canvas_screen_pos.y + y);
         
