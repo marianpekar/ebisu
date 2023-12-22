@@ -441,11 +441,6 @@ void Editor::DrawCanvasOptions()
     ImGui::RadioButton("Paint Collision", &selected_canvas_mode, PaintCollision);
     ImGui::RadioButton("Move Entities", &selected_canvas_mode, MoveEntities);
     
-    ImGui::SeparatorText("Misc");
-    ImGui::Checkbox("Lock Canvas Position", &lock_canvas_position);
-
-    
-
     ImGui::SeparatorText("Entities");
     ImGui::Checkbox("Show Names", &show_entity_names_on_canvas);
     ImGui::Checkbox("Show Sprites", &show_entity_sprites);
@@ -461,9 +456,17 @@ void Editor::DrawCanvasOptions()
 
 void Editor::DrawCanvas()
 {
-    const ImGuiWindowFlags window_flags = (lock_canvas_position ? ImGuiWindowFlags_NoMove : 0) |
-        ImGuiWindowFlags_AlwaysVerticalScrollbar | ImGuiWindowFlags_AlwaysHorizontalScrollbar;
+    constexpr ImGuiWindowFlags window_flags = ImGuiWindowFlags_NoMove |
+        ImGuiWindowFlags_NoDecoration |
+        ImGuiWindowFlags_NoResize |
+        ImGuiWindowFlags_AlwaysVerticalScrollbar |
+        ImGuiWindowFlags_AlwaysHorizontalScrollbar |
+        ImGuiWindowFlags_NoBringToFrontOnFocus;
 
+    const ImGuiViewport* viewport = ImGui::GetMainViewport();
+    ImGui::SetNextWindowPos(viewport->WorkPos);
+    ImGui::SetNextWindowSize(viewport->WorkSize);
+    
     const auto canvas_size = ImVec2(tile_size * static_cast<float>(col_tile_count),
                                     tile_size * static_cast<float>(row_tile_count));
     ImGui::SetNextWindowContentSize(canvas_size);
@@ -548,7 +551,8 @@ void Editor::CalculateSelectedTileUVs(const size_t i, const int row, const int c
 
 void Editor::HandleCanvasMouseInteraction(const ImVec2 canvas_screen_pos)
 {
-    //TODO: Do not interact when Canvas ImGui window is not in focus or mouse cursor is outside its boundaries
+    if(!ImGui::IsWindowHovered())
+        return;
     
     const ImVec2 mouse_position = ImGui::GetMousePos();
     const auto mouse_pos_relative = ImVec2(mouse_position.x - canvas_screen_pos.x,
@@ -562,11 +566,11 @@ void Editor::HandleCanvasMouseInteraction(const ImVec2 canvas_screen_pos)
 
     if (selected_canvas_mode == PaintCollision)
     {
-        if (ImGui::IsMouseDown(0))
+        if (ImGui::IsMouseDown(0) && !IsMouseHoveringOverEntityLabel(canvas_screen_pos))
         {
             collision_map[tile_index] = 1;
         }
-        else if (ImGui::IsMouseDown(1))
+        else if (ImGui::IsMouseDown(1) && !IsMouseHoveringOverEntityLabel(canvas_screen_pos))
         {
             collision_map[tile_index] = 0;
         }   
@@ -574,11 +578,11 @@ void Editor::HandleCanvasMouseInteraction(const ImVec2 canvas_screen_pos)
 
     if (selected_canvas_mode == PaintTiles)
     {
-        if (ImGui::IsMouseDown(0))
+        if (ImGui::IsMouseDown(0) && !IsMouseHoveringOverEntityLabel(canvas_screen_pos))
         {
             tile_maps[selected_tile_map_index].data[tile_index] = selected_sprite_index;
         }
-        else if (ImGui::IsMouseDown(1))
+        else if (ImGui::IsMouseDown(1) && !IsMouseHoveringOverEntityLabel(canvas_screen_pos))
         {
             tile_maps[selected_tile_map_index].data[tile_index] = -1;
         } 

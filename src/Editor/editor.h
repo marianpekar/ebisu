@@ -48,7 +48,6 @@ public:
 private:
     bool is_bank_window_init_size_set = false;
     int selected_canvas_mode;
-    bool lock_canvas_position = true;
     bool show_entity_names_on_canvas = true;
     bool show_entity_sprites = true;
 
