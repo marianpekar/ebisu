@@ -367,7 +367,7 @@ void Editor::DrawOpenPopup()
         if(ImGui::Button("Open"))
         {
             DisposeCurrentLevel();
-            JsonReader::LoadLevelFromFile(std::format("{}/{}", assets_path, level_file_name).c_str(), this);
+            JsonReader::LoadLevelFromFile(assets_path.c_str(), std::format("{}/{}", assets_path, level_file_name).c_str(), this);
             open_open_popup = false;
         }
         ImGui::EndPopup();
@@ -923,7 +923,7 @@ void Editor::DrawAddComponentDropdownAndAddButton(Entity* selected_entity)
             selected_entity->AddComponent<SpriteSheet>("", tile_size, tile_size);
             break;
         case 3:
-            selected_entity->AddComponent<Rigidbody>(tile_size, tile_size);
+            selected_entity->AddComponent<Rigidbody>(1.f, 0.1f);
             break;
         case 4:
             selected_entity->AddComponent<Animator>(0, 0, 0, 1000, true, true);
@@ -944,6 +944,16 @@ void Editor::DrawAddComponentDropdownAndAddButton(Entity* selected_entity)
             break;
         }
     }
+}
+
+void Editor::AddEntityAt(Entity* entity, const size_t index)
+{
+    if (index >= entities.size())
+    {
+        entities.resize(index + 1);
+    }
+
+    entities[index] = entity;
 }
 
 Editor::~Editor()

@@ -45,6 +45,8 @@ public:
     std::vector<char*> GetTilemapPaths() const { return new_level_tilemap_paths; }
     std::vector<Entity*> GetEntities() const { return entities; }
 
+    void AddEntityAt(Entity* entity, const size_t index);
+
 private:
     bool is_bank_window_init_size_set = false;
     int selected_canvas_mode;
