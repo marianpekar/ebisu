@@ -346,13 +346,31 @@ void Editor::DrawSaveAsPopup()
 
 void Editor::DrawOpenPopup()
 {
-    open_select_asset_popup = true;
-    open_previous_popup = nullptr;
+    ImGui::OpenPopup("Open Level");
+    if (ImGui::BeginPopupModal("Open Level", &open_open_popup))
+    {
+        ImGui::InputText("Filename", level_file_name,  256);
+        ImGui::SameLine();
+        if (ImGui::Button(std::format("...##OpenLevelFilename").c_str()))
+        {
+            open_open_popup = false;
+            open_previous_popup = &open_open_popup;
+            open_select_asset_popup = true;
+        }
 
-    if (selected_asset_path_changed)
-    {   
-        JsonReader::LoadLevelFromFile(std::format("{}/{}", assets_path, selected_asset_path.c_str()).c_str(), this);
-        open_open_popup = false;
+        if (selected_asset_path_changed)
+        {
+            selected_asset_path_changed = false;
+            strncpy_s(level_file_name, 256, selected_asset_path.c_str(), _TRUNCATE);
+        }
+        
+        if(ImGui::Button("Open"))
+        {
+            DisposeCurrentLevel();
+            JsonReader::LoadLevelFromFile(std::format("{}/{}", assets_path, level_file_name).c_str(), this);
+            open_open_popup = false;
+        }
+        ImGui::EndPopup();
     }
 }
 
