@@ -656,7 +656,7 @@ void Editor::DrawEntitiesOnCanvas(const ImVec2& canvas_screen_pos)
         
         for (const auto& component : entity->GetComponents())
         {
-            if (component->GetName() == "SpriteSheet" && show_entity_sprites)
+            if (strcmp(component->GetName(), "SpriteSheet") == 0 && show_entity_sprites)
             {
                 const auto* sprite_sheet = reinterpret_cast<SpriteSheet*>(component);
                 if (static_cast<int>(sprite_sheet->texture_index) != -1)
@@ -847,7 +847,7 @@ void Editor::DrawSelectedEntityComponentProperties(Entity* entity)
                     value = new_value_buffer;
                 }
 
-                if (component->GetName() == "SpriteSheet")
+                if (strcmp(component->GetName(), "SpriteSheet") == 0)
                 {
                     auto* sprite_sheet = reinterpret_cast<SpriteSheet*>(component);
                     sprite_sheet->texture_index = LoadTexture(value.c_str());
