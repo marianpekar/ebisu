@@ -662,7 +662,7 @@ void Editor::DrawEntitiesOnCanvas(const ImVec2& canvas_screen_pos)
         {
             if (strcmp(component->GetName(), "SpriteSheet") == 0 && show_entity_sprites)
             {
-                const auto* sprite_sheet = reinterpret_cast<SpriteSheet*>(component);
+                const auto sprite_sheet = reinterpret_cast<SpriteSheet*>(component);
                 if (static_cast<int>(sprite_sheet->texture_index) != -1)
                 {
                     const Texture* texture = textures[sprite_sheet->texture_index];
@@ -679,6 +679,10 @@ void Editor::DrawEntitiesOnCanvas(const ImVec2& canvas_screen_pos)
                          component_on_canvas_pos,
                          ImVec2(component_on_canvas_pos.x + width, component_on_canvas_pos.y + height),
                          uv0, uv1);
+                }
+                else
+                {
+                    sprite_sheet->texture_index = LoadTexture(component->GetPath("FilePath").c_str());
                 }
             }
         }
@@ -849,12 +853,6 @@ void Editor::DrawSelectedEntityComponentProperties(Entity* entity)
                 if (ImGui::IsKeyPressed(ImGuiKey_Enter))
                 {
                     value = new_value_buffer;
-                }
-
-                if (strcmp(component->GetName(), "SpriteSheet") == 0)
-                {
-                    auto* sprite_sheet = reinterpret_cast<SpriteSheet*>(component);
-                    sprite_sheet->texture_index = LoadTexture(value.c_str());
                 }
             }
 
