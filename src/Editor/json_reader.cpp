@@ -96,10 +96,10 @@ void JsonReader::LoadLevelFromFile(const char* assets_path, const char* file_pat
             }
             if (component_type == "Agent")
             {
+                const int target_entity_id = component["TargetEntityId"];
                 const float speed = component["Speed"];
                 const float stopping_distance = component["StoppingDistance"];
-                const int target_entity_id = component["TargetEntityId"];
-                entity->AddComponent<Agent>(speed, stopping_distance, target_entity_id);
+                entity->AddComponent<Agent>(target_entity_id, speed, stopping_distance);
             }
             if (component_type == "PlayerController")
             {
