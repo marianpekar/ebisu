@@ -38,14 +38,24 @@ public:
     void Draw();
 
     float GetTileSize() const { return tile_size; }
+    void SetTileSize(const float new_tile_size) { tile_size = new_tile_size; }
+    
     int GetRowTileCount() const { return row_tile_count; }
+    void SetRowTileCount(const int new_row_tile_count) { row_tile_count = new_row_tile_count; }
+    
     int GetColumnTileCount() const { return col_tile_count; }
+    void SetColumnTileCount(const int new_col_tile_count) { col_tile_count = new_col_tile_count; }
+    
     std::vector<int> GetCollisionMap() const { return collision_map; }
+    void SetCollisionMap(const std::vector<int>& new_collision_map) { collision_map = new_collision_map; }
+    
     std::vector<TilemapLayer> GetTilemapLayers() const { return tile_maps; }
     std::vector<char*> GetTilemapPaths() const { return new_level_tilemap_paths; }
     std::vector<Entity*> GetEntities() const { return entities; }
 
     void AddEntityAt(Entity* entity, const size_t index);
+
+    void AddTilemapLayer(const char* sprite_sheet_path, const bool is_front, const std::vector<int>& data);
 
 private:
     bool is_bank_window_init_size_set = false;

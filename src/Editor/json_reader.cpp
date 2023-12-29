@@ -13,6 +13,26 @@ void JsonReader::LoadLevelFromFile(const char* assets_path, const char* file_pat
     std::ifstream level_file(file_path);
 
     const json map_data = json::parse(level_file);
+
+    float tile_size = map_data["TileSize"];
+    editor->SetTileSize(tile_size);
+
+    int rows = map_data["Rows"];
+    editor->SetRowTileCount(rows);
+
+    int cols = map_data["Columns"];
+    editor->SetColumnTileCount(cols);
+
+    std::vector<int> collision_map = map_data["CollisionMap"];
+    editor->SetCollisionMap(collision_map);
+
+    for (auto& tilemap_layers = map_data["TileMapLayers"]; const json& tilemap_layer_json : tilemap_layers)
+    {
+        std::string sheet_path = tilemap_layer_json["SpriteSheet"];
+        bool is_front = tilemap_layer_json["IsFront"];
+        std::vector<int> tilemap_data = tilemap_layer_json["TileMap"];
+        editor->AddTilemapLayer(sheet_path.c_str(), is_front, tilemap_data);
+    }
     
     for (auto& entities = map_data["Entities"]; const json& entity_json : entities)
     {

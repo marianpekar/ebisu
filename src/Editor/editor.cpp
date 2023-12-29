@@ -956,6 +956,15 @@ void Editor::AddEntityAt(Entity* entity, const size_t index)
     entities[index] = entity;
 }
 
+void Editor::AddTilemapLayer(const char* sprite_sheet_path, const bool is_front, const std::vector<int>& data)
+{
+    LoadTexture(sprite_sheet_path);
+    TilemapLayer tilemap_layer;
+    tilemap_layer.is_front = is_front;
+    tilemap_layer.data = data;
+    tile_maps.push_back(tilemap_layer);
+}
+
 Editor::~Editor()
 {
     DeleteBankTextures();
