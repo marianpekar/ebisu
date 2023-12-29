@@ -8,7 +8,7 @@
 
 using json = nlohmann::json;
 
-void JsonReader::LoadLevelFromFile(const char* assets_path, const char* file_path, Editor* editor)
+void JsonReader::LoadLevelFromFile(const char* file_path, Editor* editor)
 {
     std::ifstream level_file(file_path);
 
@@ -64,7 +64,7 @@ void JsonReader::LoadLevelFromFile(const char* assets_path, const char* file_pat
                 int width = component["Width"];
                 int height = component["Height"];
                 std::string sheet_file_path = component["FilePath"];
-                entity->AddComponent<SpriteSheet>(std::format("{}/{}", assets_path, sheet_file_path), width, height);
+                entity->AddComponent<SpriteSheet>(sheet_file_path, width, height);
             }
             if (component_type == "Rigidbody")
             {

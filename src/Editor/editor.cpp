@@ -92,7 +92,7 @@ void Editor::Draw()
         DrawSelectAssetPopup();
     }
 
-    if (tile_maps.empty())
+    if (!is_level_loaded)
         return;
 
     for (size_t i = 0; i < tile_maps.size(); i++)
@@ -168,8 +168,10 @@ void Editor::DrawNewLevelPopup()
 
         if (ImGui::Button("Confirm"))
         {
+            is_level_loaded = false;
             DisposeCurrentLevel();
             CreateNewLevel();
+            is_level_loaded = true;
             open_new_level_popup = false;
         }
 
@@ -366,8 +368,10 @@ void Editor::DrawOpenPopup()
         
         if(ImGui::Button("Open"))
         {
+            is_level_loaded = false;
             DisposeCurrentLevel();
-            JsonReader::LoadLevelFromFile(assets_path.c_str(), std::format("{}/{}", assets_path, level_file_name).c_str(), this);
+            JsonReader::LoadLevelFromFile(std::format("{}/{}", assets_path, level_file_name).c_str(), this);
+            is_level_loaded = true;
             open_open_popup = false;
         }
         ImGui::EndPopup();

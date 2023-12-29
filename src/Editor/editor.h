@@ -92,6 +92,8 @@ private:
     void DrawSaveAsPopup();
     void DrawOpenPopup();
 
+    bool is_level_loaded = false;
+    
     bool open_new_level_popup = false;
     bool open_select_asset_popup = false;
     int selected_tilemap_input_field_index = 0;
