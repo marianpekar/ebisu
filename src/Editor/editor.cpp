@@ -931,7 +931,7 @@ void Editor::DrawAddComponentDropdownAndAddButton(Entity* selected_entity)
             selected_entity->AddComponent<Animator>(0, 0, 0, 1000, true, true);
             break;
         case 5:
-            selected_entity->AddComponent<CharacterAnimator>(600.0f, 0, 1, 100.0f, 500.0f, 2, 5);
+            selected_entity->AddComponent<CharacterAnimator>(600.0f, 0, 1, 500.0f, 2, 5);
             break;
         case 6:
             selected_entity->AddComponent<Agent>(0, 1000.0f, tile_size * 2.0f);

@@ -205,7 +205,6 @@
                     "IdleAnimationFrameTime": 600,
                     "IdleAnimationStartFrame": 0,
                     "IdleAnimationEndFrame": 1,
-                    "IdleToMoveAnimationThreshold": 100,
                     "MoveAnimationFrameTime": 500,
                     "MoveAnimationStartFrame": 2,
                     "MoveAnimationEndFrame": 5

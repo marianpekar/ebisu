@@ -9,6 +9,7 @@ private:
     class Game* game;
     float move_speed;
     Vector2 move_dir;
+    class CharacterAnimator* character_animator;
 
     class Rigidbody* rigidbody = nullptr;
 public:

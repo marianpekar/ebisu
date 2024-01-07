@@ -114,12 +114,12 @@ void JsonReader::LoadLevelFromFile(const char* file_path, Editor* editor)
                 const float idle_anim_frame_time = component["IdleAnimationFrameTime"];
                 const int idle_anim_start_frame = component["IdleAnimationStartFrame"];
                 const int idle_anim_end_frame = component["IdleAnimationEndFrame"];
-                const float idle_to_move_anim_threshold = component["IdleToMoveAnimationThreshold"];
+
                 const float move_anim_frame_time = component["MoveAnimationFrameTime"];
                 const int move_anim_start_frame = component["MoveAnimationStartFrame"];
                 const int move_anim_end_frame = component["MoveAnimationEndFrame"];
                 entity->AddComponent<CharacterAnimator>(idle_anim_frame_time, idle_anim_start_frame, idle_anim_end_frame,
-                    idle_to_move_anim_threshold, move_anim_frame_time, move_anim_start_frame, move_anim_end_frame);
+                    move_anim_frame_time, move_anim_start_frame, move_anim_end_frame);
             }
         }
 

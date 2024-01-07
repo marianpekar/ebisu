@@ -9,6 +9,7 @@ class Agent final : public Component
 {
 private:
     class Map* map;
+    class CharacterAnimator* character_animator = nullptr;
     class Transform* transform = nullptr;
     class Rigidbody* rigidbody = nullptr;
     Transform* target_transform = nullptr;

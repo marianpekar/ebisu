@@ -4,9 +4,11 @@
 #include "player_controller.h"
 #include "transform.h"
 #include "rigidbody.h"
+#include "character_animator.h"
 
 void PlayerController::Setup()
 {
+    character_animator = owner->GetComponent<CharacterAnimator>();
     rigidbody = owner->GetComponent<Rigidbody>();
 }
 
@@ -55,6 +57,11 @@ void PlayerController::Update(float delta_time)
     
     const Vector2 move_force = move_dir.Normalized() * move_speed;
     rigidbody->AddForce(move_force);
+
+    if (character_animator != nullptr)
+    {
+        character_animator->SetMoveDirection(move_dir);
+    }
 }
 
 void PlayerController::SetMoveSpeed(const float player_move_speed)

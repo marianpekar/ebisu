@@ -189,8 +189,6 @@ void Game::LoadComponents(const json& component, Entity* game_entity, Transform*
         {
             animator = game_entity->AddComponent<Animator>();
         }
-
-        const float idle_to_move_anim_threshold = component["IdleToMoveAnimationThreshold"];
         
         const int move_anim_start_frame = component["MoveAnimationStartFrame"];
         const int move_anim_end_frame = component["MoveAnimationEndFrame"];
@@ -200,7 +198,7 @@ void Game::LoadComponents(const json& component, Entity* game_entity, Transform*
         const int idle_anim_end_frame = component["IdleAnimationEndFrame"];
         const float idle_anim_frame_time = component["IdleAnimationFrameTime"];
         
-        game_entity->AddComponent<CharacterAnimator>(animator, idle_to_move_anim_threshold,
+        game_entity->AddComponent<CharacterAnimator>(animator,
             move_anim_start_frame, move_anim_end_frame, move_anim_frame_time,
             idle_anim_start_frame, idle_anim_end_frame, idle_anim_frame_time);
     }

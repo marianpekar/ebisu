@@ -8,9 +8,6 @@
 
 void CharacterAnimator::Setup()
 {
-    transform = owner->GetComponent<Transform>();
-    last_position = transform->GetPosition();
-
     idle_anim = new CharacterAnimation(idle_anim_start_frame, idle_anim_end_frame, idle_anim_frame_time, animator);
     move_anim = new CharacterAnimation(move_anim_start_frame, move_anim_end_frame, move_anim_frame_time, animator);
     
@@ -20,15 +17,10 @@ void CharacterAnimator::Setup()
 
 void CharacterAnimator::Update(float delta_time)
 {
-    const Vector2 current_position = transform->GetPosition();
-    const Vector2 move_dir = current_position - last_position;
-    const float speed = move_dir.Length() / delta_time;
-    last_position = current_position;
+    constexpr float dir_change_threshold = 0.001f;
     
-    if (speed > idle_move_anim_threshold)
+    if (move_dir.Length() > dir_change_threshold)
     {
-        constexpr float dir_change_threshold = 0.1f;
-        
         if (move_dir.y < -dir_change_threshold)
         {
             if (move_dir.x < -dir_change_threshold)
