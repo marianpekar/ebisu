@@ -937,7 +937,7 @@ void Editor::DrawAddComponentDropdownAndAddButton(Entity* selected_entity)
             selected_entity->AddComponent<Agent>(0, 1000.0f, tile_size * 2.0f);
             break;
         case 7:
-            selected_entity->AddComponent<PlayerController>();
+            selected_entity->AddComponent<PlayerController>(2000.f);
             break;
         case 8:
             selected_entity->AddComponent<MainCamera>();

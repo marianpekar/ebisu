@@ -121,5 +121,8 @@ struct MainCamera : Component
 
 struct PlayerController : Component
 {
-    PlayerController() : Component("PlayerController") {}
+    PlayerController(float speed) : Component("PlayerController")
+    {
+        float_properties.insert({"Speed", speed});
+    }
 };

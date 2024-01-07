@@ -103,7 +103,8 @@ void JsonReader::LoadLevelFromFile(const char* file_path, Editor* editor)
             }
             if (component_type == "PlayerController")
             {
-                entity->AddComponent<PlayerController>();
+                const float speed = component["Speed"];
+                entity->AddComponent<PlayerController>(speed);
             }
             if (component_type == "MainCamera")
             {
