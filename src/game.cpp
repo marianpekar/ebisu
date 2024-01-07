@@ -179,7 +179,8 @@ void Game::LoadComponents(const json& component, Entity* game_entity, Transform*
     }
     if (component_type == "PlayerController")
     {
-        game_entity->AddComponent<PlayerController>(this);
+        const float speed = component["Speed"];
+        game_entity->AddComponent<PlayerController>(this, speed);
     }
     if (component_type == "CharacterAnimator")
     {

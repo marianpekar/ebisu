@@ -7,12 +7,12 @@ class PlayerController : public Component
 {
 private:
     class Game* game;
-    float move_speed = 4096.f;
+    float move_speed;
     Vector2 move_dir;
 
     class Rigidbody* rigidbody = nullptr;
 public:
-    PlayerController(Game* game) : game(game) {}
+    PlayerController(Game* game, float speed) : game(game), move_speed(speed) {}
     ~PlayerController() override = default;
     void Setup() override;
     void Update(float delta_time) override;

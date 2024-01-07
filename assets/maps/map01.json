@@ -108,7 +108,8 @@
                     "MoveAnimationEndFrame": 5
                 },
                 {
-                    "Type": "PlayerController"
+                    "Type": "PlayerController",
+                    "Speed": 2000
                 },
                 {
                     "Type": "MainCamera"
