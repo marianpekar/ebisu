@@ -9,7 +9,7 @@ class Game
 public:
     Game() = default;
     ~Game();
-    bool Initialize(const char* title, int screen_width, int screen_height, bool fullscreen);
+    bool Initialize(const char* title, int screen_width, int screen_height, bool fullscreen, const char* map_path);
     void InitializeGameLogicEssentials(int screen_width, int screen_height);
     void Setup() const;
     void Update(float delta_time) const;
@@ -17,7 +17,7 @@ public:
     const bool& IsRunning() const { return is_running; }
     void Quit();
 private:
-    bool LoadLevel();
+    bool LoadLevel(const char* map_path);
     void LoadMap(const json& map_data);
     void LoadEntities(const json& map_data);
     void LoadComponents(const json& component, class Entity* game_entity, class Transform* transform);

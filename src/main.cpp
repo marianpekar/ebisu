@@ -4,7 +4,7 @@
 int main(int argc, char*[])
 {
     Game game;
-    if (!game.Initialize("Ebisu", 1024, 768, false))
+    if (!game.Initialize("Ebisu", 1024, 768, false, "maps/map01.json"))
         return -1;
 
     game.Setup();

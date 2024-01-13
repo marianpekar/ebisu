@@ -29,14 +29,14 @@ const std::string project_path =
 
 const std::string assets_path = project_path + "assets";
 
-bool Game::Initialize(const char* title, const int screen_width, const int screen_height, const bool fullscreen)
+bool Game::Initialize(const char* title, const int screen_width, const int screen_height, const bool fullscreen, const char* map_path)
 {
     if (!Renderer::Initialize(title, screen_width, screen_height, fullscreen))
         return false;
 
     InitializeGameLogicEssentials(screen_width, screen_height);
     
-    if (!LoadLevel())
+    if (!LoadLevel(map_path))
     {
         std::cout << "[Game] Failed to load level" << std::endl;
         return false;
@@ -55,9 +55,9 @@ void Game::InitializeGameLogicEssentials(const int screen_width, const int scree
     entity_pool = new EntityPool();
 }
 
-bool Game::LoadLevel()
+bool Game::LoadLevel(const char* map_path)
 {
-    std::ifstream map_file(std::format("{}/maps/map01.json", assets_path));
+    std::ifstream map_file(std::format("{}/{}", assets_path, map_path));
     if (!map_file.is_open())
         return false;
 
