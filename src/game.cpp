@@ -20,16 +20,9 @@
 #include "ECS/Components/transform.h"
 #include "ECS/Components/camera.h"
 
-const std::string project_path =
-#if _DEBUG
-    "./..";
-#else
-    ".";
-#endif
-
-bool Game::Initialize(const char* title, const int screen_width, const int screen_height, const bool fullscreen, const char* map_path, const char* assets_root_path)
+bool Game::Initialize(const char* title, const int screen_width, const int screen_height, const bool fullscreen, const char* map_path, const char* assets_root_path, const char* project_root_path)
 {
-    assets_path = std::format("{}/{}", project_path, assets_root_path);
+    assets_path = std::format("{}/{}", project_root_path, assets_root_path);
     
     if (!Renderer::Initialize(title, screen_width, screen_height, fullscreen))
         return false;

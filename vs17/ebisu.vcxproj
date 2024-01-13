@@ -92,6 +92,7 @@
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="..\src\config_map.cpp" />
     <ClCompile Include="..\src\ECS\collision_solver.cpp" />
     <ClCompile Include="..\src\ECS\Components\agent.cpp" />
     <ClCompile Include="..\src\ECS\Components\animator.cpp" />
@@ -111,6 +112,7 @@
     <ClCompile Include="..\src\quadtree.cpp" />
     <ClCompile Include="..\src\renderer.cpp" />
     <ClCompile Include="..\src\texture_loader.cpp" />
+    <ClInclude Include="..\src\config_map.h" />
     <ClInclude Include="..\src\ECS\collision_solver.h" />
     <ClInclude Include="..\src\ECS\Components\agent.h" />
     <ClInclude Include="..\src\ECS\Components\animator.h" />
