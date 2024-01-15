@@ -689,13 +689,15 @@ void Editor::DrawEntitiesOnCanvas(const ImVec2& canvas_screen_pos)
 
         if (show_entity_names_on_canvas)
         {
-            const ImVec2 text_size = ImGui::CalcTextSize(entity->GetName().c_str());
+            std::string label_text = std::format("{} [{}]", entity->GetName(), entity->GetId());
+            const ImVec2 text_size = ImGui::CalcTextSize(label_text.c_str());
             constexpr size_t margin = 2;
             const auto bg_min = ImVec2(component_on_canvas_pos.x - margin, component_on_canvas_pos.y - margin);
             const auto bg_max = ImVec2(component_on_canvas_pos.x + text_size.x + margin, component_on_canvas_pos.y + text_size.y + margin);
             ImColor label_bg_color = selected_entity_index == entity->GetIndex() ? ImColor(0.f, 0.8f, 0.8f) : ImColor(0.f, 0.f, 0.f);
             ImGui::GetWindowDrawList()->AddRectFilled(bg_min, bg_max, label_bg_color); 
-            ImGui::GetWindowDrawList()->AddText(component_on_canvas_pos, ImColor(1.f, 1.f, 1.f), entity->GetName().c_str());
+            ImGui::GetWindowDrawList()->AddText(component_on_canvas_pos, ImColor(1.f, 1.f, 1.f),
+                 label_text.c_str());
 
             if (ImGui::IsMouseHoveringRect(bg_min, bg_max) && ImGui::IsMouseClicked(ImGuiMouseButton_Left))
             {
@@ -711,7 +713,7 @@ void Editor::DrawEntitiesWindow()
 
     if (ImGui::Button("Create Entity"))
     {
-        const auto entity = new Entity("Entity", entities.size());
+        const auto entity = new Entity("Entity", entities.size(), uid_generator.CreateNew());
         entities.push_back(entity);
     }
 
@@ -769,6 +771,7 @@ void Editor::DrawSelectedEntityGeneralProperties(Entity* entity)
     ImGui::SeparatorText("General");
 
     ImGui::Checkbox(std::format("{}##{}", "Is Active", entity->GetName()).c_str(), &entity->is_active);
+    ImGui::Checkbox(std::format("{}##{}", "Is Persistent", entity->GetName()).c_str(), &entity->is_persistent);
 
     const std::string current_name = entity->GetName();
     char new_name_buffer[256];

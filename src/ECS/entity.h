@@ -10,22 +10,25 @@ class Entity
 {
 private:
     bool is_active;
+    bool is_persistent;
     std::unordered_map<std::type_index, Component*> component_map;
     ComponentManager* component_manager;
-    int id = -1;
+    uint64_t id = -1;
     const char* name = nullptr;
 public:
     Entity(ComponentManager* component_manager, class EntityPool* entity_pool);
-    ~Entity() = default;
     
     const char* GetName() const { return name; }
     void SetName(const char* entity_name) { this->name = entity_name; }
     
-    int GetId() const { return id; }
+    uint64_t GetId() const { return id; }
     void SetId(const int entity_id) { this->id = entity_id; }
 
     const bool& IsActive() const { return is_active; }
     void SetIsActive(const bool active) { this->is_active = active; }
+
+    const bool& IsPersistent() const { return is_persistent; }
+    void SetIsPersistent(const bool persistent) { this->is_persistent = persistent; }
     
     template <typename T, typename ... TArgs>
     T* AddComponent(TArgs&&... args)

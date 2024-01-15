@@ -40,85 +40,12 @@
                 2, 0, 3, 1, 3, 1, 0, 2, 2, 0, 3, 1, 3, 1, 0, 2,
                 2, 0, 1, 3, 1, 3, 0, 2, 2, 0, 1, 3, 1, 3, 0, 2
             ]
-        },
-        {
-            "SpriteSheet": "images/tilemaps/test_tilemap_4_tiles_128x128_alpha.png",
-            "IsFront": true,
-            "TileMap":
-            [
-                0, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
-                -1, 1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
-                -1, -1, 2, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
-                -1, -1, -1, 3, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
-                -1, -1, -1, -1, 0, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
-                -1, -1, -1, -1, -1, 1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
-                -1, -1, -1, -1, -1, -1, 2, -1, -1, -1, -1, -1, -1, -1, -1, -1,
-                -1, -1, -1, -1, -1, -1, -1, 3, -1, -1, -1, -1, -1, -1, -1, -1,
-                -1, -1, -1, -1, -1, -1, -1, -1, 0, -1, -1, -1, -1, -1, -1, -1,
-                -1, -1, -1, -1, -1, -1, -1, -1, -1, 1, -1, -1, -1, -1, -1, -1,
-                -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 2, -1, -1, -1, -1, -1,
-                -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 3, -1, -1, -1, -1,
-                -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 0, -1, -1, -1,
-                -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 1, -1, -1
-            ]
         }
     ],
     "Entities":
     [
        {
             "Id": 159753,
-            "Name": "Player",
-            "IsActive": true,
-            "IsPersistent": true,
-            "Components":
-            [
-                { 
-                    "Type": "MapCollider",
-                    "Width": 64,
-                    "Height": 64
-                },
-                { 
-                    "Type": "BoxCollider",
-                    "Width": 64,
-                    "Height": 64
-                },
-                {
-                    "Type": "SpriteSheet",
-                    "FilePath": "images/spritesheets/test_8dir_movement_animation_spritesheet_512x512.png",
-                    "Width": 64,
-                    "Height": 64
-                },
-                {
-                    "Type": "Rigidbody",
-                    "Mass": 1.0,
-                    "Drag": 0.1
-                },
-                {
-                    "Type": "Transform",
-                    "X": 15.0,
-                    "Y": 25.0
-                },
-                {
-                    "Type": "CharacterAnimator",
-                    "IdleAnimationFrameTime": 600,
-                    "IdleAnimationStartFrame": 0,
-                    "IdleAnimationEndFrame": 1,
-                    "IdleToMoveAnimationThreshold": 100,
-                    "MoveAnimationFrameTime": 500,
-                    "MoveAnimationStartFrame": 2,
-                    "MoveAnimationEndFrame": 5
-                },
-                {
-                    "Type": "PlayerController",
-                    "Speed": 2000
-                },
-                {
-                    "Type": "MainCamera"
-                }
-            ]
-       },
-       {
-            "Id": 159456,
             "Name": "Box",
             "IsActive": true,
             "IsPersistent": false,
@@ -165,7 +92,7 @@
             ]
        },
        {
-            "Id": 357987,
+            "Id": 789654,
             "Name": "Box2",
             "IsActive": true,
             "IsPersistent": false,
@@ -173,7 +100,7 @@
             [
                 {
                     "Type":"Agent",
-                    "TargetEntityId": 159456,
+                    "TargetEntityId": 159753,
                     "Speed": 1000,
                     "StoppingDistance": 128
                 },
@@ -211,38 +138,6 @@
                     "MoveAnimationFrameTime": 500,
                     "MoveAnimationStartFrame": 2,
                     "MoveAnimationEndFrame": 5
-                }
-            ]
-        },
-        {
-            "Id": 159456,
-            "Name": "Box",
-            "IsActive": true,
-            "IsPersistent": false,
-            "Components": 
-            [
-                { 
-                    "Type": "BoxCollider",
-                    "IsTrigger": true,
-                    "Width": 64,
-                    "Height": 64
-                },
-                {
-                    "Type": "SpriteSheet",
-                    "FilePath": "images/white_64x64.png",
-                    "Width": 64,
-                    "Height": 64
-                },
-                {
-                    "Type": "Transform",
-                    "X": 480.0,
-                    "Y": 480.0
-                },
-                {
-                    "Type": "MapExit",
-                    "NextMapPath": "maps/map02.json",
-                    "MoveOtherToX": 15.0,
-                    "MoveOtherToY": 25.0
                 }
             ]
         }

@@ -5,6 +5,7 @@
 #include <vector>
 
 #include "entity.h"
+#include "uid_generator.h"
 #include "imgui.h"
 #include "SDL_opengl.h"
 
@@ -58,6 +59,7 @@ public:
     void AddTilemapLayer(const char* sprite_sheet_path, const bool is_front, const std::vector<int>& data);
 
 private:
+    UniqueIdGenerator uid_generator;
     bool is_bank_window_init_size_set = false;
     int selected_canvas_mode;
     bool show_entity_names_on_canvas = true;

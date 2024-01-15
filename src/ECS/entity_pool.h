@@ -6,18 +6,20 @@
 class EntityPool
 {
 private:
-    std::unordered_map<int, Entity*> entities;
+    std::vector<Entity*> entities;
+    std::unordered_map<size_t, uint64_t> indices;
 
 public:
     EntityPool() = default;
 
     void AddEntity(Entity* entity)
     {
-        entities[entity->GetId()] = entity;
+        indices[entities.size()] = entity->GetId();
+        entities.emplace_back(entity);
     }
 
     Entity* GetEntityById(const int id)
     {
-        return entities[id];
+        return entities[indices[id]];
     }
 };

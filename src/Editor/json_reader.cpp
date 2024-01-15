@@ -33,15 +33,21 @@ void JsonReader::LoadLevelFromFile(const char* file_path, Editor* editor)
         std::vector<int> tilemap_data = tilemap_layer_json["TileMap"];
         editor->AddTilemapLayer(sheet_path.c_str(), is_front, tilemap_data);
     }
-    
-    for (auto& entities = map_data["Entities"]; const json& entity_json : entities)
+
+    auto& entities = map_data["Entities"];
+    for (size_t i = 0; i < entities.size(); i++)
     {
+        const json& entity_json = entities[i];
+        
         std::string entity_name = entity_json["Name"];
         const int entity_id = entity_json["Id"];
         const bool is_active = entity_json["IsActive"];
-
-        auto* entity = new Entity(entity_name.c_str(), entity_id);
+        const bool is_persistent = entity_json["IsPersistent"];
+        
+        auto* entity = new Entity(entity_name.c_str(), i, entity_id);
+        
         entity->is_active = is_active;
+        entity->is_persistent = is_persistent;
         
         for (auto& components = entity_json["Components"]; const json& component : components)
         {
@@ -124,6 +130,6 @@ void JsonReader::LoadLevelFromFile(const char* file_path, Editor* editor)
             }
         }
 
-        editor->AddEntityAt(entity, entity_id);
+        editor->AddEntityAt(entity, i);
     }
 }

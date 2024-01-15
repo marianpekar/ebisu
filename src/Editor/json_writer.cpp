@@ -54,9 +54,10 @@ void JsonWriter::SerializeEntities(const Editor* editor, nlohmann::json& json)
     for (size_t i = 0; i < entities.size(); i++)
     {
         nlohmann::json entity_entry;
-        entity_entry["Id"] = i;
+        entity_entry["Id"] = entities[i]->GetId();
         entity_entry["Name"] = entities[i]->GetName();
         entity_entry["IsActive"] = entities[i]->is_active;
+        entity_entry["IsPersistent"] = entities[i]->is_persistent;
         
         for (Component* component : entities[i]->GetComponents())
         {

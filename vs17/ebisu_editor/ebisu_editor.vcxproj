@@ -38,6 +38,7 @@
     <ClInclude Include="..\..\src\Editor\entity.h" />
     <ClInclude Include="..\..\src\Editor\json_reader.h" />
     <ClInclude Include="..\..\src\Editor\json_writer.h" />
+    <ClInclude Include="..\..\src\Editor\uid_generator.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>15.0</VCProjectVersion>

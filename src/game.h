@@ -16,9 +16,9 @@ public:
     void Render() const;
     const bool& IsRunning() const { return is_running; }
     void Quit();
+    bool LoadLevel(const char* map_path);
 private:
     std::string assets_path;
-    bool LoadLevel(const char* map_path);
     void LoadMap(const json& map_data);
     void LoadEntities(const json& map_data);
     void LoadComponents(const json& component, class Entity* game_entity, class Transform* transform);

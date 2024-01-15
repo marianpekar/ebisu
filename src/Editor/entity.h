@@ -8,7 +8,7 @@
 class Entity
 {
 public:
-    Entity(const char* name, size_t index) : is_active(true), name(name), index(index), components({})
+    Entity(const char* name, size_t index, uint64_t id) : is_active(true), index(index), id(id), name(name), components({})
     {
         AddComponent<Transform>(.0f,.0f);
     }
@@ -45,10 +45,13 @@ public:
     void SetName(const char* new_name) { name = new_name; }
 
     size_t GetIndex() { return index; }
+    uint64_t GetId() { return id; }
     
     bool is_active;
+    bool is_persistent;
 private:
     size_t index;
+    uint64_t id;
     std::string name;
     std::vector<Component*> components;
 };

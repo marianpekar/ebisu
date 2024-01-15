@@ -100,6 +100,7 @@
     <ClCompile Include="..\src\ECS\Components\camera.cpp" />
     <ClCompile Include="..\src\ECS\Components\character_animator.cpp" />
     <ClCompile Include="..\src\ECS\Components\map_collider.cpp" />
+    <ClCompile Include="..\src\ECS\Components\map_exit.cpp" />
     <ClCompile Include="..\src\ECS\Components\player_controller.cpp" />
     <ClCompile Include="..\src\ECS\Components\rigidbody.cpp" />
     <ClCompile Include="..\src\ECS\Components\sprite.cpp" />
@@ -121,6 +122,7 @@
     <ClInclude Include="..\src\ECS\Components\character_animator.h" />
     <ClInclude Include="..\src\ECS\Components\component.h" />
     <ClInclude Include="..\src\ECS\Components\map_collider.h" />
+    <ClInclude Include="..\src\ECS\Components\map_exit.h" />
     <ClInclude Include="..\src\ECS\Components\player_controller.h" />
     <ClInclude Include="..\src\ECS\Components\rigidbody.h" />
     <ClInclude Include="..\src\ECS\Components\sprite.h" />

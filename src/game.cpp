@@ -19,6 +19,7 @@
 #include "ECS/Components/sprite_sheet.h"
 #include "ECS/Components/transform.h"
 #include "ECS/Components/camera.h"
+#include "ECS/Components/map_exit.h"
 
 bool Game::Initialize(const char* title, const int screen_width, const int screen_height, const bool fullscreen, const char* map_path, const char* assets_root_path, const char* project_root_path)
 {
@@ -28,7 +29,6 @@ bool Game::Initialize(const char* title, const int screen_width, const int scree
         return false;
 
     InitializeGameLogicEssentials(screen_width, screen_height);
-    
     if (!LoadLevel(map_path))
     {
         std::cout << "[Game] Failed to load level" << std::endl;
@@ -36,6 +36,7 @@ bool Game::Initialize(const char* title, const int screen_width, const int scree
     }
 
     is_running = true;
+    
     return true;
 }
 
@@ -98,7 +99,10 @@ void Game::LoadEntities(const json& map_data)
         
         const bool is_active = entity["IsActive"];
         game_entity->SetIsActive(is_active);
-
+        
+        const bool is_persistent = entity["IsPersistent"];
+        game_entity->SetIsPersistent(is_persistent);
+        
         const auto& components = entity["Components"];
         for (const auto& component : components)
         {
@@ -199,6 +203,14 @@ void Game::LoadComponents(const json& component, Entity* game_entity, Transform*
     {
         game_entity->AssignComponent<Camera>(Renderer::GetMainCamera());
     }
+    if (component_type == "MapExit")
+    {
+        const std::string next_map_path = component["NextMapPath"];
+        const float move_other_to_pos_x = component["MoveOtherToX"];
+        const float move_other_to_pos_y = component["MoveOtherToY"];
+        const Vector2* move_other_to_pos = new Vector2(move_other_to_pos_x, move_other_to_pos_y);
+        game_entity->AddComponent<MapExit>(next_map_path.c_str(), move_other_to_pos, this);
+    }
 }
 
 void Game::Setup() const
@@ -234,6 +246,7 @@ void Game::Quit()
 
 Game::~Game()
 {
+    is_running = false;
     Renderer::Destroy();
     SDL_Quit();
     delete map;
