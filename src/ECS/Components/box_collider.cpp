@@ -43,8 +43,8 @@ void BoxCollider::Collide(BoxCollider* other, const Vector2& overlap) const
         }
     }
 
-    if(on_collision == nullptr)
+    if (on_collision == nullptr)
         return;
-
-    on_collision(other);
+    
+    on_collision(other, collision_user_data);
 }

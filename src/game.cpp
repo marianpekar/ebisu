@@ -62,6 +62,11 @@ bool Game::LoadLevel(const char* map_path)
     return true;
 }
 
+void Game::ChangeLevel(const std::string& string)
+{
+    //TODO
+}
+
 void Game::LoadMap(const json& map_data)
 {
     const std::vector<int> collision_map = map_data["CollisionMap"];

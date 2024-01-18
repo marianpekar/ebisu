@@ -17,6 +17,8 @@ public:
     const bool& IsRunning() const { return is_running; }
     void Quit();
     bool LoadLevel(const char* map_path);
+    void ChangeLevel(const std::string& string);
+
 private:
     std::string assets_path;
     void LoadMap(const json& map_data);

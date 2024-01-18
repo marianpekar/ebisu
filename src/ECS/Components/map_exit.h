@@ -16,5 +16,9 @@ private:
     Game* game;
     std::string next_map_path;
     const Vector2* move_other_to_pos;
-    void ChangeLevel(const BoxCollider* other) const;
+    void ChangeLevel(const BoxCollider* other, Game* game) const;
+    
+    typedef void (*CollisionCallback)(const BoxCollider*, void*);
+    static void OnCollisionStatic(const BoxCollider* other, void* user_data);
+    
 };

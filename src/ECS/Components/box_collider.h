@@ -15,11 +15,15 @@ private:
     class MapCollider* map_collider = nullptr;
     class Rigidbody* rigidbody = nullptr;
     class CollisionSolver* collision_solver;
+
+    typedef void (*CollisionCallback)(const BoxCollider*, void*);
 public:
+    CollisionCallback on_collision;
+    void* collision_user_data = nullptr;
+    
     BoxCollider(float width, float height, CollisionSolver* collision_solver);
     void Setup() override;
     void Update(float delta_time) override;
-    std::function<void(BoxCollider*)> on_collision;
     void Collide(BoxCollider* other, const Vector2& overlap) const;
     const bool& GetIsTrigger() const { return is_trigger; }
     void SetIsTrigger(const bool& value) { is_trigger = value; }
