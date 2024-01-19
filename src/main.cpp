@@ -30,28 +30,37 @@ int main(int argc, char*[])
     game.Setup();
 
     constexpr Uint32 target_fps = 60;
-    constexpr Uint32 max_frame_time = (1000 / target_fps);
-    constexpr float max_delta_time = 0.05f;
-    Uint32 ticks = 0;
+    constexpr Uint32 frame_time = 1000 / target_fps;
+    constexpr float fixed_delta_time = 1.0f / target_fps;
+
+    Uint32 previous_ticks = SDL_GetTicks();
+    float accumulated_time = 0.0f;
+
     while (game.IsRunning())
     {
-        while (SDL_GetTicks() < ticks + max_frame_time)
+        const Uint32 current_ticks = SDL_GetTicks();
+        const Uint32 frame_ticks = current_ticks - previous_ticks;
+
+        if (frame_ticks < frame_time)
         {
-            SDL_Delay(1);
+            SDL_Delay(frame_time - frame_ticks);
+            continue;
         }
 
-        float delta_time = static_cast<float>(SDL_GetTicks() - ticks) * 0.001f;
+        accumulated_time += 0.001f * frame_ticks;
 
-        if (delta_time > max_delta_time)
+        while (accumulated_time >= fixed_delta_time)
         {
-            delta_time = max_delta_time;
+            game.Update(fixed_delta_time);
+            accumulated_time -= fixed_delta_time;
         }
 
-        game.Update(delta_time);
         game.Render();
-        
-        ticks = SDL_GetTicks();
+
+        previous_ticks = current_ticks;
     }
+
+
 
     return 0;
 }

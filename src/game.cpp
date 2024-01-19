@@ -64,7 +64,8 @@ bool Game::LoadLevel(const char* map_path)
 
 void Game::ChangeLevel(const std::string& string)
 {
-    //TODO
+    entity_pool->RemoveAllButPersistent();
+    component_manager->RemoveAllButPersistent();
 }
 
 void Game::LoadMap(const json& map_data)
@@ -96,17 +97,19 @@ void Game::LoadEntities(const json& map_data)
         std::string entity_name = entity["Name"];
         const int entity_id = entity["Id"];
 
-        const auto game_entity = new Entity(component_manager, entity_pool);
+        const auto game_entity = new Entity(component_manager);
         game_entity->SetName(entity_name.c_str());
         game_entity->SetId(entity_id);
+        
         const auto entity_transform = game_entity->AddComponent<Transform>();
-        entity_pool->AddEntity(game_entity);
         
         const bool is_active = entity["IsActive"];
         game_entity->SetIsActive(is_active);
         
         const bool is_persistent = entity["IsPersistent"];
         game_entity->SetIsPersistent(is_persistent);
+
+        entity_pool->AddEntity(game_entity);
         
         const auto& components = entity["Components"];
         for (const auto& component : components)

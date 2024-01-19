@@ -9,19 +9,19 @@
 class Entity 
 {
 private:
-    bool is_active;
-    bool is_persistent;
+    bool is_active = true;
+    bool is_persistent = false;
     std::unordered_map<std::type_index, Component*> component_map;
     ComponentManager* component_manager;
-    uint64_t id = -1;
+    int id = -1;
     const char* name = nullptr;
 public:
-    Entity(ComponentManager* component_manager, class EntityPool* entity_pool);
+    Entity(ComponentManager* component_manager) : component_manager(component_manager) {}
     
     const char* GetName() const { return name; }
     void SetName(const char* entity_name) { this->name = entity_name; }
     
-    uint64_t GetId() const { return id; }
+    int GetId() const { return id; }
     void SetId(const int entity_id) { this->id = entity_id; }
 
     const bool& IsActive() const { return is_active; }
@@ -35,6 +35,7 @@ public:
     {
         T* component = new T(std::forward<TArgs>(args)...);  // NOLINT(clang-diagnostic-implicit-int-float-conversion)
         component->owner = this;
+        component->SetIsPersistent(is_persistent);
         component_map[typeid(T)] = component;
         component_manager->AddComponent(component);
         return component;
@@ -44,6 +45,7 @@ public:
     void AssignComponent(T* component)
     {
         component->owner = this;
+        component->SetIsPersistent(is_persistent);
         component_map[typeid(T)] = component;
         component_manager->AddComponent(component);
     }
@@ -58,4 +60,6 @@ public:
 
         return nullptr;
     }
+
+    ~Entity() = default;
 };

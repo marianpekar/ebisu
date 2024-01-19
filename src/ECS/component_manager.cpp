@@ -8,6 +8,23 @@ void ComponentManager::AddComponent(Component* component)
     components.emplace_back(component);
 }
 
+void ComponentManager::RemoveAllButPersistent()
+{
+    auto it = components.begin();
+    while (it != components.end())
+    {
+        if (!(*it)->GetIsPersistent())
+        {
+            delete *it;
+            it = components.erase(it);
+        }
+        else
+        {
+            ++it;
+        }
+    }
+}
+
 void ComponentManager::Setup() const
 {
     for (auto& component : components)

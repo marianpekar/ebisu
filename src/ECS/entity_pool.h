@@ -6,20 +6,57 @@
 class EntityPool
 {
 private:
-    std::vector<Entity*> entities;
-    std::unordered_map<size_t, uint64_t> indices;
-
+    std::unordered_map<int, Entity*> entities;
 public:
     EntityPool() = default;
+    
+    ~EntityPool()
+    {
+        for (auto& entity : entities)
+        {
+            delete entity.second;
+        }
+        entities.clear();
+    }
 
     void AddEntity(Entity* entity)
     {
-        indices[entities.size()] = entity->GetId();
-        entities.emplace_back(entity);
+        if (!entity)
+            return;
+        
+        entities.emplace(entity->GetId(), entity);
     }
 
     Entity* GetEntityById(const int id)
     {
-        return entities[indices[id]];
+        const auto it = entities.find(id);
+        return (it != entities.end()) ? it->second : nullptr;
+    }
+
+    void RemoveAllButPersistent()
+    {
+        auto it = entities.begin();
+        while (it != entities.end())
+        {
+            if (!(it->second->IsPersistent()))
+            {
+                delete it->second;
+                it = entities.erase(it);
+            }
+            else
+            {
+                ++it;
+            }
+        }
+    }
+
+    void RemoveEntity(const int id)
+    {
+        auto it = entities.find(id);
+        if (it != entities.end())
+        {
+            delete it->second;
+            entities.erase(it);
+        }
     }
 };

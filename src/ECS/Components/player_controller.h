@@ -9,8 +9,7 @@ private:
     class Game* game;
     float move_speed;
     Vector2 move_dir;
-    class CharacterAnimator* character_animator;
-
+    class CharacterAnimator* character_animator = nullptr;
     class Rigidbody* rigidbody = nullptr;
 public:
     PlayerController(Game* game, float speed) : game(game), move_speed(speed) {}

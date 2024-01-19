@@ -106,7 +106,6 @@
     <ClCompile Include="..\src\ECS\Components\sprite.cpp" />
     <ClCompile Include="..\src\ECS\Components\sprite_sheet.cpp" />
     <ClCompile Include="..\src\ECS\component_manager.cpp" />
-    <ClCompile Include="..\src\ECS\entity.cpp" />
     <ClCompile Include="..\src\game.cpp" />
     <ClCompile Include="..\src\main.cpp" />
     <ClCompile Include="..\src\map.cpp" />

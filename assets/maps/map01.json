@@ -216,7 +216,7 @@
         },
         {
             "Id": 159456,
-            "Name": "Box",
+            "Name": "Exit",
             "IsActive": true,
             "IsPersistent": false,
             "Components": 

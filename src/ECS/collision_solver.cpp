@@ -32,18 +32,11 @@ void CollisionSolver::Update()
 
             if (Vector2 overlap; SAT(a, b, overlap))
             {
-                collisions.emplace_back(a, b, overlap);
+                a->Collide(b, overlap);
+                b->Collide(a, -overlap);
             }
         }
     }
-
-    for (auto& [a, b, overlap] : collisions)
-    {
-        a->Collide(b, overlap);
-        b->Collide(a, -overlap);
-    }
-
-    collisions.clear();
 }
 
 bool CollisionSolver::SAT(const BoxCollider* a, const BoxCollider* b, Vector2& overlap)

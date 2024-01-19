@@ -12,4 +12,5 @@ public:
     void Update(float delta_time) const;
     void Render() const;
     void AddComponent(Component* component);
+    void RemoveAllButPersistent();
 };

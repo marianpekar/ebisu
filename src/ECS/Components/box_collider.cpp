@@ -39,7 +39,7 @@ void BoxCollider::Collide(BoxCollider* other, const Vector2& overlap) const
         {
             const Vector2 force = rigidbody->GetForce();
             other->rigidbody->AddForce(force);
-            rigidbody->ResetForces();
+            rigidbody->AddForce(-force);
         }
     }
 

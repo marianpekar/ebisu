@@ -9,7 +9,7 @@ private:
     struct Collision
     {
         class BoxCollider* a;
-        class BoxCollider* b;
+        BoxCollider* b;
         Vector2 overlap;
     };
 
