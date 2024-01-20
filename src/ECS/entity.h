@@ -1,5 +1,6 @@
 #pragma once
 
+#include <string>
 #include <unordered_map>
 #include <typeindex>
 
@@ -14,15 +15,13 @@ private:
     std::unordered_map<std::type_index, Component*> component_map;
     ComponentManager* component_manager;
     int id = -1;
-    const char* name = nullptr;
+    std::string name;
 public:
-    Entity(ComponentManager* component_manager) : component_manager(component_manager) {}
+    Entity(int id, std::string name, ComponentManager* component_manager) :
+        component_manager(component_manager), id(id), name(std::move(name)) {}
     
-    const char* GetName() const { return name; }
-    void SetName(const char* entity_name) { this->name = entity_name; }
-    
+    std::string GetName() const { return name; }
     int GetId() const { return id; }
-    void SetId(const int entity_id) { this->id = entity_id; }
 
     const bool& IsActive() const { return is_active; }
     void SetIsActive(const bool active) { this->is_active = active; }

@@ -97,9 +97,7 @@ void Game::LoadEntities(const json& map_data)
         std::string entity_name = entity["Name"];
         const int entity_id = entity["Id"];
 
-        const auto game_entity = new Entity(component_manager);
-        game_entity->SetName(entity_name.c_str());
-        game_entity->SetId(entity_id);
+        const auto game_entity = new Entity(entity_id, entity_name, component_manager);
         
         const bool is_active = entity["IsActive"];
         game_entity->SetIsActive(is_active);
