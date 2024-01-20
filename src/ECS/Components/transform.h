@@ -8,7 +8,7 @@ class Transform final : public Component
 private:
     Vector2 position, scale;
 public:
-    Transform() : position(), scale(Vector2(1,1)) {}
+    Transform(const float x, const float y) : position(x, y), scale(Vector2(1,1)) {}
     ~Transform() override = default;
     const Vector2& GetPosition() const { return position; } 
     const Vector2& GetScale() const { return scale; }

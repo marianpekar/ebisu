@@ -23,7 +23,7 @@ private:
     std::string assets_path;
     void LoadMap(const json& map_data);
     void LoadEntities(const json& map_data);
-    void LoadComponents(const json& component, class Entity* game_entity, class Transform* transform);
+    void LoadComponents(const json& component, class Entity* game_entity);
     bool is_running = false;
     class ComponentManager* component_manager = nullptr;
     class CollisionSolver* collision_solver = nullptr;

@@ -101,8 +101,6 @@ void Game::LoadEntities(const json& map_data)
         game_entity->SetName(entity_name.c_str());
         game_entity->SetId(entity_id);
         
-        const auto entity_transform = game_entity->AddComponent<Transform>();
-        
         const bool is_active = entity["IsActive"];
         game_entity->SetIsActive(is_active);
         
@@ -114,12 +112,12 @@ void Game::LoadEntities(const json& map_data)
         const auto& components = entity["Components"];
         for (const auto& component : components)
         {
-            LoadComponents(component, game_entity, entity_transform);
+            LoadComponents(component, game_entity);
         }
     }
 }
 
-void Game::LoadComponents(const json& component, Entity* game_entity, Transform* transform)
+void Game::LoadComponents(const json& component, Entity* game_entity)
 {
     const auto& component_type = component["Type"];
     if (component_type == "MapCollider")
@@ -153,7 +151,7 @@ void Game::LoadComponents(const json& component, Entity* game_entity, Transform*
     {
         const float x = component["X"];
         const float y = component["Y"];
-        transform->SetPosition(x, y);
+        game_entity->AddComponent<Transform>(x, y);
     }
     if (component_type == "Animator")
     {
