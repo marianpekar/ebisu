@@ -3,7 +3,7 @@
 #include "entity.h"
 #include "Components/component.h"
 
-void ComponentManager::AddComponent(Component* component)
+void ComponentManager::AddComponent(const std::shared_ptr<Component>& component)
 {
     components.emplace_back(component);
 }
@@ -15,7 +15,6 @@ void ComponentManager::RemoveAllButPersistent()
     {
         if (!(*it)->GetIsPersistent())
         {
-            delete *it;
             it = components.erase(it);
         }
         else
@@ -57,8 +56,5 @@ void ComponentManager::Render() const
 
 ComponentManager::~ComponentManager()
 {
-    for (const auto& component : components)
-    {
-        delete component;
-    }
+    components.clear();
 }

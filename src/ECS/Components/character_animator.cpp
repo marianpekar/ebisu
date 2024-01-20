@@ -8,8 +8,8 @@
 
 void CharacterAnimator::Setup()
 {
-    idle_anim = new CharacterAnimation(idle_anim_start_frame, idle_anim_end_frame, idle_anim_frame_time, animator);
-    move_anim = new CharacterAnimation(move_anim_start_frame, move_anim_end_frame, move_anim_frame_time, animator);
+    idle_anim = std::make_shared<CharacterAnimation>(idle_anim_start_frame, idle_anim_end_frame, idle_anim_frame_time, animator);
+    move_anim = std::make_shared<CharacterAnimation>(move_anim_start_frame, move_anim_end_frame, move_anim_frame_time, animator);
     
     current_idle_animation_id = idle_anim->down_anim_id;
     animator->Play(current_idle_animation_id);

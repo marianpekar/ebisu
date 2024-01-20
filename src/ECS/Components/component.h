@@ -1,10 +1,13 @@
 #pragma once
 
-class Component {
+#include <memory>
+
+class Component
+{
 private:
     bool is_persistent = false;
 public:
-    class Entity* owner = nullptr;
+    std::shared_ptr<class Entity> owner;
     Component() = default;
     virtual ~Component() = default;
     virtual void Setup() {}

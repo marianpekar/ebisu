@@ -13,23 +13,18 @@ void MapExit::Setup()
     collider->collision_user_data = this;
 }
 
-void MapExit::ChangeLevel(const BoxCollider* other, Game* game)
+void MapExit::ChangeLevel(const BoxCollider* other, Game* game_ptr) const
 {
     if (other->owner->GetComponent<PlayerController>() == nullptr)
         return;
     
-    other->owner->GetComponent<Transform>()->SetPosition(*move_other_to_pos);
+    other->owner->GetComponent<Transform>()->SetPosition(move_other_to_pos);
     
-    game->ChangeLevel(next_map_path);
+    game_ptr->ChangeLevel(next_map_path);
 }
 
 void MapExit::OnCollisionStatic(const BoxCollider* other, void* user_data)
 {
     MapExit* map_exit = static_cast<MapExit*>(user_data);
     map_exit->ChangeLevel(other, map_exit->game);
-}
-
-MapExit::~MapExit()
-{
-    delete move_other_to_pos;
 }

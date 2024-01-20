@@ -1,7 +1,7 @@
 #include "../../map.h"
 #include "map_collider.h"
 
-MapCollider::MapCollider(const float width, const float height, Map* map) : width(width), height(height), map(map)
+MapCollider::MapCollider(const float width, const float height, const std::shared_ptr<Map>& map) : width(width), height(height), map(map)
 {
     map_tile_size = map->GetTileSize();
 }

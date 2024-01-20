@@ -13,7 +13,7 @@ const std::string project_path =
 int main(int argc, char*[])
 {
     const std::string game_ini_path = project_path + "/config/game.ini";
-    ConfigMap* config_map = new ConfigMap(game_ini_path.c_str());
+    auto config_map = std::make_shared<ConfigMap>(game_ini_path);
     const std::string title = config_map->GetString("Title");
     const int screen_width = config_map->GetInt("ScreenWidth");
     const int screen_height = config_map->GetInt("ScreenHeight");
@@ -22,10 +22,10 @@ int main(int argc, char*[])
     const std::string assets_path = config_map->GetString("AssetsRootPath");
     
     Game game;
-    if (!game.Initialize(title.c_str(), screen_width, screen_height, is_fullscreen, initial_map_path.c_str(), assets_path.c_str(), project_path.c_str()))
+    if (!game.Initialize(title, screen_width, screen_height, is_fullscreen, initial_map_path, assets_path, project_path))
         return -1;
-
-    delete config_map;
+    
+    config_map.reset();
     
     game.Setup();
 
@@ -59,8 +59,6 @@ int main(int argc, char*[])
 
         previous_ticks = current_ticks;
     }
-
-
-
+    
     return 0;
 }

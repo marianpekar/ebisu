@@ -1,4 +1,6 @@
 ﻿#pragma once
+
+#include <memory>
 #include "animator.h"
 #include "component.h"
 #include "../../Math/vector2.h"
@@ -17,7 +19,7 @@ struct CharacterAnimation
     int end_frame;
     int frame_time;
 
-    CharacterAnimation(const int start_frame, const int end_frame, const int frame_time, Animator* animator) :
+    CharacterAnimation(const int start_frame, const int end_frame, const int frame_time, const std::shared_ptr<Animator>& animator) :
         start_frame(start_frame), end_frame(end_frame), frame_time(frame_time)
     {
         up_anim_id = animator->AddAnimation(0, start_frame, end_frame, frame_time, true, false);
@@ -34,10 +36,10 @@ struct CharacterAnimation
 class CharacterAnimator final : public Component
 {
 private:
-    Animator* animator = nullptr;
+    std::shared_ptr<Animator> animator;
     
-    CharacterAnimation* idle_anim;
-    CharacterAnimation* move_anim;
+    std::shared_ptr<CharacterAnimation> idle_anim;
+    std::shared_ptr<CharacterAnimation> move_anim;
 
     int move_anim_start_frame;
     int move_anim_end_frame;
@@ -51,7 +53,7 @@ private:
     Vector2 move_dir = Vector2(0.0f, 0.0f);
 
 public:
-    CharacterAnimator(Animator* animator,
+    CharacterAnimator(const std::shared_ptr<Animator>& animator,
                       const int move_anim_start_frame, const int move_anim_end_frame, const float move_anim_frame_time,
                       const int idle_anim_start_frame, const int idle_anim_end_frame, const float idle_anim_frame_time) :
     animator(animator),
@@ -59,11 +61,7 @@ public:
     move_anim_start_frame(move_anim_start_frame), move_anim_end_frame(move_anim_end_frame), move_anim_frame_time(move_anim_frame_time),
     idle_anim_start_frame(idle_anim_start_frame), idle_anim_end_frame(idle_anim_end_frame), idle_anim_frame_time(idle_anim_frame_time) {}
 
-    ~CharacterAnimator() override
-    {
-        delete idle_anim;
-        delete move_anim;
-    }
+    ~CharacterAnimator() override = default;
 
     void SetMoveDirection(const Vector2& direction) { move_dir = direction; }
 

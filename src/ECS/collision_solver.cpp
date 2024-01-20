@@ -6,7 +6,7 @@
 CollisionSolver::CollisionSolver(const float quad_x, const float quad_y, const float quad_width, const float quad_height) :
     quad(new Quadtree(0, quad_x, quad_y, quad_width, quad_height)) {}
 
-void CollisionSolver::AddCollider(BoxCollider* collider)
+void CollisionSolver::AddCollider(const std::shared_ptr<BoxCollider>& collider)
 {
     colliders.emplace_back(collider);
 }
@@ -26,7 +26,7 @@ void CollisionSolver::Update()
 
         for (auto b : quad_result)
         {
-            BoxCollider* a = collider;
+            const std::shared_ptr<BoxCollider>& a = collider;
             if (a == b)
                 continue;
 
@@ -39,7 +39,13 @@ void CollisionSolver::Update()
     }
 }
 
-bool CollisionSolver::SAT(const BoxCollider* a, const BoxCollider* b, Vector2& overlap)
+void CollisionSolver::Clear()
+{
+    quad_result.clear();
+    colliders.clear();
+}
+
+bool CollisionSolver::SAT(const std::shared_ptr<BoxCollider>& a, const std::shared_ptr<BoxCollider>& b, Vector2& overlap)
 {
     const Vector2 a_center = a->GetPosition() + Vector2(a->GetHalfWidth(), a->GetHalfHeight());
     const Vector2 b_center = b->GetPosition() + Vector2(b->GetHalfWidth(), b->GetHalfHeight());

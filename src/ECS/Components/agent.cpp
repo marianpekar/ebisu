@@ -41,7 +41,7 @@ void Agent::Update(float delta_time)
     }
 }
 
-void Agent::SetTarget(Transform* target)
+void Agent::SetTarget(const std::shared_ptr<Transform>& target)
 {
     target_transform = target;
 }

@@ -5,7 +5,7 @@
 #include "map_collider.h"
 #include "rigidbody.h"
 
-BoxCollider::BoxCollider(const float width, const float height, CollisionSolver* collision_solver) : 
+BoxCollider::BoxCollider(const float width, const float height, const std::shared_ptr<CollisionSolver>& collision_solver) : 
     position(Vector2(0, 0)), width(width), height(height), half_width(width * 0.5f), half_height(height * 0.5f),
     collision_solver(collision_solver) {}
 
@@ -14,7 +14,7 @@ void BoxCollider::Setup()
     transform = owner->GetComponent<Transform>();
     map_collider = owner->GetComponent<MapCollider>();
     rigidbody = owner->GetComponent<Rigidbody>();
-    collision_solver->AddCollider(this);
+    collision_solver->AddCollider(shared_from_this());
 }
 
 void BoxCollider::Update(float delta_time)
@@ -22,7 +22,7 @@ void BoxCollider::Update(float delta_time)
     position = transform->GetPosition();
 }
 
-void BoxCollider::Collide(BoxCollider* other, const Vector2& overlap) const
+void BoxCollider::Collide(const std::shared_ptr<BoxCollider>& other, const Vector2& overlap) const
 {
     if (!is_trigger)
     {
@@ -43,8 +43,8 @@ void BoxCollider::Collide(BoxCollider* other, const Vector2& overlap) const
         }
     }
 
-    if (on_collision == nullptr)
+    if (on_collision == nullptr || collision_user_data == nullptr)
         return;
     
-    on_collision(other, collision_user_data);
+    on_collision(other.get(), collision_user_data);
 }

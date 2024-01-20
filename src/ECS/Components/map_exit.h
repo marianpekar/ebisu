@@ -1,22 +1,23 @@
 #pragma once
 
+#include <memory>
 #include <string>
 
+#include "../../Math/vector2.h"
 #include "component.h"
 
 class MapExit : public Component
 {
 public:
-    MapExit(const std::string& next_map_path, const struct Vector2* move_other_to_pos, class Game* game) :
-    game(game), next_map_path(next_map_path), move_other_to_pos(move_other_to_pos) {}
+    MapExit(const std::string& next_map_path, float move_to_x, float move_to_y, class Game* game) :
+    game(game), next_map_path(std::move(next_map_path)), move_other_to_pos(Vector2(move_to_x, move_to_y)) {}
     void Setup() override;
-    ~MapExit() override;
 private:
-    class BoxCollider* collider = nullptr;
+    std::shared_ptr<class BoxCollider> collider;
     Game* game;
     std::string next_map_path;
-    const Vector2* move_other_to_pos;
-    void ChangeLevel(const BoxCollider* other, Game* game);
+    const Vector2 move_other_to_pos;
+    void ChangeLevel(const BoxCollider* other, Game* game) const;
     
     typedef void (*CollisionCallback)(const BoxCollider*, void*);
     static void OnCollisionStatic(const BoxCollider* other, void* user_data);

@@ -21,7 +21,7 @@
 #include "ECS/Components/camera.h"
 #include "ECS/Components/map_exit.h"
 
-bool Game::Initialize(const char* title, const int screen_width, const int screen_height, const bool fullscreen, const char* map_path, const char* assets_root_path, const char* project_root_path)
+bool Game::Initialize(const std::string& title, const int screen_width, const int screen_height, const bool fullscreen, const std::string& map_path, const std::string& assets_root_path, const std::string& project_root_path)
 {
     assets_path = std::format("{}/{}", project_root_path, assets_root_path);
     
@@ -42,14 +42,15 @@ bool Game::Initialize(const char* title, const int screen_width, const int scree
 
 void Game::InitializeGameLogicEssentials(const int screen_width, const int screen_height)
 {
-    component_manager = new ComponentManager();
-    collision_solver = new CollisionSolver(0, 0, static_cast<float>(screen_width), static_cast<float>(screen_height));
+    component_manager = std::make_shared<ComponentManager>();
+    collision_solver = std::make_shared<CollisionSolver>(0, 0, static_cast<float>(screen_width), static_cast<float>(screen_height));
 
-    Renderer::SetMainCamera(new Camera(screen_width, screen_height));
-    entity_pool = new EntityPool();
+    const std::shared_ptr<Camera> main_camera = std::make_shared<Camera>(screen_width, screen_height);
+    Renderer::SetMainCamera(main_camera);
+    entity_pool = std::make_shared<EntityPool>();
 }
 
-bool Game::LoadLevel(const char* map_path)
+bool Game::LoadLevel(const std::string& map_path)
 {
     std::ifstream map_file(std::format("{}/{}", assets_path, map_path));
     if (!map_file.is_open())
@@ -66,6 +67,7 @@ void Game::ChangeLevel(const std::string& string)
 {
     entity_pool->RemoveAllButPersistent();
     component_manager->RemoveAllButPersistent();
+    collision_solver->Clear();
 }
 
 void Game::LoadMap(const json& map_data)
@@ -78,7 +80,7 @@ void Game::LoadMap(const json& map_data)
     const int map_width = tile_size * cols;
     const int map_height = tile_size * rows;
 
-    map = new Map(tile_size, map_width, map_height, collision_map);
+    map = std::make_shared<Map>(tile_size, map_width, map_height, collision_map);
     
     const auto& layers = map_data["TileMapLayers"];
     for (const auto& layer : layers)
@@ -97,7 +99,7 @@ void Game::LoadEntities(const json& map_data)
         std::string entity_name = entity["Name"];
         const int entity_id = entity["Id"];
 
-        const auto game_entity = new Entity(entity_id, entity_name, component_manager);
+        const auto game_entity = std::make_shared<Entity>(entity_id, entity_name, component_manager.get());
         
         const bool is_active = entity["IsActive"];
         game_entity->SetIsActive(is_active);
@@ -115,7 +117,7 @@ void Game::LoadEntities(const json& map_data)
     }
 }
 
-void Game::LoadComponents(const json& component, Entity* game_entity)
+void Game::LoadComponents(const json& component, const std::shared_ptr<Entity>& game_entity)
 {
     const auto& component_type = component["Type"];
     if (component_type == "MapCollider")
@@ -212,8 +214,7 @@ void Game::LoadComponents(const json& component, Entity* game_entity)
         const std::string next_map_path = component["NextMapPath"];
         const float move_other_to_pos_x = component["MoveOtherToX"];
         const float move_other_to_pos_y = component["MoveOtherToY"];
-        const Vector2* move_other_to_pos = new Vector2(move_other_to_pos_x, move_other_to_pos_y);
-        game_entity->AddComponent<MapExit>(next_map_path.c_str(), move_other_to_pos, this);
+        game_entity->AddComponent<MapExit>(next_map_path, move_other_to_pos_x, move_other_to_pos_y, this);
     }
 }
 
@@ -253,7 +254,4 @@ Game::~Game()
     is_running = false;
     Renderer::Destroy();
     SDL_Quit();
-    delete map;
-    delete component_manager;
-    delete entity_pool;
 }

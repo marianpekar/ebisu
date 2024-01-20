@@ -3,9 +3,8 @@
 #include <algorithm>
 #include <fstream>
 #include <iostream>
-#include <string>
 
-ConfigMap::ConfigMap(const char* config_file_path)
+ConfigMap::ConfigMap(const std::string& config_file_path)
 {
     if (!Parse(config_file_path))
     {
@@ -14,7 +13,7 @@ ConfigMap::ConfigMap(const char* config_file_path)
     }
 }
 
-bool ConfigMap::Parse(const char* config_file_path)
+bool ConfigMap::Parse(const std::string& config_file_path)
 {
     std::ifstream config_file(config_file_path);
 

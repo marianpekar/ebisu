@@ -6,11 +6,11 @@
 class PlayerController : public Component
 {
 private:
-    class Game* game;
+    Game* game;
     float move_speed;
     Vector2 move_dir;
-    class CharacterAnimator* character_animator = nullptr;
-    class Rigidbody* rigidbody = nullptr;
+    std::shared_ptr<class CharacterAnimator> character_animator;
+    std::shared_ptr<class Rigidbody> rigidbody;
 public:
     PlayerController(Game* game, float speed) : game(game), move_speed(speed) {}
     ~PlayerController() override = default;

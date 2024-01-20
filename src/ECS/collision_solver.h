@@ -1,5 +1,6 @@
 #pragma once
 
+#include <memory>
 #include <vector>
 #include "../Math/vector2.h"
 
@@ -13,13 +14,14 @@ private:
         Vector2 overlap;
     };
 
-    std::vector<BoxCollider*> colliders;
-    std::vector<BoxCollider*> quad_result;
+    std::vector<std::shared_ptr<BoxCollider>> colliders;
+    std::vector<std::shared_ptr<BoxCollider>> quad_result;
     std::vector<Collision> collisions;
-    static bool SAT(const BoxCollider* a, const BoxCollider* b, Vector2& overlap);
+    static bool SAT(const std::shared_ptr<BoxCollider>& a, const std::shared_ptr<BoxCollider>& b, Vector2& overlap);
     class Quadtree* quad;
 public:
     CollisionSolver(float quad_x, float quad_y, float quad_width, float quad_height);
-    void AddCollider(BoxCollider* collider);
+    void AddCollider(const std::shared_ptr<BoxCollider>& collider);
     void Update();
+    void Clear();
 };

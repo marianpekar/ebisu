@@ -1,13 +1,14 @@
 #pragma once
 
+#include <memory>
 #include "../../Math/vector2.h"
 #include "component.h"
 
 class Rigidbody final : public Component
 {
 private:
-    class Transform* transform = nullptr;
-    class MapCollider* map_collider = nullptr;
+    std::shared_ptr<class Transform> transform;
+    std::shared_ptr<class MapCollider> map_collider;
     Vector2 force;
     float mass, drag, acceleration;
 public:

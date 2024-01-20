@@ -1,5 +1,6 @@
 #pragma once
 
+#include <memory>
 #include "component.h"
 #include "../../Math/vector2.h"
 #include "transform.h"
@@ -7,7 +8,7 @@
 class Camera final : public Component
 {
 private:
-    Transform* target = nullptr;
+    std::shared_ptr<Transform> target;
     Vector2 position;
     int screen_half_width, screen_half_height;
 public:

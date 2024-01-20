@@ -3,6 +3,7 @@
 #include <SDL.h>
 #include "component.h"
 #include <vector>
+#include <memory>
 
 struct Animation 
 {
@@ -24,8 +25,8 @@ struct Animation
 class Animator final : public Component
 {
 private:
-    class SpriteSheet* sprite_sheet = nullptr;
-    std::vector<Animation*> animations;
+    std::shared_ptr<class SpriteSheet> sprite_sheet = nullptr;
+    std::vector<std::shared_ptr<Animation>> animations;
     size_t active_anim_id = -1;
     size_t no_id = -1;
     Uint32 last_time = 0;

@@ -1,5 +1,6 @@
 #pragma once
 
+#include <memory>
 #include <vector>
 
 struct Rectangle
@@ -24,14 +25,14 @@ private:
     int no_index = -1;
     
     Rectangle bounds;
-    std::vector<class BoxCollider*> objects;
+    std::vector<std::shared_ptr<class BoxCollider>> objects;
     Quadtree* nodes[4];
 
     void Split();
-    const int& GetIndex(const BoxCollider* collider) const;
+    const int& GetIndex(const std::shared_ptr<BoxCollider>& collider) const;
 public:
     Quadtree(int level, float x, float y, float width, float height);
     void Clear();
-    void Insert(BoxCollider* collider);
-    std::vector<BoxCollider*> Retrieve(std::vector<BoxCollider*>& result, BoxCollider* collider);
+    void Insert(const std::shared_ptr<BoxCollider>& collider);
+    std::vector<std::shared_ptr<BoxCollider>> Retrieve(std::vector<std::shared_ptr<BoxCollider>>& result, const std::shared_ptr<BoxCollider>& collider);
 };

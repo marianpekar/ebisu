@@ -1,6 +1,7 @@
 #pragma once
 
 #include <string>
+#include <memory>
 #include "component.h"
 
 class SpriteSheet final : public Component
@@ -11,7 +12,7 @@ private:
     struct SDL_Rect* src_rect = nullptr;
     SDL_Rect* dst_rect = nullptr;
     std::string filepath;
-    class Transform* transform = nullptr;
+    std::shared_ptr<class Transform> transform;
 public:
     SpriteSheet(std::string filepath, int rect_width, int rect_height);
     ~SpriteSheet() override;

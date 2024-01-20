@@ -1,36 +1,34 @@
 ﻿#pragma once
 
-#include "entity.h"
 #include <unordered_map>
+#include <memory>
+#include "entity.h"
 
 class EntityPool
 {
 private:
-    std::unordered_map<int, Entity*> entities;
+    std::unordered_map<int, std::shared_ptr<Entity>> entities;
+
 public:
     EntityPool() = default;
-    
+
     ~EntityPool()
     {
-        for (auto& entity : entities)
-        {
-            delete entity.second;
-        }
         entities.clear();
     }
 
-    void AddEntity(Entity* entity)
+    void AddEntity(const std::shared_ptr<Entity>& entity)
     {
         if (!entity)
             return;
-        
+
         entities.emplace(entity->GetId(), entity);
     }
 
-    Entity* GetEntityById(const int id)
+    const std::shared_ptr<Entity>& GetEntityById(const int id)
     {
         const auto it = entities.find(id);
-        return (it != entities.end()) ? it->second : nullptr;
+        return it != entities.end() ? it->second : nullptr;
     }
 
     void RemoveAllButPersistent()
@@ -40,7 +38,6 @@ public:
         {
             if (!(it->second->IsPersistent()))
             {
-                delete it->second;
                 it = entities.erase(it);
             }
             else
@@ -55,7 +52,7 @@ public:
         auto it = entities.find(id);
         if (it != entities.end())
         {
-            delete it->second;
+            it->second.reset();
             entities.erase(it);
         }
     }

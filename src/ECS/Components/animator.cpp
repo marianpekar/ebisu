@@ -46,7 +46,7 @@ void Animator::Update(float delta_time)
 
 size_t Animator::AddAnimation(const int row, const int start_frame, const int end_frame, const int frame_time, const bool is_loop, const bool play_on_setup)
 {
-    auto animation = new Animation(row, start_frame, end_frame, frame_time, is_loop);
+    auto animation = std::make_shared<Animation>(row, start_frame, end_frame, frame_time, is_loop);
     animation->id = animations.size();
     animations.emplace_back(animation);
 

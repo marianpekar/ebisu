@@ -5,7 +5,7 @@
 class ConfigMap
 {
 public:
-    ConfigMap(const char* config_file_path);
+    ConfigMap(const std::string& config_file_path);
 
     float GetFloat(const std::string& property_name) { return float_properties[property_name]; }
     int GetInt(const std::string& property_name) { return int_properties[property_name]; }
@@ -16,7 +16,7 @@ private:
     std::unordered_map<std::string, bool> bool_properties;
     std::unordered_map<std::string, int> int_properties;
     std::unordered_map<std::string, std::string> string_properties;
-    bool Parse(const char* config_file_path);
+    bool Parse(const std::string& config_file_path);
     static bool StringToBool(std::string& str);
 };
 

@@ -7,9 +7,9 @@
 
 SDL_Renderer* Renderer::s_renderer;
 SDL_Window* Renderer::s_window;
-Camera* Renderer::s_main_camera;
+std::shared_ptr<Camera> Renderer::s_main_camera;
 
-bool Renderer::Initialize(const char* title, const int screen_width, const int screen_height, const bool fullscreen)
+bool Renderer::Initialize(const std::string& title, const int screen_width, const int screen_height, const bool fullscreen)
 {
     if (SDL_Init(SDL_INIT_EVERYTHING) != 0)
     {
@@ -17,7 +17,7 @@ bool Renderer::Initialize(const char* title, const int screen_width, const int s
         return false;
     }
 
-    s_window = SDL_CreateWindow(title, SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, screen_width, screen_height, fullscreen ? SDL_WINDOW_FULLSCREEN : 0);
+    s_window = SDL_CreateWindow(title.c_str(), SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, screen_width, screen_height, fullscreen ? SDL_WINDOW_FULLSCREEN : 0);
     if (!s_window)
     {
         std::cout << "[Renderer] Failed to create SDL Window" << std::endl;
@@ -46,12 +46,12 @@ void Renderer::Destroy()
     SDL_DestroyRenderer(s_renderer);
 }
 
-void Renderer::SetMainCamera(Camera* camera)
+void Renderer::SetMainCamera(const std::shared_ptr<Camera>& camera)
 {
     s_main_camera = camera;
 }
 
-Camera* Renderer::GetMainCamera()
+std::shared_ptr<Camera> Renderer::GetMainCamera()
 {
     return s_main_camera;
 }
