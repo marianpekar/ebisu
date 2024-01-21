@@ -88,7 +88,7 @@ void Game::LoadMap(const json& map_data)
         const std::string tilemap_sheet_path = layer["SpriteSheet"];
         const std::vector<int> tile_map = layer["TileMap"];
         const bool is_front = layer["IsFront"];
-        map->AddLayer(std::format("{}/{}", assets_path, tilemap_sheet_path).c_str(), tile_map, is_front);
+        map->AddLayer(std::format("{}/{}", assets_path, tilemap_sheet_path), tile_map, is_front);
     }
 }
 

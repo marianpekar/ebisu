@@ -57,12 +57,12 @@ Map::Map(const int tile_size, const int map_width, const int map_height, std::ve
     }
 }
 
-void Map::AddLayer(const char* sprite_filepath, const std::vector<int>& tile_map, bool is_front)
+void Map::AddLayer(const std::string& sprite_filepath, const std::vector<int>& tile_map, bool is_front)
 {
     int image_width, image_height;
     SDL_Texture* sprite = TextureLoader::LoadTexture(sprite_filepath, Renderer::GetRenderer(), image_width, image_height);
     const int spritesheet_cols = image_width / tile_size;
-    auto layer = new Layer(sprite, tile_map, tiles_in_row, spritesheet_cols);
+    std::shared_ptr<Layer> layer = std::make_shared<Layer>(sprite, tile_map, tiles_in_row, spritesheet_cols);
 
     if (is_front)
     {
@@ -76,7 +76,7 @@ void Map::AddLayer(const char* sprite_filepath, const std::vector<int>& tile_map
 
 void Map::RenderBackLayers() const
 {
-    for (const auto layer : layers_back)
+    for (const auto& layer : layers_back)
     {
         Render(layer);
     }
@@ -84,7 +84,7 @@ void Map::RenderBackLayers() const
 
 void Map::RenderFrontLayers() const
 {
-    for (const auto layer : layers_front)
+    for (const auto& layer : layers_front)
     {
         Render(layer);
     }
@@ -170,7 +170,7 @@ int Map::GetDistance(const PathNode& node_a, const PathNode& node_b)
     return dist_x > dist_y ? 14 * dist_y + 10 * (dist_x - dist_y) : 14 * dist_x + 10 * (dist_y - dist_x);
 }
 
-void Map::Render(const Layer* layer) const
+void Map::Render(const std::shared_ptr<Layer>& layer) const
 {
     for (int y = 0; y < tiles_in_col; y++)
     {
@@ -210,24 +210,11 @@ Map::~Map()
 {
     delete src_rect;
     delete dst_rect;
-
-    for (const auto& layer : layers_back)
-    {
-        delete layer;
-    }
+    
     layers_front.clear();
-
-    for (const auto& layer : layers_front)
-    {
-        delete layer;
-    }
     layers_back.clear();
-
-    for (const auto& node : path_nodes)
-    {
-        delete node;
-    }
     path_nodes.clear();
+    TextureLoader::ClearTextureCache();
 }
 
 Layer::~Layer()

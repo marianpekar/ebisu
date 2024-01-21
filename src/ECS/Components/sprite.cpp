@@ -12,6 +12,11 @@ void Sprite::Setup()
     dst_rect = new SDL_Rect();
 }
 
+Sprite::~Sprite()
+{
+    delete dst_rect;
+}
+
 void Sprite::Render()
 {
     dst_rect->x = static_cast<int>(transform->GetPosition().x - Renderer::TryGetCameraPosition().x);

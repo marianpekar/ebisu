@@ -1,6 +1,8 @@
 #pragma once
 
 #include <vector>
+#include <memory>
+#include <string>
 
 #include "path_node.h"
 
@@ -28,12 +30,12 @@ private:
     int tiles_in_row;
     int tiles_in_col;
     
-    std::vector<Layer*> layers_back;
-    std::vector<Layer*> layers_front;
+    std::vector<std::shared_ptr<Layer>> layers_back;
+    std::vector<std::shared_ptr<Layer>> layers_front;
     std::vector<int> collision_map;
     int zero_index = 0;
     
-    void Render(const Layer* layer) const;
+    void Render(const std::shared_ptr<Layer>& layer) const;
     
     std::vector<PathNode*> path_nodes;
     
@@ -43,7 +45,7 @@ private:
 public:
     Map(int tile_size, int map_width, int map_height, std::vector<int> collision_map);
     ~Map();
-    void AddLayer(const char* sprite_filepath, const std::vector<int>& tile_map, bool is_front);
+    void AddLayer(const std::string& sprite_filepath, const std::vector<int>& tile_map, bool is_front);
     
     void RenderBackLayers() const;
     void RenderFrontLayers() const;
