@@ -47,7 +47,7 @@ int main(int argc, char*[])
             continue;
         }
 
-        accumulated_time += 0.001f * frame_ticks;
+        accumulated_time += 0.001f * static_cast<float>(frame_ticks);
 
         while (accumulated_time >= fixed_delta_time)
         {
