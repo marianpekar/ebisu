@@ -14,12 +14,13 @@ private:
     bool is_active = true;
     bool is_persistent = false;
     std::unordered_map<std::type_index, std::shared_ptr<Component>> component_map;
-    ComponentManager* component_manager;
+    std::shared_ptr<ComponentManager> component_manager;
     int id = -1;
     std::string name;
 public:
-    Entity(int id, std::string name, ComponentManager* component_manager) :
+    Entity(int id, std::string name, const std::shared_ptr<ComponentManager>& component_manager) :
         component_manager(component_manager), id(id), name(std::move(name)) {}
+    ~Entity() = default;
     
     const std::string& GetName() const { return name; }
     int GetId() const { return id; }
@@ -61,5 +62,4 @@ public:
         return nullptr;
     }
 
-    ~Entity() = default;
 };
