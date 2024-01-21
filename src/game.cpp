@@ -5,6 +5,7 @@
 #include "game.h"
 #include "map.h"
 #include "renderer.h"
+#include "texture_loader.h"
 #include "ECS/collision_solver.h"
 #include "ECS/component_manager.h"
 #include "ECS/entity.h"
@@ -29,19 +30,22 @@ bool Game::Initialize(const std::string& title, const int screen_width, const in
         return false;
 
     InitializeGameLogicEssentials(screen_width, screen_height);
+    
     if (!LoadLevel(map_path))
     {
         std::cout << "[Game] Failed to load level" << std::endl;
         return false;
     }
 
-    is_running = true;
+    component_manager->Setup();
     
-    return true;
+    is_running = true;
+    return is_running;
 }
 
 void Game::InitializeGameLogicEssentials(const int screen_width, const int screen_height)
 {
+    map = std::make_shared<Map>();
     component_manager = std::make_shared<ComponentManager>();
     collision_solver = std::make_shared<CollisionSolver>(0, 0, static_cast<float>(screen_width), static_cast<float>(screen_height));
 
@@ -63,24 +67,30 @@ bool Game::LoadLevel(const std::string& map_path)
     return true;
 }
 
-void Game::ChangeLevel(const std::string& string)
+void Game::ChangeLevel(const std::string& next_map_path)
 {
     entity_pool->RemoveAllButPersistent();
     component_manager->RemoveAllButPersistent();
     collision_solver->Clear();
+    map->Clear();
+    TextureLoader::ClearTextureCache();
+    LoadLevel(next_map_path);
+    component_manager->Setup();
 }
 
 void Game::LoadMap(const json& map_data)
 {
     const std::vector<int> collision_map = map_data["CollisionMap"];
-
+    
     const int tile_size = map_data["TileSize"];
     const int rows = map_data["Rows"];
     const int cols = map_data["Columns"];
     const int map_width = tile_size * cols;
     const int map_height = tile_size * rows;
-
-    map = std::make_shared<Map>(tile_size, map_width, map_height, collision_map);
+    
+    map->SetDimensions(tile_size, map_width, map_height);
+    map->SetCollisionMap(collision_map);
+    map->GeneratePathNodes();
     
     const auto& layers = map_data["TileMapLayers"];
     for (const auto& layer : layers)
@@ -218,11 +228,6 @@ void Game::LoadComponents(const json& component, const std::shared_ptr<Entity>& 
     }
 }
 
-void Game::Setup() const
-{
-    component_manager->Setup();
-}
-
 void Game::Update(const float delta_time) const
 {
     component_manager->Update(delta_time);
@@ -252,6 +257,7 @@ void Game::Quit()
 Game::~Game()
 {
     is_running = false;
+    TextureLoader::ClearTextureCache();
     Renderer::Destroy();
     SDL_Quit();
 }

@@ -12,7 +12,6 @@ public:
     ~Game();
     bool Initialize(const std::string& title, int screen_width, int screen_height, bool fullscreen, const std::string& map_path, const std::string& assets_root_path, const std::string& project_root_path);
     void InitializeGameLogicEssentials(int screen_width, int screen_height);
-    void Setup() const;
     void Update(float delta_time) const;
     void Render() const;
     const bool& IsRunning() const { return is_running; }

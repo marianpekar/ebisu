@@ -6,14 +6,28 @@
 #include "heap.h"
 #include "renderer.h"
 
-Map::Map(const int tile_size, const int map_width, const int map_height, std::vector<int> collision_map) :
-    tile_size(tile_size), map_width(map_width), map_height(map_height),
-    tiles_in_row(map_width / tile_size), tiles_in_col(map_height / tile_size),
-    collision_map(std::move(collision_map))
+Map::Map()
 {
     src_rect = new SDL_Rect();
     dst_rect = new SDL_Rect();
+}
 
+void Map::SetDimensions(int new_tile_size, int new_map_width, int new_map_height)
+{
+    tile_size = new_tile_size;
+    map_width = new_map_width;
+    map_height = new_map_height;
+    tiles_in_row = map_width / tile_size;
+    tiles_in_col = map_height /  tile_size;
+}
+
+void Map::SetCollisionMap(const std::vector<int>& collision_map_data)
+{
+    collision_map = collision_map_data;
+}
+
+void Map::GeneratePathNodes()
+{
     for (int y = 0; y < tiles_in_col; y++)
     {
         for (int x = 0; x < tiles_in_row; x++)
@@ -211,10 +225,15 @@ Map::~Map()
     delete src_rect;
     delete dst_rect;
     
+    Clear();
+}
+
+void Map::Clear()
+{
     layers_front.clear();
     layers_back.clear();
     path_nodes.clear();
-    TextureLoader::ClearTextureCache();
+    collision_map.clear();
 }
 
 Layer::~Layer()

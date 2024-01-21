@@ -27,8 +27,6 @@ int main(int argc, char*[])
     
     config_map.reset();
     
-    game.Setup();
-
     constexpr Uint32 target_fps = 60;
     constexpr Uint32 frame_time = 1000 / target_fps;
     constexpr float fixed_delta_time = 1.0f / target_fps;

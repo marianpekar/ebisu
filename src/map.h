@@ -24,11 +24,11 @@ private:
     struct SDL_Rect* src_rect = nullptr;
     SDL_Rect* dst_rect = nullptr;
     
-    int tile_size;
-    int map_width;
-    int map_height;
-    int tiles_in_row;
-    int tiles_in_col;
+    int tile_size = 0;
+    int map_width = 0;
+    int map_height = 0;
+    int tiles_in_row = 0;
+    int tiles_in_col = 0;
     
     std::vector<std::shared_ptr<Layer>> layers_back;
     std::vector<std::shared_ptr<Layer>> layers_front;
@@ -43,9 +43,13 @@ private:
     PathNode* GetPathNodeFromWorldPosition(const Vector2& world_position) const;
     static std::vector<Vector2> RetracePath(const PathNode* start_node, PathNode* end_node);
 public:
-    Map(int tile_size, int map_width, int map_height, std::vector<int> collision_map);
+    Map();
     ~Map();
+    void SetDimensions(int new_tile_size, int new_map_width, int new_map_height);
+    void SetCollisionMap(const std::vector<int>& collision_map_data);
+    void GeneratePathNodes();
     void AddLayer(const std::string& sprite_filepath, const std::vector<int>& tile_map, bool is_front);
+    void Clear();
     
     void RenderBackLayers() const;
     void RenderFrontLayers() const;
