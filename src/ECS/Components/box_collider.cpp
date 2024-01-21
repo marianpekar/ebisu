@@ -46,5 +46,5 @@ void BoxCollider::Collide(const std::shared_ptr<BoxCollider>& other, const Vecto
     if (on_collision == nullptr || collision_user_data == nullptr)
         return;
     
-    on_collision(other.get(), collision_user_data);
+    on_collision(other, collision_user_data);
 }

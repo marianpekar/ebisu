@@ -17,7 +17,7 @@ private:
     std::shared_ptr<class Rigidbody> rigidbody;
     std::shared_ptr<class CollisionSolver> collision_solver;
 
-    typedef void (*CollisionCallback)(const BoxCollider*, void*);
+    typedef void (*CollisionCallback)(const std::shared_ptr<BoxCollider>&, void*);
 public:
     CollisionCallback on_collision;
     void* collision_user_data = nullptr;

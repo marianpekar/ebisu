@@ -13,7 +13,13 @@ void MapExit::Setup()
     collider->collision_user_data = this;
 }
 
-void MapExit::ChangeLevel(const BoxCollider* other, Game* game_ptr) const
+void MapExit::OnCollisionStatic(const std::shared_ptr<BoxCollider>& other, void* user_data)
+{
+    const MapExit* map_exit = static_cast<MapExit*>(user_data);
+    map_exit->ChangeLevel(other, map_exit->game);
+}
+
+void MapExit::ChangeLevel(const std::shared_ptr<BoxCollider>& other, Game* game_ptr) const
 {
     if (other->owner->GetComponent<PlayerController>() == nullptr)
         return;
@@ -21,10 +27,4 @@ void MapExit::ChangeLevel(const BoxCollider* other, Game* game_ptr) const
     other->owner->GetComponent<Transform>()->SetPosition(move_other_to_pos);
     
     game_ptr->ChangeLevel(next_map_path);
-}
-
-void MapExit::OnCollisionStatic(const BoxCollider* other, void* user_data)
-{
-    MapExit* map_exit = static_cast<MapExit*>(user_data);
-    map_exit->ChangeLevel(other, map_exit->game);
 }
