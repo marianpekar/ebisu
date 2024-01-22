@@ -1,7 +1,6 @@
 #include "collision_solver.h"
 #include "../quadtree.h"
 #include "Components/box_collider.h"
-#include "entity.h"
 
 CollisionSolver::CollisionSolver(const float quad_x, const float quad_y, const float quad_width, const float quad_height) :
     quad(std::make_shared<Quadtree>(0, quad_x, quad_y, quad_width, quad_height)) {}
