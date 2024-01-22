@@ -106,9 +106,13 @@ void Game::LoadEntities(const json& map_data)
 {
     for (auto& entities = map_data["Entities"]; const json& entity : entities)
     {
-        std::string entity_name = entity["Name"];
         const int entity_id = entity["Id"];
 
+        if (entity_pool->GetEntityById(entity_id) != nullptr)
+            continue;
+        
+        std::string entity_name = entity["Name"];
+        
         const auto game_entity = std::make_shared<Entity>(entity_id, entity_name, component_manager);
         
         const bool is_active = entity["IsActive"];
