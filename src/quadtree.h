@@ -26,7 +26,7 @@ private:
     
     Rectangle bounds;
     std::vector<std::shared_ptr<class BoxCollider>> objects;
-    Quadtree* nodes[4];
+    std::shared_ptr<Quadtree> nodes[4];
 
     void Split();
     const int& GetIndex(const std::shared_ptr<BoxCollider>& collider) const;

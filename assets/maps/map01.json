@@ -79,6 +79,7 @@
                 },
                 { 
                     "Type": "BoxCollider",
+                    "IsTrigger": false,
                     "Width": 64,
                     "Height": 64
                 },
@@ -131,6 +132,7 @@
                 },
                 { 
                     "Type": "BoxCollider",
+                    "IsTrigger": false,
                     "Width": 64,
                     "Height": 64
                 },
@@ -184,6 +186,7 @@
                 },
                 { 
                     "Type": "BoxCollider",
+                    "IsTrigger": false,
                     "Width": 64,
                     "Height": 64
                 },

@@ -4,7 +4,7 @@
 #include "entity.h"
 
 CollisionSolver::CollisionSolver(const float quad_x, const float quad_y, const float quad_width, const float quad_height) :
-    quad(new Quadtree(0, quad_x, quad_y, quad_width, quad_height)) {}
+    quad(std::make_shared<Quadtree>(0, quad_x, quad_y, quad_width, quad_height)) {}
 
 void CollisionSolver::AddCollider(const std::shared_ptr<BoxCollider>& collider)
 {
@@ -24,7 +24,7 @@ void CollisionSolver::Update()
         quad_result.clear();
         quad->Retrieve(quad_result, collider);
 
-        for (auto b : quad_result)
+        for (const std::shared_ptr<BoxCollider>& b : quad_result)
         {
             const std::shared_ptr<BoxCollider>& a = collider;
             if (a == b)
@@ -32,8 +32,9 @@ void CollisionSolver::Update()
 
             if (Vector2 overlap; SAT(a, b, overlap))
             {
-                a->Collide(b, overlap);
-                b->Collide(a, -overlap);
+                const bool one_is_trigger = a->GetIsTrigger() || b->GetIsTrigger();
+                a->Collide(b, overlap, one_is_trigger);
+                b->Collide(a, -overlap, one_is_trigger);
             }
         }
     }
@@ -41,8 +42,9 @@ void CollisionSolver::Update()
 
 void CollisionSolver::Clear()
 {
-    quad_result.clear();
     colliders.clear();
+    quad->Clear();
+    quad_result.clear();
 }
 
 bool CollisionSolver::SAT(const std::shared_ptr<BoxCollider>& a, const std::shared_ptr<BoxCollider>& b, Vector2& overlap)

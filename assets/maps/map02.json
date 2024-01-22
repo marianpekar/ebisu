@@ -50,6 +50,7 @@
                 },
                 { 
                     "Type": "BoxCollider",
+                    "IsTrigger": false,
                     "Width": 64,
                     "Height": 64
                 },
@@ -82,6 +83,38 @@
                     }
                 }
             ]
-       }
+       },
+       {
+            "Id": 156457,
+            "Name": "Exit",
+            "IsActive": true,
+            "IsPersistent": false,
+            "Components": 
+            [
+                { 
+                    "Type": "BoxCollider",
+                    "IsTrigger": true,
+                    "Width": 64,
+                    "Height": 64
+                },
+                {
+                    "Type": "SpriteSheet",
+                    "FilePath": "images/white_64x64.png",
+                    "Width": 64,
+                    "Height": 64
+                },
+                {
+                    "Type": "Transform",
+                    "X": 480.0,
+                    "Y": 480.0
+                },
+                {
+                    "Type": "MapExit",
+                    "NextMapPath": "maps/map01.json",
+                    "MoveOtherToX": 15.0,
+                    "MoveOtherToY": 25.0
+                }
+            ]
+        }
     ]
 }

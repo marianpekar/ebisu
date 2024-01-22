@@ -95,8 +95,8 @@ void Quadtree::Split()
     const float x = bounds.x;
     const float y = bounds.y;
 
-    nodes[0] = new Quadtree(level + 1, x + sub_width, y, sub_width, sub_height);
-    nodes[1] = new Quadtree(level + 1, x, y, sub_width, sub_height);
-    nodes[2] = new Quadtree(level + 1, x, y + sub_height, sub_width, sub_height);
-    nodes[3] = new Quadtree(level + 1, x + sub_width, y + sub_height, sub_width, sub_height);
+    nodes[0] = std::make_shared<Quadtree>(level + 1, x + sub_width, y, sub_width, sub_height);
+    nodes[1] = std::make_shared<Quadtree>(level + 1, x, y, sub_width, sub_height);
+    nodes[2] = std::make_shared<Quadtree>(level + 1, x, y + sub_height, sub_width, sub_height);
+    nodes[3] = std::make_shared<Quadtree>(level + 1, x + sub_width, y + sub_height, sub_width, sub_height);
 }

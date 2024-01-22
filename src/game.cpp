@@ -140,7 +140,8 @@ void Game::LoadComponents(const json& component, const std::shared_ptr<Entity>& 
     {
         int width = component["Width"];
         int height = component["Height"];
-        game_entity->AddComponent<BoxCollider>(width, height, collision_solver);
+        bool is_trigger = component["IsTrigger"];
+        game_entity->AddComponent<BoxCollider>(width, height, is_trigger, collision_solver);
     }
     if (component_type == "SpriteSheet")
     {

@@ -5,9 +5,12 @@
 #include "map_collider.h"
 #include "rigidbody.h"
 
-BoxCollider::BoxCollider(const float width, const float height, const std::shared_ptr<CollisionSolver>& collision_solver) : 
+BoxCollider::BoxCollider(const float width, const float height, bool is_trigger, const std::shared_ptr<CollisionSolver>& collision_solver) :
     position(Vector2(0, 0)), width(width), height(height), half_width(width * 0.5f), half_height(height * 0.5f),
-    collision_solver(collision_solver) {}
+    is_trigger(is_trigger),
+    collision_solver(collision_solver)
+{
+}
 
 void BoxCollider::Setup()
 {
@@ -22,29 +25,29 @@ void BoxCollider::Update(float delta_time)
     position = transform->GetPosition();
 }
 
-void BoxCollider::Collide(const std::shared_ptr<BoxCollider>& other, const Vector2& overlap) const
+void BoxCollider::Collide(const std::shared_ptr<BoxCollider>& other, const Vector2& overlap, const bool one_is_trigger) const
 {
-    if (!is_trigger)
+    if (on_collision != nullptr && collision_user_data != nullptr)
     {
-        const Vector2 current_pos = transform->GetPosition();
-        Vector2 target_pos = current_pos + overlap / 2.0f;
-
-        if (map_collider != nullptr)
-        {
-            map_collider->AdjustTargetPosition(current_pos, target_pos);
-        }
-        transform->SetPosition(target_pos);
-
-        if (rigidbody != nullptr && other->rigidbody != nullptr)
-        {
-            const Vector2 force = rigidbody->GetForce();
-            other->rigidbody->AddForce(force);
-            rigidbody->AddForce(-force);
-        }
+        on_collision(other, collision_user_data);
     }
-
-    if (on_collision == nullptr || collision_user_data == nullptr)
+    
+    if (one_is_trigger)
         return;
     
-    on_collision(other, collision_user_data);
+    const Vector2 current_pos = transform->GetPosition();
+    Vector2 target_pos = current_pos + overlap / 2.0f;
+
+    if (map_collider != nullptr)
+    {
+        map_collider->AdjustTargetPosition(current_pos, target_pos);
+    }
+    transform->SetPosition(target_pos);
+
+    if (rigidbody != nullptr && other->rigidbody != nullptr)
+    {
+        const Vector2 force = rigidbody->GetForce();
+        other->rigidbody->AddForce(force);
+        rigidbody->AddForce(-force);
+    }
 }
