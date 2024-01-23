@@ -112,6 +112,7 @@
     <ClCompile Include="..\src\quadtree.cpp" />
     <ClCompile Include="..\src\renderer.cpp" />
     <ClCompile Include="..\src\texture_loader.cpp" />
+    <ClCompile Include="..\src\transition_storage.cpp" />
     <ClInclude Include="..\src\config_map.h" />
     <ClInclude Include="..\src\ECS\collision_solver.h" />
     <ClInclude Include="..\src\ECS\Components\agent.h" />
@@ -138,6 +139,7 @@
     <ClInclude Include="..\src\quadtree.h" />
     <ClInclude Include="..\src\renderer.h" />
     <ClInclude Include="..\src\texture_loader.h" />
+    <ClInclude Include="..\src\transition_storage.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

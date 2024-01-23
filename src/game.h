@@ -25,8 +25,9 @@ private:
     void LoadEntities(const json& map_data);
     void LoadComponents(const json& component, const std::shared_ptr<class Entity>& game_entity);
     bool is_running = false;
-    std::shared_ptr<class ComponentManager> component_manager = nullptr;
-    std::shared_ptr<class CollisionSolver> collision_solver = nullptr;
-    std::shared_ptr<class Map> map = nullptr;
-    std::shared_ptr<class EntityPool> entity_pool = nullptr;
+    std::shared_ptr<class ComponentManager> component_manager;
+    std::shared_ptr<class CollisionSolver> collision_solver;
+    std::shared_ptr<class Map> map;
+    std::shared_ptr<class EntityPool> entity_pool;
+    std::shared_ptr<class TransitionStorage> transition_storage;
 };

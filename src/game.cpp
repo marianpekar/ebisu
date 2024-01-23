@@ -4,6 +4,7 @@
 #include <SDL.h>
 #include "game.h"
 #include "map.h"
+#include "transition_storage.h"
 #include "renderer.h"
 #include "texture_loader.h"
 #include "ECS/collision_solver.h"
@@ -52,6 +53,7 @@ void Game::InitializeGameLogicEssentials(const int screen_width, const int scree
     const std::shared_ptr<Camera> main_camera = std::make_shared<Camera>(screen_width, screen_height);
     Renderer::SetMainCamera(main_camera);
     entity_pool = std::make_shared<EntityPool>();
+    transition_storage = std::make_shared<TransitionStorage>();
 }
 
 bool Game::LoadLevel(const std::string& map_path)
@@ -59,16 +61,20 @@ bool Game::LoadLevel(const std::string& map_path)
     std::ifstream map_file(std::format("{}/{}", assets_path, map_path));
     if (!map_file.is_open())
         return false;
-
+    
     const json map_data = json::parse(map_file);
     LoadMap(map_data);
     LoadEntities(map_data);
+
+    transition_storage->SetCurrentMapPath(map_path);
+    entity_pool->LoadTransitionData(transition_storage);
     
     return true;
 }
 
 void Game::ChangeLevel(const std::string& next_map_path)
 {
+    transition_storage->SaveTransitionData(entity_pool);
     entity_pool->RemoveAllButPersistent();
     component_manager->RemoveAllButPersistent();
     collision_solver->Clear();

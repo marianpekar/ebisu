@@ -3,6 +3,7 @@
 #include <unordered_map>
 #include <memory>
 #include "entity.h"
+#include "Components/transform.h"
 
 class EntityPool
 {
@@ -17,6 +18,11 @@ public:
         entities.clear();
     }
 
+    const std::unordered_map<int, std::shared_ptr<Entity>>& GetEntities()
+    {
+        return entities;
+    }
+    
     void AddEntity(const std::shared_ptr<Entity>& entity)
     {
         if (!entity)
@@ -54,6 +60,18 @@ public:
         {
             it->second.reset();
             entities.erase(it);
+        }
+    }
+
+    void LoadTransitionData(const std::shared_ptr<TransitionStorage>& transition_storage) const
+    {
+        for (const auto& entity : entities)
+        {
+            if (std::shared_ptr<TransitionData> transition_data;
+                transition_storage->TryGetTransitionData(entity.first, transition_data))
+            {
+                entity.second->GetComponent<Transform>()->SetPosition(transition_data->position.x, transition_data->position.y);
+            }
         }
     }
 };
