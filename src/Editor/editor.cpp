@@ -831,31 +831,24 @@ void Editor::DrawSelectedEntityComponentProperties(Entity* entity)
                     value = new_value_buffer;
                 }
             }
-
+            
             for (auto& [name, value] : component->path_properties)
             {
-                if (ImGui::Button(std::format("...##{}", i).c_str()))
-                {
-                    open_previous_popup = nullptr;
-                    open_select_asset_popup = true;
-                }
-
-                if (selected_asset_path_changed)
-                {
-                    selected_asset_path_changed = false;
-                    value = selected_asset_path;
-                }
+                ImGui::Text(std::format("{}: {}", name, value).c_str());
 
                 ImGui::SameLine();
                 
-                std::string current_value = value;
-                char new_value_buffer[256];
-                strncpy_s(new_value_buffer, current_value.c_str(), sizeof(new_value_buffer));
-                ImGui::InputText(std::format("{}##{}{}", name, component->GetName(), i).c_str(), new_value_buffer, IM_ARRAYSIZE(new_value_buffer));
-                
-                if (ImGui::IsKeyPressed(ImGuiKey_Enter))
+                if (ImGui::Button(std::format("...##{}{}", component->GetName(), i).c_str()))
                 {
-                    value = new_value_buffer;
+                    open_previous_popup = nullptr;
+                    open_select_asset_popup = true;
+                    selected_path_property_index = i;
+                }
+                
+                if (selected_asset_path_changed && selected_path_property_index == i)
+                {
+                    selected_asset_path_changed = false;
+                    value = selected_asset_path;
                 }
             }
 
@@ -889,7 +882,8 @@ void Editor::DrawAddComponentDropdownAndAddButton(Entity* selected_entity)
         "CharacterAnimator", // 5
         "Agent", // 6
         "PlayerController", // 7
-        "MainCamera" // 8
+        "MainCamera", // 8
+        "MapExit" // 9
     };
     static int current_item_index = 0;
 
@@ -945,6 +939,8 @@ void Editor::DrawAddComponentDropdownAndAddButton(Entity* selected_entity)
         case 8:
             selected_entity->AddComponent<MainCamera>();
             break;
+        case 9:
+            selected_entity->AddComponent<MapExit>("", 0.f, 0.f);
         default:
             break;
         }

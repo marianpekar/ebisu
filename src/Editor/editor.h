@@ -111,6 +111,7 @@ private:
     std::string current_assets_relative_subdir_path = "";
     std::string selected_asset_path;
     bool selected_asset_path_changed;
+    size_t selected_path_property_index = 0;
     bool* open_previous_popup = nullptr;
     void DrawSelectAssetPopup();
 

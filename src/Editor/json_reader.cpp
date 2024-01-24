@@ -128,6 +128,13 @@ void JsonReader::LoadLevelFromFile(const char* file_path, Editor* editor)
                 entity->AddComponent<CharacterAnimator>(idle_anim_frame_time, idle_anim_start_frame, idle_anim_end_frame,
                     move_anim_frame_time, move_anim_start_frame, move_anim_end_frame);
             }
+            if (component_type == "MapExit")
+            {
+                const std::string next_map_path = component["NextMapPath"];
+                const float move_other_to_x = component["MoveOtherToX"];
+                const float move_other_to_y = component["MoveOtherToY"];
+                entity->AddComponent<MapExit>(next_map_path, move_other_to_x, move_other_to_y);
+            }
         }
 
         editor->AddEntityAt(entity, i);

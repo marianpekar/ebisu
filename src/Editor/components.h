@@ -126,3 +126,13 @@ struct PlayerController : Component
         float_properties.insert({"Speed", speed});
     }
 };
+
+struct MapExit : Component
+{
+    MapExit(const std::string& next_map_path, float move_other_to_x, float move_other_to_y) : Component("MapExit")
+    {
+        path_properties.insert({"NextMapPath", next_map_path});
+        float_properties.insert({"MoveOtherToX", move_other_to_x});
+        float_properties.insert({"MoveOtherToY", move_other_to_y});
+    }
+};
