@@ -849,6 +849,12 @@ void Editor::DrawSelectedEntityComponentProperties(Entity* entity)
                 {
                     selected_asset_path_changed = false;
                     value = selected_asset_path;
+
+                    if (strcmp(component->GetName(), "SpriteSheet") == 0)
+                    {
+                        SpriteSheet* sprite_sheet = static_cast<SpriteSheet*>(component);
+                        sprite_sheet->texture_index = -1;
+                    }
                 }
             }
 
