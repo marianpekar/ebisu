@@ -13,21 +13,21 @@ bool Renderer::Initialize(const std::string& title, const int screen_width, cons
 {
     if (SDL_Init(SDL_INIT_EVERYTHING) != 0)
     {
-        std::cout << "[Renderer] Failed to initialize SDL subsystems" << std::endl;
+        std::cout << "[Renderer] Failed to initialize SDL subsystems" << '\n';
         return false;
     }
 
     s_window = SDL_CreateWindow(title.c_str(), SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, screen_width, screen_height, fullscreen ? SDL_WINDOW_FULLSCREEN : 0);
     if (!s_window)
     {
-        std::cout << "[Renderer] Failed to create SDL Window" << std::endl;
+        std::cout << "[Renderer] Failed to create SDL Window" << '\n';
         return false;
     }
 
     s_renderer = SDL_CreateRenderer(s_window, -1, 0);
     if (!s_window)
     {
-        std::cout << "[Renderer] Failed to create SDL Renderer" << std::endl;
+        std::cout << "[Renderer] Failed to create SDL Renderer" << '\n';
         return false;
     }
 

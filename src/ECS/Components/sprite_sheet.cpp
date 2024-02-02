@@ -5,7 +5,7 @@
 #include <SDL.h>
 #include "../../renderer.h"
 
-SpriteSheet::SpriteSheet(const std::string& filepath, const int rect_width, const int rect_height) :
+SpriteSheet::SpriteSheet(std::string filepath, const int rect_width, const int rect_height) :
     sheet_width(0), sheet_height(0), rect_width(rect_width), rect_height(rect_height), filepath(std::move(filepath))
 {
     src_rect = new SDL_Rect();

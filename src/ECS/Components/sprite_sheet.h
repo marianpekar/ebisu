@@ -14,7 +14,7 @@ private:
     std::string filepath;
     std::shared_ptr<class Transform> transform;
 public:
-    SpriteSheet(const std::string& filepath, int rect_width, int rect_height);
+    SpriteSheet(std::string filepath, int rect_width, int rect_height);
     ~SpriteSheet() override;
     void Setup() override;
     void Render() override;

@@ -17,7 +17,7 @@ void CharacterAnimator::Setup()
 
 void CharacterAnimator::Update(float delta_time)
 {
-    constexpr float dir_change_threshold = 0.001f;
+    static constexpr float dir_change_threshold = 0.001f;
     
     if (move_dir.Length() > dir_change_threshold)
     {

@@ -26,7 +26,7 @@ void Agent::Update(float delta_time)
     {
         if (character_animator != nullptr)
         {
-            character_animator->SetMoveDirection(Vector2(0,0));
+            character_animator->SetMoveDirection(zero_vector);
         }
         
         return;

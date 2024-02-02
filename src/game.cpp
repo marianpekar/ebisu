@@ -232,7 +232,7 @@ void Game::LoadComponents(const json& component, const std::shared_ptr<Entity>& 
     }
     if (component_type == "MapExit")
     {
-        const std::string next_map_path = component["NextMapPath"];
+        std::string next_map_path = component["NextMapPath"];
         const float move_other_to_pos_x = component["MoveOtherToX"];
         const float move_other_to_pos_y = component["MoveOtherToY"];
         game_entity->AddComponent<MapExit>(next_map_path, move_other_to_pos_x, move_other_to_pos_y, this);

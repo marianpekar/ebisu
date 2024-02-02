@@ -17,6 +17,7 @@ private:
     float speed;
     float stopping_distance;
     std::vector<Vector2> current_path;
+    Vector2 zero_vector = Vector2(0,0);
     Vector2 current_direction; 
 public:
     Agent(const std::shared_ptr<Map>& map, float speed, float stopping_distance) : map(map), speed(speed), stopping_distance(stopping_distance) {}

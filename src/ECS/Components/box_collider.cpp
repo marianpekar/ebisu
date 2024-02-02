@@ -5,7 +5,7 @@
 #include "map_collider.h"
 #include "rigidbody.h"
 
-BoxCollider::BoxCollider(const float width, const float height, bool is_trigger, const std::shared_ptr<CollisionSolver>& collision_solver) :
+BoxCollider::BoxCollider(const float width, const float height, const bool is_trigger, const std::shared_ptr<CollisionSolver>& collision_solver) :
     position(Vector2(0, 0)), width(width), height(height), half_width(width * 0.5f), half_height(height * 0.5f),
     is_trigger(is_trigger),
     collision_solver(collision_solver)

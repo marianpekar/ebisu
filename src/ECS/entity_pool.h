@@ -28,13 +28,15 @@ public:
         if (!entity)
             return;
 
-        entities.emplace(entity->GetId(), entity);
+        entities.try_emplace(entity->GetId(), entity);
     }
 
     const std::shared_ptr<Entity>& GetEntityById(const int id)
     {
-        const auto it = entities.find(id);
-        return it != entities.end() ? it->second : nullptr;
+        if (const auto it = entities.find(id); it != entities.end())
+            return it->second;
+        
+        return nullptr;
     }
 
     void RemoveAllButPersistent()

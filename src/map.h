@@ -11,9 +11,9 @@ struct Layer
     struct SDL_Texture* sprite = nullptr;
     std::vector<int> tile_map;
     int tiles_in_row;
-    int spritesheet_cols;
-    Layer(SDL_Texture* sprite, std::vector<int> tile_map, const int& tiles_in_row, const int spritesheet_cols) :
-        sprite(sprite), tile_map(std::move(tile_map)), tiles_in_row(tiles_in_row), spritesheet_cols(spritesheet_cols) {}
+    int sprite_sheet_cols;
+    Layer(SDL_Texture* sprite, std::vector<int> tile_map, const int& tiles_in_row, const int sprite_sheet_cols) :
+        sprite(sprite), tile_map(std::move(tile_map)), tiles_in_row(tiles_in_row), sprite_sheet_cols(sprite_sheet_cols) {}
     ~Layer();
     const int& GetTileAt(const int& i, const int& j) const { return tile_map[j * tiles_in_row + i]; }
 };

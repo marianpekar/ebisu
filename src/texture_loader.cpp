@@ -7,7 +7,7 @@ std::unordered_map<std::string, SDL_Texture*> TextureLoader::texture_cache;
 SDL_Texture* TextureLoader::LoadTexture(const std::string& filepath, SDL_Renderer* renderer, int& width, int& height)
 {
     if (texture_cache.contains(filepath))
-        return texture_cache[filepath];
+        return texture_cache.at(filepath);
 
     SDL_Surface* surface = IMG_Load(filepath.c_str());
     SDL_Texture* texture = SDL_CreateTextureFromSurface(renderer, surface);
@@ -15,7 +15,7 @@ SDL_Texture* TextureLoader::LoadTexture(const std::string& filepath, SDL_Rendere
     height = surface->h;
     SDL_FreeSurface(surface);
 
-    texture_cache.emplace(filepath, texture);
+    texture_cache.try_emplace(filepath, texture);
 
     return texture;
 }

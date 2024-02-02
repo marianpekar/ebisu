@@ -71,12 +71,12 @@ void Map::GeneratePathNodes()
     }
 }
 
-void Map::AddLayer(const std::string& sprite_filepath, const std::vector<int>& tile_map, bool is_front)
+void Map::AddLayer(const std::string& sprite_filepath, const std::vector<int>& tile_map, const bool is_front)
 {
     int image_width, image_height;
     SDL_Texture* sprite = TextureLoader::LoadTexture(sprite_filepath, Renderer::GetRenderer(), image_width, image_height);
-    const int spritesheet_cols = image_width / tile_size;
-    std::shared_ptr<Layer> layer = std::make_shared<Layer>(sprite, tile_map, tiles_in_row, spritesheet_cols);
+    const int sprite_sheet_cols = image_width / tile_size;
+    std::shared_ptr<Layer> layer = std::make_shared<Layer>(sprite, tile_map, tiles_in_row, sprite_sheet_cols);
 
     if (is_front)
     {
@@ -193,8 +193,8 @@ void Map::Render(const std::shared_ptr<Layer>& layer) const
             if (layer->tile_map[y * tiles_in_row + x] == -1)
                 continue;
 
-            src_rect->x = (layer->tile_map[y * tiles_in_row + x] % layer->spritesheet_cols) * tile_size;
-            src_rect->y = (layer->tile_map[y * tiles_in_row + x] / layer->spritesheet_cols) * tile_size;
+            src_rect->x = (layer->tile_map[y * tiles_in_row + x] % layer->sprite_sheet_cols) * tile_size;
+            src_rect->y = (layer->tile_map[y * tiles_in_row + x] / layer->sprite_sheet_cols) * tile_size;
             src_rect->w = tile_size;
             src_rect->h = tile_size;
 
