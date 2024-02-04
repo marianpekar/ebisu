@@ -115,6 +115,16 @@
                 },
                 {
                     "Type": "MainCamera"
+                },
+                {
+                    "Type": "ProjectileEmitter",
+                    "ProjectileSpriteFilePath": "images/test_square_64x64.png",
+                    "ProjectileWidth": 64,
+                    "ProjectileHeight": 64,
+                    "ProjectileSpeed": 100,
+                    "ProjectileLifeTime": 5000,
+                    "PoolSize": 10,
+                    "EmitDelay": 1000
                 }
             ]
        },

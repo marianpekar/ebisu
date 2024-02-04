@@ -5,60 +5,80 @@
 #include "transform.h"
 #include "rigidbody.h"
 #include "character_animator.h"
+#include "projectile_emitter.h"
 
 void PlayerController::Setup()
 {
     character_animator = owner->GetComponent<CharacterAnimator>();
     rigidbody = owner->GetComponent<Rigidbody>();
+    projectile_emitter = owner->GetComponent<ProjectileEmitter>();
 }
 
 void PlayerController::Update(float delta_time)
 {
     SDL_Event event;
-    SDL_PollEvent(&event);
+
     const Uint8* keys = SDL_GetKeyboardState(nullptr);
-    switch (event.type)
+
+    if(keys[SDL_SCANCODE_SPACE] && projectile_emitter != nullptr)
     {
+        projectile_emitter->Emit(current_dir.Normalized());
+    }
+
+    while(SDL_PollEvent(&event))
+    {
+        switch(event.type)
+        {
         case SDL_QUIT:
             game->Quit();
             break;
 
         case SDL_KEYDOWN:
-        case SDL_KEYUP:
-            if (keys[SDL_SCANCODE_W])
+            if(keys[SDL_SCANCODE_W])
             {
                 move_dir.y = -1;
+                current_dir.y = move_dir.y;
             }
-            else if (keys[SDL_SCANCODE_S])
+            else if(keys[SDL_SCANCODE_S])
             {
                 move_dir.y = 1;
+                current_dir.y = move_dir.y;
             }
-            else
+            else if(keys[SDL_SCANCODE_A])
+            {
+                move_dir.x = -1;
+                current_dir.x = move_dir.x;
+            }
+            else if(keys[SDL_SCANCODE_D])
+            {
+                move_dir.x = 1;
+                current_dir.x = move_dir.x;
+            }
+
+            break;
+
+        case SDL_KEYUP:
+            if(event.key.keysym.scancode == SDL_SCANCODE_W || event.key.keysym.scancode == SDL_SCANCODE_S)
             {
                 move_dir.y = 0;
             }
 
-            if (keys[SDL_SCANCODE_A])
-            {
-                move_dir.x = -1;
-            }
-            else if (keys[SDL_SCANCODE_D])
-            {
-                move_dir.x = 1;
-            }
-            else
+            if(event.key.keysym.scancode == SDL_SCANCODE_A || event.key.keysym.scancode == SDL_SCANCODE_D)
             {
                 move_dir.x = 0;
             }
+
             break;
+
         default:
             break;
+        }
     }
-    
+
     const Vector2 move_force = move_dir.Normalized() * move_speed;
     rigidbody->AddForce(move_force);
 
-    if (character_animator != nullptr)
+    if(character_animator != nullptr)
     {
         character_animator->SetMoveDirection(move_dir);
     }

@@ -24,6 +24,14 @@ void ComponentManager::RemoveAllButPersistent()
     }
 }
 
+void ComponentManager::ResetComponents() const
+{
+    for (const auto& component : components)
+    {
+        component->Reset();
+    }
+}
+
 void ComponentManager::Setup() const
 {
     for (auto& component : components)

@@ -22,6 +22,7 @@
 #include "ECS/Components/transform.h"
 #include "ECS/Components/camera.h"
 #include "ECS/Components/map_exit.h"
+#include "ECS/Components/projectile_emitter.h"
 
 bool Game::Initialize(const std::string& title, const int screen_width, const int screen_height, const bool fullscreen, const std::string& map_path, const std::string& assets_root_path, const std::string& project_root_path)
 {
@@ -77,6 +78,7 @@ void Game::ChangeLevel(const std::string& next_map_path)
     transition_storage->SaveTransitionData(entity_pool);
     entity_pool->RemoveAllButPersistent();
     component_manager->RemoveAllButPersistent();
+    component_manager->ResetComponents();
     collision_solver->Clear();
     map->Clear();
     TextureLoader::ClearTextureCache();
@@ -236,6 +238,17 @@ void Game::LoadComponents(const json& component, const std::shared_ptr<Entity>& 
         const float move_other_to_pos_x = component["MoveOtherToX"];
         const float move_other_to_pos_y = component["MoveOtherToY"];
         game_entity->AddComponent<MapExit>(next_map_path, move_other_to_pos_x, move_other_to_pos_y, this);
+    }
+    if (component_type == "ProjectileEmitter")
+    {
+        std::string proj_sprite_filepath = component["ProjectileSpriteFilePath"];
+        int proj_width = component["ProjectileWidth"];
+        int proj_height = component["ProjectileHeight"];
+        const float proj_speed = component["ProjectileSpeed"];
+        const uint32_t proj_life_time_ms = component["ProjectileLifeTime"];
+        const size_t pool_size = component["PoolSize"];
+        const uint32_t emit_delay_ms = component["EmitDelay"];
+        game_entity->AddComponent<ProjectileEmitter>(std::format("{}/{}", assets_path, proj_sprite_filepath), proj_width, proj_height, proj_speed, proj_life_time_ms, pool_size, emit_delay_ms);
     }
 }
 

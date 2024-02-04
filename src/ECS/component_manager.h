@@ -14,4 +14,5 @@ public:
     void Render() const;
     void AddComponent(const std::shared_ptr<Component>& component);
     void RemoveAllButPersistent();
+    void ResetComponents() const;
 };
