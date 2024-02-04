@@ -9,7 +9,7 @@ private:
     Game* game;
     float move_speed;
     Vector2 move_dir;
-    Vector2 current_dir;
+    Vector2 facing_dir = Vector2(0,-1);
     std::shared_ptr<class CharacterAnimator> character_animator;
     std::shared_ptr<class Rigidbody> rigidbody;
     std::shared_ptr<class ProjectileEmitter> projectile_emitter;

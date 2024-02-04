@@ -118,10 +118,10 @@
                 },
                 {
                     "Type": "ProjectileEmitter",
-                    "ProjectileSpriteFilePath": "images/test_square_64x64.png",
+                    "ProjectileSpriteSheetFilePath": "images/spritesheets/test_8dir_movement_animation_spritesheet_512x512.png",
                     "ProjectileWidth": 64,
                     "ProjectileHeight": 64,
-                    "ProjectileSpeed": 100,
+                    "ProjectileSpeed": 500,
                     "ProjectileLifeTime": 5000,
                     "PoolSize": 10,
                     "EmitDelay": 1000

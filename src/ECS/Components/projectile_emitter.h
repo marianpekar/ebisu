@@ -10,15 +10,22 @@
 
 struct Projectile
 {
-    Projectile()
+    Projectile(const int width, const int height)
     {
         dst_rect = new SDL_Rect();
+        
+        src_rect = new SDL_Rect();
+        src_rect->x = 0;
+        src_rect->y = 0;
+        src_rect->w = width;
+        src_rect->h = height;
     }
     Vector2 position;
     Vector2 direction;
     float speed = 0;
     uint32_t destroy_time = 0;
     SDL_Rect* dst_rect = nullptr;
+    SDL_Rect* src_rect = nullptr;
     
     void Reset()
     {
@@ -28,6 +35,7 @@ struct Projectile
     ~Projectile()
     {
         delete dst_rect;
+        delete src_rect;
     }
 };
 
@@ -49,11 +57,11 @@ public:
         pool.push(proj);
     }
 
-    void Add(const size_t count)
+    void Add(const size_t count, const int width, const int height)
     {
         for(size_t i = 0; i < count; ++i)
         {
-            pool.push(std::make_shared<Projectile>()); 
+            pool.push(std::make_shared<Projectile>(width, height)); 
         }
     }
 
@@ -78,13 +86,15 @@ private:
     
     int proj_width = 0;
     int proj_height = 0;
-    std::string proj_sprite_filepath;
-    SDL_Texture* proj_sprite = nullptr;
+    std::string proj_sprite_sheet_filepath;
+    SDL_Texture* proj_sprite_sheet = nullptr;
     std::shared_ptr<class Transform> transform;
+
+    static int GetDirectionIndex(const Vector2& direction);
 public:
-    ProjectileEmitter(std::string proj_sprite_filepath, const int proj_width, const int proj_height, const float proj_speed, const uint32_t proj_life_time_ms, const size_t pool_size, const uint32_t emit_delay_ms)
+    ProjectileEmitter(std::string proj_sprite_sheet_filepath, const int proj_width, const int proj_height, const float proj_speed, const uint32_t proj_life_time_ms, const size_t pool_size, const uint32_t emit_delay_ms)
         : proj_life_time_ms(proj_life_time_ms), proj_speed(proj_speed), pool_size(pool_size),
-          emit_delay_ms(emit_delay_ms), proj_width(proj_width), proj_height(proj_height), proj_sprite_filepath(std::move(proj_sprite_filepath)) {}
+          emit_delay_ms(emit_delay_ms), proj_width(proj_width), proj_height(proj_height), proj_sprite_sheet_filepath(std::move(proj_sprite_sheet_filepath)) {}
     
     void Setup() override;
     void Update(float delta_time) override;
