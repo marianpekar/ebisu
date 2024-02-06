@@ -89,12 +89,18 @@ private:
     std::string proj_sprite_sheet_filepath;
     SDL_Texture* proj_sprite_sheet = nullptr;
     std::shared_ptr<class Transform> transform;
+    std::shared_ptr<class Map> map;
 
     static int GetDirectionIndex(const Vector2& direction);
 public:
-    ProjectileEmitter(std::string proj_sprite_sheet_filepath, const int proj_width, const int proj_height, const float proj_speed, const uint32_t proj_life_time_ms, const size_t pool_size, const uint32_t emit_delay_ms)
+    ProjectileEmitter(std::string proj_sprite_sheet_filepath,
+        const int proj_width, const int proj_height,
+        const float proj_speed, const uint32_t proj_life_time_ms,
+        const size_t pool_size, const uint32_t emit_delay_ms,
+        const std::shared_ptr<Map>& map)
         : proj_life_time_ms(proj_life_time_ms), proj_speed(proj_speed), pool_size(pool_size),
-          emit_delay_ms(emit_delay_ms), proj_width(proj_width), proj_height(proj_height), proj_sprite_sheet_filepath(std::move(proj_sprite_sheet_filepath)) {}
+          emit_delay_ms(emit_delay_ms), proj_width(proj_width), proj_height(proj_height),
+          proj_sprite_sheet_filepath(std::move(proj_sprite_sheet_filepath)), map(map) {}
     
     void Setup() override;
     void Update(float delta_time) override;

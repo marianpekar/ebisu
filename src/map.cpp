@@ -220,7 +220,7 @@ const int& Map::GetCollisionAt(const int& x, const int& y) const
     return collision_map[index];
 }
 
-const bool& Map::HasCollisionAt(const Vector2& position, const float& width, const float& height) const
+bool Map::HasCollisionAt(const Vector2& position, const float& width, const float& height) const
 {
     const float tl_x = position.x;
     const float tl_y = position.y;

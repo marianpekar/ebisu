@@ -5,6 +5,7 @@
 #include "../../renderer.h"
 #include "../entity.h"
 #include "transform.h"
+#include "../../map.h"
 
 void ProjectileEmitter::Setup()
 {
@@ -24,12 +25,19 @@ void ProjectileEmitter::Update(float delta_time)
         {
             projectile_pool.Return(*it);
             it = active_projectiles.erase(it);
+            continue;
         }
-        else
+        
+        (*it)->position += (*it)->direction * (*it)->speed * delta_time;
+
+        if (map->HasCollisionAt((*it)->position, static_cast<float>(proj_width), static_cast<float>(proj_height)))
         {
-            (*it)->position += (*it)->direction * (*it)->speed * delta_time;
-            ++it;
+            projectile_pool.Return(*it);
+            it = active_projectiles.erase(it);
+            continue;
         }
+            
+        ++it;
     }
 }
 

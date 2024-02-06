@@ -58,7 +58,7 @@ public:
     const int& GetMapWidth() const { return map_width; }
     const int& GetMapHeight() const { return map_height; }
     const int& GetCollisionAt(const int& x, const int& y) const;
-    const bool& HasCollisionAt(const Vector2& position, const float& width, const float& height) const;
+    bool HasCollisionAt(const Vector2& position, const float& width, const float& height) const;
     
     std::vector<Vector2> FindPath(const struct Vector2& start, const Vector2& end) const;
 
