@@ -220,6 +220,43 @@ const int& Map::GetCollisionAt(const int& x, const int& y) const
     return collision_map[index];
 }
 
+const bool& Map::HasCollisionAt(const Vector2& position, const float& width, const float& height) const
+{
+    const float tl_x = position.x;
+    const float tl_y = position.y;
+
+    const float tr_x = position.x + width;
+    const float tr_y = position.y;
+
+    const float bl_x = position.x;
+    const float bl_y = position.y + height;
+
+    const float br_x = position.x + width;
+    const float br_y = position.y + height;
+
+    const int tl_i = static_cast<int>(tl_x) / tile_size;
+    const int tl_j = static_cast<int>(tl_y) / tile_size;
+
+    const int tr_i = static_cast<int>(tr_x) / tile_size;
+    const int tr_j = static_cast<int>(tr_y) / tile_size;
+
+    const int bl_i = static_cast<int>(bl_x) / tile_size;
+    const int bl_j = static_cast<int>(bl_y) / tile_size;
+
+    const int br_i = static_cast<int>(br_x) / tile_size;
+    const int br_j = static_cast<int>(br_y) / tile_size;
+
+    if (GetCollisionAt(tl_i, tl_j) ||
+        GetCollisionAt(tr_i, tr_j) ||
+        GetCollisionAt(bl_i, bl_j) ||
+        GetCollisionAt(br_i, br_j))
+    {
+        return true;
+    }
+
+    return false;
+}
+
 Map::~Map()
 {
     delete src_rect;
