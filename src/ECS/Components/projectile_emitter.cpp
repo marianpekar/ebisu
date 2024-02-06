@@ -1,6 +1,5 @@
 #include "projectile_emitter.h"
 
-#include <map>
 #include <SDL.h>
 #include "../../texture_loader.h"
 #include "../../renderer.h"
