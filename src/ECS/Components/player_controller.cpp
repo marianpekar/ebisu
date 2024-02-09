@@ -20,41 +20,59 @@ void PlayerController::Update(float delta_time)
 
     const Uint8* keys = SDL_GetKeyboardState(nullptr);
 
-    while(SDL_PollEvent(&event))
+    while (SDL_PollEvent(&event))
     {
-        switch(event.type)
+        switch (event.type)
         {
         case SDL_QUIT:
             game->Quit();
             break;
 
         case SDL_KEYDOWN:
-            if(keys[SDL_SCANCODE_W])
+            if (keys[SDL_SCANCODE_W])
             {
                 move_dir.y = -1;
             }
-            else if(keys[SDL_SCANCODE_S])
+
+            if (keys[SDL_SCANCODE_S])
             {
                 move_dir.y = 1;
             }
-            else if(keys[SDL_SCANCODE_A])
+
+            if (keys[SDL_SCANCODE_A])
             {
                 move_dir.x = -1;
             }
-            else if(keys[SDL_SCANCODE_D])
+
+            if (keys[SDL_SCANCODE_D])
             {
                 move_dir.x = 1;
             }
-            
             break;
 
         case SDL_KEYUP:
-            if(event.key.keysym.scancode == SDL_SCANCODE_W || event.key.keysym.scancode == SDL_SCANCODE_S)
+            if (keys[SDL_SCANCODE_W])
+            {
+                move_dir.y = -1;
+            }
+            else if (keys[SDL_SCANCODE_S])
+            {
+                move_dir.y = 1;
+            }
+            else
             {
                 move_dir.y = 0;
             }
 
-            if(event.key.keysym.scancode == SDL_SCANCODE_A || event.key.keysym.scancode == SDL_SCANCODE_D)
+            if (keys[SDL_SCANCODE_A])
+            {
+                move_dir.x = -1;
+            }
+            else if (keys[SDL_SCANCODE_D])
+            {
+                move_dir.x = 1;
+            }
+            else
             {
                 move_dir.x = 0;
             }
@@ -67,11 +85,11 @@ void PlayerController::Update(float delta_time)
     }
 
     move_dir.Normalize();
-    
+
     const Vector2 move_force = move_dir * move_speed;
     rigidbody->AddForce(move_force);
 
-    if(character_animator != nullptr)
+    if (character_animator != nullptr)
     {
         character_animator->SetMoveDirection(move_dir);
     }
@@ -80,8 +98,8 @@ void PlayerController::Update(float delta_time)
     {
         facing_dir = move_dir;
     }
-    
-    if(keys[SDL_SCANCODE_SPACE] && projectile_emitter != nullptr)
+
+    if (keys[SDL_SCANCODE_SPACE] && projectile_emitter != nullptr)
     {
         projectile_emitter->Emit(facing_dir);
     }
