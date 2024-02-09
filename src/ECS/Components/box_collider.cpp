@@ -25,7 +25,7 @@ void BoxCollider::Update(float delta_time)
     position = transform->GetPosition();
 }
 
-void BoxCollider::Collide(const std::shared_ptr<BoxCollider>& other, const Vector2& overlap, const bool one_is_trigger) const
+void BoxCollider::Collide(const std::shared_ptr<Collider>& other, const Vector2& overlap, const bool one_is_trigger) const
 {
     if (on_collision != nullptr && collision_user_data != nullptr)
     {
@@ -44,10 +44,10 @@ void BoxCollider::Collide(const std::shared_ptr<BoxCollider>& other, const Vecto
     }
     transform->SetPosition(target_pos);
 
-    if (rigidbody != nullptr && other->rigidbody != nullptr)
+    if (rigidbody != nullptr && other->GetRigidbody() != nullptr)
     {
         const Vector2 force = rigidbody->GetForce();
-        other->rigidbody->AddForce(force);
+        other->GetRigidbody()->AddForce(force);
         rigidbody->AddForce(-force);
     }
 }

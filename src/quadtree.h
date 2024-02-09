@@ -25,14 +25,14 @@ private:
     int no_index = -1;
     
     Rectangle bounds;
-    std::vector<std::shared_ptr<class BoxCollider>> objects;
+    std::vector<std::shared_ptr<class Collider>> objects;
     std::shared_ptr<Quadtree> nodes[4];
 
     void Split();
-    const int& GetIndex(const std::shared_ptr<BoxCollider>& collider) const;
+    const int& GetIndex(const std::shared_ptr<Collider>& collider) const;
 public:
     Quadtree(int level, float x, float y, float width, float height);
     void Clear();
-    void Insert(const std::shared_ptr<BoxCollider>& collider);
-    std::vector<std::shared_ptr<BoxCollider>> Retrieve(std::vector<std::shared_ptr<BoxCollider>>& result, const std::shared_ptr<BoxCollider>& collider);
+    void Insert(const std::shared_ptr<Collider>& collider);
+    std::vector<std::shared_ptr<Collider>> Retrieve(std::vector<std::shared_ptr<Collider>>& result, const std::shared_ptr<Collider>& collider);
 };

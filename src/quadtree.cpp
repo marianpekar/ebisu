@@ -17,7 +17,7 @@ void Quadtree::Clear()
     }
 }
 
-void Quadtree::Insert(const std::shared_ptr<BoxCollider>& collider)
+void Quadtree::Insert(const std::shared_ptr<Collider>& collider)
 {
     if (nodes[0] != nullptr) {
         if (const int index = GetIndex(collider); index != -1) 
@@ -50,7 +50,7 @@ void Quadtree::Insert(const std::shared_ptr<BoxCollider>& collider)
     }
 }
 
-const int& Quadtree::GetIndex(const std::shared_ptr<BoxCollider>& collider) const
+const int& Quadtree::GetIndex(const std::shared_ptr<Collider>& collider) const
 {
     const float vertical_midpoint = bounds.x + bounds.width / 2;
     const float horizontal_midpoint = bounds.y + bounds.height / 2;
@@ -78,7 +78,7 @@ const int& Quadtree::GetIndex(const std::shared_ptr<BoxCollider>& collider) cons
     return no_index;
 }
 
-std::vector<std::shared_ptr<BoxCollider>> Quadtree::Retrieve(std::vector<std::shared_ptr<BoxCollider>>& result, const std::shared_ptr<BoxCollider>& collider)
+std::vector<std::shared_ptr<Collider>> Quadtree::Retrieve(std::vector<std::shared_ptr<Collider>>& result, const std::shared_ptr<Collider>& collider)
 {
     if (const int index = GetIndex(collider); index != -1 && nodes[0] != nullptr)
     {

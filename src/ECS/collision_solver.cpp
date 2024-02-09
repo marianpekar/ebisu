@@ -1,11 +1,12 @@
 #include "collision_solver.h"
 #include "../quadtree.h"
 #include "Components/box_collider.h"
+#include "Components/projectile_emitter.h"
 
 CollisionSolver::CollisionSolver(const float quad_x, const float quad_y, const float quad_width, const float quad_height) :
     quad(std::make_shared<Quadtree>(0, quad_x, quad_y, quad_width, quad_height)) {}
 
-void CollisionSolver::AddCollider(const std::shared_ptr<BoxCollider>& collider)
+void CollisionSolver::AddCollider(const std::shared_ptr<Collider>& collider)
 {
     colliders.emplace_back(collider);
 }
@@ -23,9 +24,9 @@ void CollisionSolver::Update()
         quad_result.clear();
         quad->Retrieve(quad_result, collider);
 
-        for (const std::shared_ptr<BoxCollider>& b : quad_result)
+        for (const std::shared_ptr<Collider>& b : quad_result)
         {
-            const std::shared_ptr<BoxCollider>& a = collider;
+            const std::shared_ptr<Collider>& a = collider;
             if (a == b)
                 continue;
 
@@ -46,7 +47,7 @@ void CollisionSolver::Clear()
     quad_result.clear();
 }
 
-bool CollisionSolver::SAT(const std::shared_ptr<BoxCollider>& a, const std::shared_ptr<BoxCollider>& b, Vector2& overlap)
+bool CollisionSolver::SAT(const std::shared_ptr<Collider>& a, const std::shared_ptr<Collider>& b, Vector2& overlap)
 {
     const Vector2 a_center = a->GetPosition() + Vector2(a->GetHalfWidth(), a->GetHalfHeight());
     const Vector2 b_center = b->GetPosition() + Vector2(b->GetHalfWidth(), b->GetHalfHeight());

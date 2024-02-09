@@ -5,6 +5,8 @@
 #include <memory>
 #include <stack>
 #include <vector>
+
+#include "box_collider.h"
 #include "../../Math/vector2.h"
 #include "component.h"
 
