@@ -121,6 +121,7 @@
     <ClInclude Include="..\src\ECS\Components\box_collider.h" />
     <ClInclude Include="..\src\ECS\Components\camera.h" />
     <ClInclude Include="..\src\ECS\Components\character_animator.h" />
+    <ClInclude Include="..\src\ECS\Components\collider.h" />
     <ClInclude Include="..\src\ECS\Components\component.h" />
     <ClInclude Include="..\src\ECS\Components\map_collider.h" />
     <ClInclude Include="..\src\ECS\Components\map_exit.h" />
