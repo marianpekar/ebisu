@@ -104,6 +104,7 @@
     <ClCompile Include="..\src\ECS\Components\player_controller.cpp" />
     <ClCompile Include="..\src\ECS\Components\projectile.cpp" />
     <ClCompile Include="..\src\ECS\Components\projectile_emitter.cpp" />
+    <ClCompile Include="..\src\ECS\Components\projectile_pool.cpp" />
     <ClCompile Include="..\src\ECS\Components\rigidbody.cpp" />
     <ClCompile Include="..\src\ECS\Components\sprite.cpp" />
     <ClCompile Include="..\src\ECS\Components\sprite_sheet.cpp" />
@@ -129,6 +130,7 @@
     <ClInclude Include="..\src\ECS\Components\player_controller.h" />
     <ClInclude Include="..\src\ECS\Components\projectile.h" />
     <ClInclude Include="..\src\ECS\Components\projectile_emitter.h" />
+    <ClInclude Include="..\src\ECS\Components\projectile_pool.h" />
     <ClInclude Include="..\src\ECS\Components\rigidbody.h" />
     <ClInclude Include="..\src\ECS\Components\sprite.h" />
     <ClInclude Include="..\src\ECS\Components\sprite_sheet.h" />

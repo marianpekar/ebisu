@@ -3,60 +3,12 @@
 #include <SDL.h>
 #include <string>
 #include <memory>
-#include <stack>
-#include <vector>
 
 #include "component.h"
-
 #include "player_controller.h"
 #include "../collision_solver.h"
 #include "../../Math/vector2.h"
-#include "projectile.h"
-
-class ProjectilePool
-{
-    std::stack<std::shared_ptr<Projectile>> pool;
-    std::vector<std::shared_ptr<Projectile>> active_projectiles;
-public:
-    std::vector<std::shared_ptr<Projectile>>& GetActiveProjectiles() { return active_projectiles; }
-    
-    std::shared_ptr<Projectile> Get()
-    {
-        auto proj = pool.top();
-        pool.pop();
-        return proj;
-    }
-
-    void Return(const std::shared_ptr<Projectile>& proj)
-    {
-        pool.push(proj);
-    }
-
-    void ReturnAll()
-    {
-        auto it = active_projectiles.begin();
-        while (it != active_projectiles.end())
-        {
-            Return(*it);
-            it = active_projectiles.erase(it);
-        }
-    }
-
-    void Add(const size_t count, const int width, const int height, const std::shared_ptr<CollisionSolver>& collision_solver)
-    {
-        for (size_t i = 0; i < count; ++i)
-        {
-            std::shared_ptr<Projectile> projectile = std::make_shared<Projectile>(width, height);
-            collision_solver->AddCollider(projectile);
-            pool.push(projectile);
-        }
-    }
-
-    bool IsEmpty() const
-    {
-        return pool.empty();
-    }
-};
+#include "projectile_pool.h"
 
 class ProjectileEmitter : public Component
 {
