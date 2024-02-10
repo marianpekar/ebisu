@@ -6,6 +6,7 @@
 class Collider
 {
 public:
+    virtual ~Collider() = default;
     virtual const Vector2& GetPosition() const = 0;
     virtual const float& GetX() const = 0;
     virtual const float& GetY() const = 0;
@@ -23,5 +24,5 @@ public:
     CollisionCallback on_collision = nullptr;
     void* collision_user_data = nullptr;
     
-    virtual void Collide(const std::shared_ptr<Collider>& other, const Vector2& overlap, bool one_is_trigger) const = 0;
+    virtual void Collide(const std::shared_ptr<Collider>& other, const Vector2& overlap, bool one_is_trigger) = 0;
 };

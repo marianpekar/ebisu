@@ -249,7 +249,7 @@ void Game::LoadComponents(const json& component, const std::shared_ptr<Entity>& 
         const size_t pool_size = component["PoolSize"];
         const uint32_t emit_delay_ms = component["EmitDelay"];
         game_entity->AddComponent<ProjectileEmitter>(std::format("{}/{}", assets_path, proj_sprite_sheet_filepath),
-            proj_width, proj_height, proj_speed, proj_life_time_ms, pool_size, emit_delay_ms, map);
+            proj_width, proj_height, proj_speed, proj_life_time_ms, pool_size, emit_delay_ms, map, collision_solver);
     }
 }
 

@@ -25,7 +25,7 @@ void BoxCollider::Update(float delta_time)
     position = transform->GetPosition();
 }
 
-void BoxCollider::Collide(const std::shared_ptr<Collider>& other, const Vector2& overlap, const bool one_is_trigger) const
+void BoxCollider::Collide(const std::shared_ptr<Collider>& other, const Vector2& overlap, const bool one_is_trigger)
 {
     if (on_collision != nullptr && collision_user_data != nullptr)
     {

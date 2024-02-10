@@ -22,7 +22,7 @@ public:
     BoxCollider(float width, float height, bool is_trigger, const std::shared_ptr<CollisionSolver>& collision_solver);
     void Setup() override;
     void Update(float delta_time) override;
-    void Collide(const std::shared_ptr<Collider>& other, const Vector2& overlap, bool one_is_trigger) const override;
+    void Collide(const std::shared_ptr<Collider>& other, const Vector2& overlap, bool one_is_trigger) override;
     const bool& GetIsTrigger() const override { return is_trigger; }
     void SetIsTrigger(const bool& value) { is_trigger = value; }
     const float& GetX() const override { return position.x; }
