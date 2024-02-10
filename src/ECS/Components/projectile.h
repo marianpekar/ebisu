@@ -11,35 +11,35 @@ class Projectile : public Collider
 private:
     float width, height, half_width, half_height;
     Vector2 position, direction;
-public:
 
-    Projectile(int width, int height);
-    
     float speed = 0;
     uint32_t destroy_time = 0;
-    SDL_Rect* dst_rect = nullptr;
-    SDL_Rect* src_rect = nullptr;
-
-    void Reset()
-    {
-        is_active = false;
-        destroy_time = 0;
-    }
-
-    ~Projectile() override
-    {
-        delete dst_rect;
-        delete src_rect;
-    }
 
     bool is_trigger = true;
     bool is_active = false;
-    bool is_projectile = true;
-
+public:
+    SDL_Rect* dst_rect = nullptr;
+    SDL_Rect* src_rect = nullptr;
+    
+    Projectile(int width, int height);
+    ~Projectile() override;
+    
+    void Reset();
+    
     void SetPosition(const float x, const float y) { position.x = x, position.y = y; }
     void SetDirection(const float x, const float y) { direction.x = x, direction.y = y; }
     const Vector2& GetDirection() const { return direction; }
     
+    const float& GetSpeed() const { return speed; }
+    void SetSpeed(const float new_speed) { speed = new_speed; }
+    
+    const bool& GetIsActive() const { return is_active; }
+    void SetIsActive(const bool active) { is_active = active; } 
+    
+    const uint32_t& GetDestroyTime() const { return destroy_time; }
+    void SetDestroyTime(const uint32_t new_destroy_time) { destroy_time = new_destroy_time; }
+    
+    // Collider
     const Vector2& GetPosition() const override { return position; }
     const float& GetX() const override { return position.x; }
     const float& GetY() const override { return position.y; }
@@ -50,7 +50,7 @@ public:
     const bool& GetIsTrigger() const override { return is_trigger; }
     const std::shared_ptr<Entity>& GetOwner() override { return nullptr; }
     const std::shared_ptr<Rigidbody>& GetRigidbody() override { return nullptr; }
-
+    
     void Collide(const std::shared_ptr<Collider>& other, const Vector2& overlap, bool one_is_trigger) override;
 };
 

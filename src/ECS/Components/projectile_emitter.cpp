@@ -18,24 +18,24 @@ void ProjectileEmitter::Setup()
 
 void ProjectileEmitter::Update(float delta_time)
 {
-    auto it = projectile_pool->active_projectiles.begin();
-    while (it != projectile_pool->active_projectiles.end())
+    auto it = projectile_pool->GetActiveProjectiles().begin();
+    while (it != projectile_pool->GetActiveProjectiles().end())
     {
-        if (SDL_GetTicks() > (*it)->destroy_time)
+        if (SDL_GetTicks() > (*it)->GetDestroyTime())
         {
             projectile_pool->Return(*it);
-            it = projectile_pool->active_projectiles.erase(it);
+            it = projectile_pool->GetActiveProjectiles().erase(it);
             continue;
         }
 
-        const Vector2 new_position = (*it)->GetPosition() + (*it)->GetDirection() * (*it)->speed * delta_time;
+        const Vector2 new_position = (*it)->GetPosition() + (*it)->GetDirection() * (*it)->GetSpeed() * delta_time;
         (*it)->SetPosition(new_position.x, new_position.y);
 
-        if (!(*it)->is_active || map->HasCollisionAt((*it)->GetPosition(), static_cast<float>(proj_width), static_cast<float>(proj_height)))
+        if (!(*it)->GetIsActive() || map->HasCollisionAt((*it)->GetPosition(), static_cast<float>(proj_width), static_cast<float>(proj_height)))
         {
             (*it)->Reset();
             projectile_pool->Return(*it);
-            it = projectile_pool->active_projectiles.erase(it);
+            it = projectile_pool->GetActiveProjectiles().erase(it);
             continue;
         }
             
@@ -45,7 +45,7 @@ void ProjectileEmitter::Update(float delta_time)
 
 void ProjectileEmitter::Render()
 {
-    for (const auto& proj : projectile_pool->active_projectiles)
+    for (const auto& proj : projectile_pool->GetActiveProjectiles())
     {
         proj->dst_rect->x = static_cast<int>(proj->GetPosition().x - Renderer::TryGetCameraPosition().x);
         proj->dst_rect->y = static_cast<int>(proj->GetPosition().y - Renderer::TryGetCameraPosition().y);
@@ -62,16 +62,16 @@ void ProjectileEmitter::Emit(const Vector2& direction)
         return;
 
     std::shared_ptr<Projectile> proj = projectile_pool->Get();
-    proj->is_active = true;
-    proj->destroy_time = SDL_GetTicks() + proj_life_time_ms;
+    proj->SetIsActive(true);
+    proj->SetDestroyTime(SDL_GetTicks() + proj_life_time_ms);
     proj->SetPosition(transform->GetPosition().x, transform->GetPosition().y);
     proj->SetDirection(direction.x, direction.y);
-    proj->speed = proj_speed;
+    proj->SetSpeed(proj_speed);
 
     const int direction_index = GetDirectionIndex(direction);
     proj->src_rect->y = direction_index * proj_height;
 
-    projectile_pool->active_projectiles.emplace_back(proj);
+    projectile_pool->GetActiveProjectiles().emplace_back(proj);
 
     last_emit_time = SDL_GetTicks();
 }

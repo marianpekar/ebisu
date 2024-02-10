@@ -16,10 +16,10 @@
 class ProjectilePool
 {
     std::stack<std::shared_ptr<Projectile>> pool;
-
-public:
     std::vector<std::shared_ptr<Projectile>> active_projectiles;
-
+public:
+    std::vector<std::shared_ptr<Projectile>>& GetActiveProjectiles() { return active_projectiles; }
+    
     std::shared_ptr<Projectile> Get()
     {
         auto proj = pool.top();
