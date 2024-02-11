@@ -1,5 +1,6 @@
 #include "projectile.h"
 #include "player_controller.h"
+#include "projectile_acceptor.h"
 
 Projectile::Projectile(const int width, const int height)
     : width(static_cast<float>(width)), height(static_cast<float>(height)),
@@ -21,9 +22,19 @@ void Projectile::Reset()
 
 void Projectile::Collide(const std::shared_ptr<Collider>& other, const Vector2& overlap, bool one_is_trigger)
 {
-    if (!is_active || (other->GetOwner() && other->GetOwner()->GetComponent<PlayerController>()))
+    if (!is_active)
         return;
 
+    const std::shared_ptr<Entity> other_entity = other->GetOwner();
+    if (!other_entity)
+        return;
+
+    const std::shared_ptr<ProjectileAcceptor> projectile_acceptor = other_entity->GetComponent<ProjectileAcceptor>();
+    if (!projectile_acceptor)
+        return;
+    
+    projectile_acceptor->Accept(other_entity);
+    
     Reset();
 }
 

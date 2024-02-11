@@ -23,6 +23,7 @@
 #include "ECS/Components/camera.h"
 #include "ECS/Components/map_exit.h"
 #include "ECS/Components/projectile_emitter.h"
+#include "ECS/Components/projectile_acceptor.h"
 
 bool Game::Initialize(const std::string& title, const int screen_width, const int screen_height, const bool fullscreen, const std::string& map_path, const std::string& assets_root_path, const std::string& project_root_path)
 {
@@ -250,6 +251,10 @@ void Game::LoadComponents(const json& component, const std::shared_ptr<Entity>& 
         const uint32_t emit_delay_ms = component["EmitDelay"];
         game_entity->AddComponent<ProjectileEmitter>(std::format("{}/{}", assets_path, proj_sprite_sheet_filepath),
             proj_width, proj_height, proj_speed, proj_life_time_ms, pool_size, emit_delay_ms, map, collision_solver);
+    }
+    if (component_type == "ProjectileAcceptor")
+    {
+        game_entity->AddComponent<ProjectileAcceptor>();
     }
 }
 

@@ -224,6 +224,9 @@
                     "MoveAnimationFrameTime": 500,
                     "MoveAnimationStartFrame": 2,
                     "MoveAnimationEndFrame": 5
+                },
+                {
+                    "Type": "ProjectileAcceptor"
                 }
             ]
         },
