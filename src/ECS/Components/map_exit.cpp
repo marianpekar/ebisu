@@ -21,10 +21,14 @@ void MapExit::OnCollisionStatic(const std::shared_ptr<Collider>& other, void* us
 
 void MapExit::ChangeLevel(const std::shared_ptr<Collider>& other, Game* game_ptr) const
 {
-    if (other->GetOwner() == nullptr || other->GetOwner()->GetComponent<PlayerController>() == nullptr)
+    const std::shared_ptr<Entity> other_entity = other->GetOwner();
+    if (!other_entity)
         return;
     
-    other->GetOwner()->GetComponent<Transform>()->SetPosition(move_other_to_pos);
+    if (!other_entity->GetComponent<PlayerController>())
+        return;
+    
+    other_entity->GetComponent<Transform>()->SetPosition(move_other_to_pos);
     
     game_ptr->ChangeLevel(next_map_path);
 }
