@@ -19,7 +19,5 @@ private:
     Vector2 move_other_to_pos;
     void ChangeLevel(const std::shared_ptr<Collider>& other, Game* game_ptr) const;
     
-    typedef void (*CollisionCallback)(const std::shared_ptr<class Collider>&, void*);
     static void OnCollisionStatic(const std::shared_ptr<Collider>& other, void* user_data);
-    
 };

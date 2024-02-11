@@ -21,6 +21,8 @@
 #include "ECS/Components/sprite_sheet.h"
 #include "ECS/Components/transform.h"
 #include "ECS/Components/camera.h"
+#include "ECS/Components/damage_receptor.h"
+#include "ECS/Components/health.h"
 #include "ECS/Components/map_exit.h"
 #include "ECS/Components/projectile_emitter.h"
 #include "ECS/Components/projectile_acceptor.h"
@@ -255,6 +257,17 @@ void Game::LoadComponents(const json& component, const std::shared_ptr<Entity>& 
     if (component_type == "ProjectileAcceptor")
     {
         game_entity->AddComponent<ProjectileAcceptor>();
+    }
+    if (component_type == "Health")
+    {
+        const float initial_health = component["InitialHealth"];
+        const float max_health = component["MaxHealth"];
+        game_entity->AddComponent<Health>(initial_health, max_health);
+    }
+    if (component_type == "DamageReceptor")
+    {
+        const float on_projectile_hit = component["OnProjectileHit"];
+        game_entity->AddComponent<DamageReceptor>(on_projectile_hit);
     }
 }
 

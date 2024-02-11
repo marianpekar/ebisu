@@ -99,6 +99,7 @@
     <ClCompile Include="..\src\ECS\Components\box_collider.cpp" />
     <ClCompile Include="..\src\ECS\Components\camera.cpp" />
     <ClCompile Include="..\src\ECS\Components\character_animator.cpp" />
+    <ClCompile Include="..\src\ECS\Components\health.cpp" />
     <ClCompile Include="..\src\ECS\Components\map_collider.cpp" />
     <ClCompile Include="..\src\ECS\Components\map_exit.cpp" />
     <ClCompile Include="..\src\ECS\Components\player_controller.cpp" />
@@ -126,6 +127,8 @@
     <ClInclude Include="..\src\ECS\Components\character_animator.h" />
     <ClInclude Include="..\src\ECS\Components\collider.h" />
     <ClInclude Include="..\src\ECS\Components\component.h" />
+    <ClInclude Include="..\src\ECS\Components\damage_receptor.h" />
+    <ClInclude Include="..\src\ECS\Components\health.h" />
     <ClInclude Include="..\src\ECS\Components\map_collider.h" />
     <ClInclude Include="..\src\ECS\Components\map_exit.h" />
     <ClInclude Include="..\src\ECS\Components\player_controller.h" />

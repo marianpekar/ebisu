@@ -227,6 +227,15 @@
                 },
                 {
                     "Type": "ProjectileAcceptor"
+                },
+                {
+                    "Type": "Health",
+                    "MaxHealth": 100,
+                    "InitialHealth": 100
+                },
+                {
+                    "Type": "DamageReceptor",
+                    "OnProjectileHit": 60
                 }
             ]
         },
