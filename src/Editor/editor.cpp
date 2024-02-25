@@ -889,7 +889,11 @@ void Editor::DrawAddComponentDropdownAndAddButton(Entity* selected_entity)
         "Agent", // 6
         "PlayerController", // 7
         "MainCamera", // 8
-        "MapExit" // 9
+        "MapExit", // 9
+        "ProjectileEmitter", // 10
+        "ProjectileAcceptor", // 11
+        "DamageReceptor", // 12
+        "Health" // 13
     };
     static int current_item_index = 0;
 
@@ -947,6 +951,19 @@ void Editor::DrawAddComponentDropdownAndAddButton(Entity* selected_entity)
             break;
         case 9:
             selected_entity->AddComponent<MapExit>("", 0.f, 0.f);
+            break;
+        case 10:
+            selected_entity->AddComponent<ProjectileEmitter>("", 1.0f, 1.0f, 500.0f, 5000.0f, 10, 1000);
+            break;
+        case 11:
+            selected_entity->AddComponent<ProjectileAcceptor>();
+            break;
+        case 12:
+            selected_entity->AddComponent<DamageReceptor>(1.0f);
+            break;
+        case 13:
+            selected_entity->AddComponent<Health>(100.f, 100.f);
+            break;
         default:
             break;
         }

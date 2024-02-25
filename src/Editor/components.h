@@ -136,3 +136,40 @@ struct MapExit : Component
         float_properties.insert({"MoveOtherToY", move_other_to_y});
     }
 };
+
+struct ProjectileEmitter : Component
+{
+    ProjectileEmitter(const std::string& sprite_sheet_filepath, float proj_width, float proj_height, float proj_speed,
+        float proj_lifetime, int pool_size, float emit_delay) : Component("ProjectileEmitter")
+    {
+        path_properties.insert({"ProjectileSpriteSheetFilePath", sprite_sheet_filepath });
+        float_properties.insert({"ProjectileWidth", proj_width});
+        float_properties.insert({"ProjectileHeight", proj_height});
+        float_properties.insert({"ProjectileSpeed", proj_speed});
+        float_properties.insert({"ProjectileLifeTime", proj_lifetime});
+        int_properties.insert({"PoolSize", pool_size});
+        float_properties.insert({"EmitDelay", emit_delay});
+    }
+};
+
+struct ProjectileAcceptor : Component
+{
+    ProjectileAcceptor() : Component("ProjectileAcceptor") { }
+};
+
+struct DamageReceptor : Component
+{
+    DamageReceptor(float on_projectile_hit) : Component("DamageReceptor")
+    {
+        float_properties.insert({"OnProjectileHit", on_projectile_hit});
+    }
+};
+
+struct Health : Component
+{
+    Health(float init_health, float max_health) : Component("Health")
+    {
+        float_properties.insert({"InitialHealth", init_health});
+        float_properties.insert({"MaxHealth", max_health});
+    }
+};

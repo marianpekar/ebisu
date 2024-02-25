@@ -135,6 +135,34 @@ void JsonReader::LoadLevelFromFile(const char* file_path, Editor* editor)
                 const float move_other_to_y = component["MoveOtherToY"];
                 entity->AddComponent<MapExit>(next_map_path, move_other_to_x, move_other_to_y);
             }
+            if (component_type == "ProjectileEmitter")
+            {
+                const std::string proj_sprite_filepath = component["ProjectileSpriteSheetFilePath"];
+                const float proj_width = component["ProjectileWidth"];
+                const float proj_height = component["ProjectileHeight"];
+                const float proj_speed = component["ProjectileSpeed"];
+                const float proj_lifetime = component["ProjectileLifeTime"];
+                const int pool_size = component["PoolSize"];
+                const float emit_delay = component["EmitDelay"];
+                entity->AddComponent<ProjectileEmitter>(proj_sprite_filepath, proj_width, proj_height,
+                    proj_speed, proj_lifetime, pool_size, emit_delay);
+            }
+            if (component_type == "ProjectileAcceptor")
+            {
+                entity->AddComponent<ProjectileAcceptor>();
+            }
+            if (component_type == "DamageReceptor")
+            {
+                const float on_projectile_hit = component["OnProjectileHit"];
+                entity->AddComponent<DamageReceptor>(on_projectile_hit);
+            }
+            if (component_type == "Health")
+            {
+                const float init_health = component["InitialHealth"];
+                const float max_health = component["MaxHealth"];
+                entity->AddComponent<Health>(init_health, max_health);
+            }
+            
         }
 
         editor->AddEntityAt(entity, i);
