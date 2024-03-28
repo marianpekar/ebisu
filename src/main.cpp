@@ -18,11 +18,13 @@ int main(int argc, char*[])
     const int screen_width = config_map->GetInt("ScreenWidth");
     const int screen_height = config_map->GetInt("ScreenHeight");
     const bool is_fullscreen = config_map->GetBool("Fullscreen");
+    const float scale_x = config_map->GetFloat("ScaleX");
+    const float scale_y = config_map->GetFloat("ScaleY");
     const std::string initial_map_path = config_map->GetString("MapPath");
     const std::string assets_path = config_map->GetString("AssetsRootPath");
     
     Game game;
-    if (!game.Initialize(title, screen_width, screen_height, is_fullscreen, initial_map_path, assets_path, project_path))
+    if (!game.Initialize(title, screen_width, screen_height, scale_x, scale_y, is_fullscreen, initial_map_path, assets_path, project_path))
         return -1;
     
     config_map.reset();

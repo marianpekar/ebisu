@@ -27,18 +27,19 @@
 #include "ECS/Components/projectile_emitter.h"
 #include "ECS/Components/projectile_acceptor.h"
 
-bool Game::Initialize(const std::string& title, const int screen_width, const int screen_height, const bool fullscreen, const std::string& map_path, const std::string& assets_root_path, const std::string& project_root_path)
+bool Game::Initialize(const std::string& title, const int screen_width, const int screen_height, const float scale_x, const float scale_y,
+    const bool fullscreen, const std::string& map_path, const std::string& assets_root_path, const std::string& project_root_path)
 {
     assets_path = std::format("{}/{}", project_root_path, assets_root_path);
     
-    if (!Renderer::Initialize(title, screen_width, screen_height, fullscreen))
+    if (!Renderer::Initialize(title, screen_width, screen_height, scale_x, scale_x, fullscreen))
         return false;
 
     InitializeGameLogicEssentials(screen_width, screen_height);
     
     if (!LoadLevel(map_path))
     {
-        std::cout << "[Game] Failed to load level" << std::endl;
+        std::cout << "[Game] Failed to load level" << '\n';
         return false;
     }
 

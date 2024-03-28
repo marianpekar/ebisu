@@ -11,6 +11,8 @@ private:
     std::shared_ptr<Transform> target;
     Vector2 position;
     int screen_half_width, screen_half_height;
+    float scale_x = 1.0;
+    float scale_y = 1.0;
 public:
     Camera(const int screen_width, const int screen_height) :
         screen_half_width(screen_width / 2), screen_half_height(screen_height / 2) {}
