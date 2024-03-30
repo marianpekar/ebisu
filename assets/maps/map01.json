@@ -75,13 +75,17 @@
                 { 
                     "Type": "MapCollider",
                     "Width": 22,
-                    "Height": 46
+                    "Height": 46,
+                    "OffsetX": 23,
+                    "OffsetY": 11
                 },
                 { 
                     "Type": "BoxCollider",
                     "IsTrigger": false,
                     "Width": 22,
-                    "Height": 46
+                    "Height": 46,
+                    "OffsetX": 23,
+                    "OffsetY": 11
                 },
                 {
                     "Type": "SpriteSheet",
@@ -138,13 +142,17 @@
                 { 
                     "Type": "MapCollider",
                     "Width": 64,
-                    "Height": 64
+                    "Height": 64,
+                    "OffsetX": 0,
+                    "OffsetY": 0
                 },
                 { 
                     "Type": "BoxCollider",
                     "IsTrigger": false,
                     "Width": 64,
-                    "Height": 64
+                    "Height": 64,
+                    "OffsetX": 0,
+                    "OffsetY": 0
                 },
                 {
                     "Type": "SpriteSheet",
@@ -192,13 +200,17 @@
                 { 
                     "Type": "MapCollider",
                     "Width": 22,
-                    "Height": 46
+                    "Height": 46,
+                    "OffsetX": 23,
+                    "OffsetY": 11
                 },
                 { 
                     "Type": "BoxCollider",
                     "IsTrigger": false,
                     "Width": 22,
-                    "Height": 46
+                    "Height": 46,
+                    "OffsetX": 23,
+                    "OffsetY": 11
                 },
                 {
                     "Type": "SpriteSheet",
@@ -250,7 +262,9 @@
                     "Type": "BoxCollider",
                     "IsTrigger": true,
                     "Width": 64,
-                    "Height": 64
+                    "Height": 64,
+                    "OffsetX": 0,
+                    "OffsetY": 0
                 },
                 {
                     "Type": "SpriteSheet",

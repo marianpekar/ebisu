@@ -13,13 +13,14 @@ private:
     Vector2 position;
     float width, height;
     float half_width, half_height;
+    float offset_x, offset_y;
     bool is_trigger = false;
     std::shared_ptr<class Transform> transform;
     std::shared_ptr<class MapCollider> map_collider;
     std::shared_ptr<class Rigidbody> rigidbody;
     std::shared_ptr<class CollisionSolver> collision_solver;
 public:
-    BoxCollider(float width, float height, bool is_trigger, const std::shared_ptr<CollisionSolver>& collision_solver);
+    BoxCollider(float width, float height, float offset_x, float offset_y, bool is_trigger, const std::shared_ptr<CollisionSolver>& collision_solver);
     void Setup() override;
     void Update(float delta_time) override;
     void Collide(const std::shared_ptr<Collider>& other, const Vector2& overlap, bool one_is_trigger) override;

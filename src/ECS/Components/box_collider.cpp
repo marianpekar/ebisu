@@ -9,8 +9,12 @@
 #include "map_collider.h"
 #include "rigidbody.h"
 
-BoxCollider::BoxCollider(const float width, const float height, const bool is_trigger, const std::shared_ptr<CollisionSolver>& collision_solver) :
-    position(Vector2(0, 0)), width(width), height(height), half_width(width * 0.5f), half_height(height * 0.5f),
+BoxCollider::BoxCollider(const float width, const float height, const float offset_x, const float offset_y,
+    const bool is_trigger, const std::shared_ptr<CollisionSolver>& collision_solver) :
+    position(Vector2(0, 0)),
+    width(width), height(height),
+    half_width(width * 0.5f), half_height(height * 0.5f),
+    offset_x(offset_x), offset_y(offset_y),
     is_trigger(is_trigger),
     collision_solver(collision_solver)
 {
@@ -26,7 +30,7 @@ void BoxCollider::Setup()
 
 void BoxCollider::Update(float delta_time)
 {
-    position = transform->GetPosition();
+    position = Vector2(transform->GetPosition().x + offset_x, transform->GetPosition().y + offset_y);
 }
 
 void BoxCollider::Collide(const std::shared_ptr<Collider>& other, const Vector2& overlap, const bool one_is_trigger)
@@ -62,7 +66,7 @@ void BoxCollider::Render()
     Uint8 r, g, b, a;
     SDL_GetRenderDrawColor(Renderer::GetRenderer(), &r, &g, &b, &a);
     
-    SDL_SetRenderDrawColor(Renderer::GetRenderer(), 0, 255, 255, 0);
+    SDL_SetRenderDrawColor(Renderer::GetRenderer(), 255, 255, 0, 0);
     
     const auto* rect = new SDL_Rect{
         static_cast<int>(position.x - Renderer::TryGetCameraPosition().x),

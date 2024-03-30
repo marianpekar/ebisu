@@ -148,16 +148,20 @@ void Game::LoadComponents(const json& component, const std::shared_ptr<Entity>& 
     const auto& component_type = component["Type"];
     if (component_type == "MapCollider")
     {
-        int width = component["Width"];
-        int height = component["Height"];
-        game_entity->AddComponent<MapCollider>(width, height, map);
+        float width = component["Width"];
+        float height = component["Height"];
+        float offset_x = component["OffsetX"];
+        float offset_y = component["OffsetY"];
+        game_entity->AddComponent<MapCollider>(width, height, offset_x, offset_y, map);
     }
     if (component_type == "BoxCollider")
     {
-        int width = component["Width"];
-        int height = component["Height"];
+        float width = component["Width"];
+        float height = component["Height"];
+        float offset_x = component["OffsetX"];
+        float offset_y = component["OffsetY"];
         bool is_trigger = component["IsTrigger"];
-        game_entity->AddComponent<BoxCollider>(width, height, is_trigger, collision_solver);
+        game_entity->AddComponent<BoxCollider>(width, height, offset_x, offset_y, is_trigger, collision_solver);
     }
     if (component_type == "SpriteSheet")
     {
