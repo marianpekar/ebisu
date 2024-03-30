@@ -74,14 +74,14 @@
             [
                 { 
                     "Type": "MapCollider",
-                    "Width": 64,
-                    "Height": 64
+                    "Width": 22,
+                    "Height": 46
                 },
                 { 
                     "Type": "BoxCollider",
                     "IsTrigger": false,
-                    "Width": 64,
-                    "Height": 64
+                    "Width": 22,
+                    "Height": 46
                 },
                 {
                     "Type": "SpriteSheet",
@@ -137,14 +137,14 @@
             [
                 { 
                     "Type": "MapCollider",
-                    "Width": 22,
-                    "Height": 46
+                    "Width": 64,
+                    "Height": 64
                 },
                 { 
                     "Type": "BoxCollider",
                     "IsTrigger": false,
-                    "Width": 22,
-                    "Height": 46
+                    "Width": 64,
+                    "Height": 64
                 },
                 {
                     "Type": "SpriteSheet",
