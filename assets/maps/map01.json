@@ -85,7 +85,7 @@
                 },
                 {
                     "Type": "SpriteSheet",
-                    "FilePath": "images/spritesheets/test_8dir_movement_animation_spritesheet_512x512.png",
+                    "FilePath": "images/spritesheets/green_character_8dir_movement_animation_spritesheet_64_640x512.png",
                     "Width": 64,
                     "Height": 64
                 },
@@ -105,9 +105,9 @@
                     "IdleAnimationStartFrame": 0,
                     "IdleAnimationEndFrame": 1,
                     "IdleToMoveAnimationThreshold": 100,
-                    "MoveAnimationFrameTime": 500,
+                    "MoveAnimationFrameTime": 50,
                     "MoveAnimationStartFrame": 2,
-                    "MoveAnimationEndFrame": 5
+                    "MoveAnimationEndFrame": 9
                 },
                 {
                     "Type": "PlayerController",
@@ -137,14 +137,14 @@
             [
                 { 
                     "Type": "MapCollider",
-                    "Width": 64,
-                    "Height": 64
+                    "Width": 22,
+                    "Height": 46
                 },
                 { 
                     "Type": "BoxCollider",
                     "IsTrigger": false,
-                    "Width": 64,
-                    "Height": 64
+                    "Width": 22,
+                    "Height": 46
                 },
                 {
                     "Type": "SpriteSheet",
@@ -178,7 +178,7 @@
        },
        {
             "Id": 357987,
-            "Name": "Box2",
+            "Name": "Enemy",
             "IsActive": true,
             "IsPersistent": false,
             "Components": 
@@ -191,18 +191,18 @@
                 },
                 { 
                     "Type": "MapCollider",
-                    "Width": 64,
-                    "Height": 64
+                    "Width": 22,
+                    "Height": 46
                 },
                 { 
                     "Type": "BoxCollider",
                     "IsTrigger": false,
-                    "Width": 64,
-                    "Height": 64
+                    "Width": 22,
+                    "Height": 46
                 },
                 {
                     "Type": "SpriteSheet",
-                    "FilePath": "images/spritesheets/test_8dir_movement_animation_spritesheet_512x512.png",
+                    "FilePath": "images/spritesheets/red_character_8dir_movement_animation_spritesheet_64_640x512.png",
                     "Width": 64,
                     "Height": 64
                 },
@@ -221,9 +221,9 @@
                     "IdleAnimationFrameTime": 600,
                     "IdleAnimationStartFrame": 0,
                     "IdleAnimationEndFrame": 1,
-                    "MoveAnimationFrameTime": 500,
+                    "MoveAnimationFrameTime": 50,
                     "MoveAnimationStartFrame": 2,
-                    "MoveAnimationEndFrame": 5
+                    "MoveAnimationEndFrame": 9
                 },
                 {
                     "Type": "ProjectileAcceptor"
