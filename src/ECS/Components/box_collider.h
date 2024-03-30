@@ -34,4 +34,8 @@ public:
     const Vector2& GetPosition() const override { return position; }
     const std::shared_ptr<Rigidbody>& GetRigidbody() override { return rigidbody; }
     const std::shared_ptr<Entity>& GetOwner() override { return owner; }
+
+#if _DEBUG
+    void Render() override;
+#endif
 };

@@ -1,6 +1,10 @@
 #include "../collision_solver.h"
 #include "../entity.h"
 #include "box_collider.h"
+
+#include <SDL.h>
+#include "../../renderer.h"
+
 #include "transform.h"
 #include "map_collider.h"
 #include "rigidbody.h"
@@ -51,3 +55,23 @@ void BoxCollider::Collide(const std::shared_ptr<Collider>& other, const Vector2&
         rigidbody->AddForce(-force);
     }
 }
+
+#if _DEBUG
+void BoxCollider::Render()
+{
+    Uint8 r, g, b, a;
+    SDL_GetRenderDrawColor(Renderer::GetRenderer(), &r, &g, &b, &a);
+    
+    SDL_SetRenderDrawColor(Renderer::GetRenderer(), 0, 255, 255, 0);
+    
+    const auto* rect = new SDL_Rect{
+        static_cast<int>(position.x - Renderer::TryGetCameraPosition().x),
+        static_cast<int>(position.y - Renderer::TryGetCameraPosition().y),
+        static_cast<int>(width), static_cast<int>(height)
+    };
+    SDL_RenderDrawRect(Renderer::GetRenderer(), rect);
+    delete rect;
+    
+    SDL_SetRenderDrawColor(Renderer::GetRenderer(), r, g, b, a);
+}
+#endif
