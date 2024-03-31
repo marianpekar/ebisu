@@ -157,7 +157,7 @@ void Editor::DrawNewLevelPopup()
                 open_select_asset_popup = true;
             }
             ImGui::SameLine();
-            ImGui::InputText(std::format("Tilemap Path {}", i).c_str(), new_level_tilemap_paths[i], 256);
+            ImGui::InputText(std::format("Tilemap Path {}", i).c_str(), new_level_tilemap_paths[i].data(), 256);
         }
 
         if (selected_asset_path_changed)
@@ -194,7 +194,7 @@ void Editor::UpdateSelectedNewLevelTilemapPath()
     }
 
     const size_t source_length = strlen(selected_asset_path.c_str());
-    strncpy_s(new_level_tilemap_paths[selected_tilemap_input_field_index],
+    strncpy_s(new_level_tilemap_paths[selected_tilemap_input_field_index].data(),
               source_length + 1,
               selected_asset_path.c_str(),
               source_length);
@@ -275,13 +275,9 @@ void Editor::DrawSelectAssetPopup()
 
 void Editor::InitTilemapPathsInputFields()
 {
-    for (const auto& new_level_tilemap_path : new_level_tilemap_paths)
-    {
-        delete new_level_tilemap_path;
-    }
     new_level_tilemap_paths.clear();
 
-    new_level_tilemap_paths = std::vector<char*>(tilemap_paths_count);
+    new_level_tilemap_paths = std::vector<std::string>(tilemap_paths_count);
     for (auto& new_level_tilemap_path : new_level_tilemap_paths)
     {
         new_level_tilemap_path = new char[256];
@@ -311,9 +307,9 @@ void Editor::CreateNewLevel()
     col_tile_count = new_level_col_tile_count;
     tile_size = static_cast<float>(new_level_tile_size);
 
-    for (const auto& path : new_level_tilemap_paths)
+    for (const std::string& path : new_level_tilemap_paths)
     {
-        LoadTexture(path);
+        LoadTexture(path.c_str());
         tile_maps.emplace_back();
     }
 
@@ -980,13 +976,14 @@ void Editor::AddEntityAt(Entity* entity, const size_t index)
     entities[index] = entity;
 }
 
-void Editor::AddTilemapLayer(const char* sprite_sheet_path, const bool is_front, const std::vector<int>& data)
+void Editor::AddTilemapLayer(const std::string& sprite_sheet_path, const bool is_front, const std::vector<int>& data)
 {
-    LoadTexture(sprite_sheet_path);
+    LoadTexture(sprite_sheet_path.c_str());
     TilemapLayer tilemap_layer;
     tilemap_layer.is_front = is_front;
     tilemap_layer.data = data;
     tile_maps.push_back(tilemap_layer);
+    new_level_tilemap_paths.push_back(sprite_sheet_path);
 }
 
 Editor::~Editor()

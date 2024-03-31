@@ -28,7 +28,7 @@ void JsonWriter::SerializeTileMapLayers(const Editor* editor, nlohmann::json& js
     json["TileMapLayers"] = nlohmann::json::array();
     
     const std::vector<TilemapLayer> tilemap_layers = editor->GetTilemapLayers();
-    std::vector<char*> tilemap_paths = editor->GetTilemapPaths();
+    std::vector<std::string> tilemap_paths = editor->GetTilemapPaths();
 
     for (size_t i = 0; i < tilemap_layers.size(); i++)
     {
