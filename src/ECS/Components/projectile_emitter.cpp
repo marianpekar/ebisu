@@ -13,14 +13,24 @@ void ProjectileEmitter::Setup()
     int _;
     proj_sprite_sheet = TextureLoader::LoadTexture(proj_sprite_sheet_filepath, Renderer::GetRenderer(), _, _);
 
-    projectile_pool->Add(pool_size, proj_height, proj_width, collision_solver);
+    projectile_pool->Add(pool_size, proj_height, proj_width, animation_frames, collision_solver);
 }
 
 void ProjectileEmitter::Update(float delta_time)
 {
+    const Uint32 current_time = SDL_GetTicks();
+    const Uint32 elapsed_time = current_time - last_time;
+    const bool next_frame = elapsed_time >= animation_frame_time;
+
     auto it = projectile_pool->GetActiveProjectiles().begin();
     while (it != projectile_pool->GetActiveProjectiles().end())
     {
+        if (next_frame)
+        {
+            last_time = current_time;
+            (*it)->NextFrame();
+        }
+        
         if (SDL_GetTicks() > (*it)->GetDestroyTime())
         {
             projectile_pool->Return(*it);
@@ -33,7 +43,6 @@ void ProjectileEmitter::Update(float delta_time)
 
         if (!(*it)->GetIsActive() || map->HasCollisionAt((*it)->GetPosition(), static_cast<float>(proj_width), static_cast<float>(proj_height)))
         {
-            (*it)->Reset();
             projectile_pool->Return(*it);
             it = projectile_pool->GetActiveProjectiles().erase(it);
             continue;
@@ -68,8 +77,8 @@ void ProjectileEmitter::Emit(const Vector2& direction)
     proj->SetDirection(direction.x, direction.y);
     proj->SetSpeed(proj_speed);
 
-    const int direction_index = GetDirectionIndex(direction);
-    proj->src_rect->y = direction_index * proj_height;
+    const int sprite_row = GetDirectionIndex(direction);
+    proj->SelectSpriteRow(sprite_row);
 
     projectile_pool->GetActiveProjectiles().emplace_back(proj);
 

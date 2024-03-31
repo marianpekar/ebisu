@@ -9,8 +9,11 @@
 class Projectile : public Collider
 {
 private:
-    float width, height, half_width, half_height;
+    int width, height, half_width, half_height;
     Vector2 position, direction;
+
+    int current_frame = 0;
+    int frames;
 
     float speed = 0;
     uint32_t destroy_time = 0;
@@ -21,8 +24,14 @@ public:
     SDL_Rect* dst_rect = nullptr;
     SDL_Rect* src_rect = nullptr;
     
-    Projectile(int width, int height);
+    Projectile(int width, int height, int frames);
     ~Projectile() override;
+
+    void NextFrame();
+private:
+    void SelectSpriteCol(const int& col) const;
+public:
+    void SelectSpriteRow(const int& row) const;
     
     void Reset();
     

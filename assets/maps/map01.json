@@ -117,10 +117,12 @@
                     "ProjectileSpriteSheetFilePath": "images/spritesheets/test_8dir_movement_animation_spritesheet_512x512.png",
                     "ProjectileWidth": 64,
                     "ProjectileHeight": 64,
-                    "ProjectileSpeed": 500,
+                    "ProjectileSpeed": 150,
                     "ProjectileLifeTime": 5000,
                     "PoolSize": 10,
-                    "EmitDelay": 1000
+                    "EmitDelay": 200,
+                    "ProjectileAnimationFrameTime": 100,
+                    "ProjectileAnimationFrames": 6
                 }
             ]
        },

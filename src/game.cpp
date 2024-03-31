@@ -256,8 +256,11 @@ void Game::LoadComponents(const json& component, const std::shared_ptr<Entity>& 
         const uint32_t proj_life_time_ms = component["ProjectileLifeTime"];
         const size_t pool_size = component["PoolSize"];
         const uint32_t emit_delay_ms = component["EmitDelay"];
+        const uint32_t animation_frame_time = component["ProjectileAnimationFrameTime"];
+        const uint32_t animation_frames = component["ProjectileAnimationFrames"];
         game_entity->AddComponent<ProjectileEmitter>(std::format("{}/{}", assets_path, proj_sprite_sheet_filepath),
-            proj_width, proj_height, proj_speed, proj_life_time_ms, pool_size, emit_delay_ms, map, collision_solver);
+            proj_width, proj_height, proj_speed, proj_life_time_ms, pool_size, emit_delay_ms, map, collision_solver,
+            animation_frame_time, animation_frames);
     }
     if (component_type == "ProjectileAcceptor")
     {

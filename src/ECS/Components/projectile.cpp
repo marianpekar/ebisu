@@ -2,9 +2,10 @@
 #include "player_controller.h"
 #include "projectile_acceptor.h"
 
-Projectile::Projectile(const int width, const int height)
-    : width(static_cast<float>(width)), height(static_cast<float>(height)),
-      half_width(static_cast<float>(width) / 2.f), half_height(static_cast<float>(height) / 2.f)
+Projectile::Projectile(const int width, const int height, const int frames)
+    : width(width), height(height),
+      half_width(width / 2), half_height(height / 2),
+      frames(frames)
 {
     dst_rect = new SDL_Rect();
     src_rect = new SDL_Rect();
@@ -14,9 +15,27 @@ Projectile::Projectile(const int width, const int height)
     src_rect->h = height;
 }
 
+void Projectile::NextFrame()
+{
+    current_frame = (current_frame + 1) % frames;
+    SelectSpriteCol(current_frame);
+}
+
+void Projectile::SelectSpriteCol(const int& col) const
+{
+    src_rect->x = width * col;
+}
+
+void Projectile::SelectSpriteRow(const int& row) const
+{
+    src_rect->y = height * row;
+}
+
 void Projectile::Reset()
 {
     is_active = false;
+    current_frame = 0;
+    SelectSpriteCol(current_frame);
     destroy_time = 0;
 }
 
@@ -34,8 +53,6 @@ void Projectile::Collide(const std::shared_ptr<Collider>& other, const Vector2& 
         return;
     
     projectile_acceptor->Accept(other_entity);
-    
-    Reset();
 }
 
 Projectile::~Projectile()

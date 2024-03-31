@@ -10,7 +10,7 @@ class ProjectilePool
 public:
     std::vector<std::shared_ptr<Projectile>>& GetActiveProjectiles() { return active_projectiles; }
     
-    void Add(const size_t& count, const int& width, const int& height, const std::shared_ptr<class CollisionSolver>& collision_solver);
+    void Add(const size_t& count, const int& width, const int& height, const int& frames, const std::shared_ptr<class CollisionSolver>& collision_solver);
     std::shared_ptr<Projectile>& Get();
     void Return(const std::shared_ptr<Projectile>& proj);
     void ReturnAll();
