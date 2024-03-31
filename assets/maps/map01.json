@@ -107,7 +107,7 @@
                 },
                 {
                     "Type": "PlayerController",
-                    "Speed": 2000
+                    "Speed": 1500
                 },
                 {
                     "Type": "MainCamera"
