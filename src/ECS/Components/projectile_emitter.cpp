@@ -10,10 +10,10 @@
 void ProjectileEmitter::Setup()
 {
     transform = owner->GetComponent<Transform>();
-    proj_sprite_sheet = TextureLoader::LoadTexture(proj_sprite_sheet_filepath, Renderer::GetRenderer(), proj_width,
-                                                   proj_height);
+    int _;
+    proj_sprite_sheet = TextureLoader::LoadTexture(proj_sprite_sheet_filepath, Renderer::GetRenderer(), _, _);
 
-    projectile_pool->Add(pool_size, proj_width, proj_height, collision_solver);
+    projectile_pool->Add(pool_size, proj_height, proj_width, collision_solver);
 }
 
 void ProjectileEmitter::Update(float delta_time)
