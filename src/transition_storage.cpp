@@ -44,6 +44,9 @@ void TransitionStorage::SaveTransitionData(const std::shared_ptr<EntityPool>& en
     ClearTransitionData();
     for (const auto& entity : entity_pool->GetEntities())
     {
+        if (entity.second->IsPersistent())
+            continue;
+        
         std::shared_ptr<Transform> transform = entity.second->GetComponent<Transform>();
         if (transform != nullptr)
         {

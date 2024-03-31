@@ -119,8 +119,8 @@
                 {
                     "Type": "MapExit",
                     "NextMapPath": "maps/map01.json",
-                    "MoveOtherToX": 15.0,
-                    "MoveOtherToY": 25.0
+                    "MoveOtherToX": 192.0,
+                    "MoveOtherToY": 512.0
                 }
             ]
         }
