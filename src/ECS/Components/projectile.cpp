@@ -53,6 +53,7 @@ void Projectile::Collide(const std::shared_ptr<Collider>& other, const Vector2& 
         return;
     
     projectile_acceptor->Accept(other_entity);
+    is_active = false;
 }
 
 Projectile::~Projectile()
