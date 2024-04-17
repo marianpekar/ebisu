@@ -114,15 +114,15 @@
                 },
                 {
                     "Type": "ProjectileEmitter",
-                    "ProjectileSpriteSheetFilePath": "images/spritesheets/test_8dir_movement_animation_spritesheet_512x512.png",
+                    "ProjectileSpriteSheetFilePath": "images/spritesheets/throwing_knife_8dir_animation_spritesheet_576x576.png",
                     "ProjectileWidth": 64,
                     "ProjectileHeight": 64,
-                    "ProjectileSpeed": 150,
+                    "ProjectileSpeed": 500,
                     "ProjectileLifeTime": 5000,
                     "PoolSize": 10,
                     "EmitDelay": 200,
-                    "ProjectileAnimationFrameTime": 100,
-                    "ProjectileAnimationFrames": 6
+                    "ProjectileAnimationFrameTime": 25,
+                    "ProjectileAnimationFrames": 9
                 }
             ]
        },
