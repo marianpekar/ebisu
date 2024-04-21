@@ -81,7 +81,7 @@
                 },
                 {
                     "Type": "SpriteSheet",
-                    "FilePath": "images/spritesheets/barbarian_8dir_movement_animation_spritesheet_128_2048x1024.png",
+                    "FilePath": "images/spritesheets/barbarian_spritesheet_128_3200x1024.png",
                     "Width": 128,
                     "Height": 128
                 },
