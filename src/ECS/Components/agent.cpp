@@ -20,6 +20,9 @@ void Agent::Setup()
 
 void Agent::Update(float delta_time)
 {
+    if (target_transform == nullptr)
+        return;
+    
     current_path = map->FindPath(transform->GetPosition(), target_transform->GetPosition());
 
     if ((target_transform->GetPosition() - transform->GetPosition()).Length() <= stopping_distance || current_path.size() < 2)
@@ -44,6 +47,11 @@ void Agent::Update(float delta_time)
 void Agent::SetTarget(const std::shared_ptr<Transform>& target)
 {
     target_transform = target;
+}
+
+void Agent::ForceStop()
+{
+    target_transform = nullptr;
 }
 
 #if _DEBUG

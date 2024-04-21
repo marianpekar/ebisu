@@ -1,7 +1,9 @@
 #include "health.h"
 
+#include "character_animator.h"
 #include "damage_receptor.h"
 #include "projectile_acceptor.h"
+#include "agent.h"
 
 Health::Health(float health, float max_health) : health(health), max_health(max_health) {}
 
@@ -11,6 +13,9 @@ void Health::Setup()
     {
        proj_acceptor->RegisterCallback(OnProjectileHit, this);
     }
+
+    character_animator = owner->GetComponent<CharacterAnimator>();
+    agent = owner->GetComponent<Agent>();
 }
 
 void Health::OnProjectileHit(const std::shared_ptr<Entity>& owner_entity, void* user_data)
@@ -34,9 +39,17 @@ void Health::AddToHealth(float diff)
         Die();
 }
 
-void Health::Die()
+void Health::Die() const
 {
-    //TODO:
+    if (character_animator != nullptr)
+    {
+        character_animator->PlayDeadAnimation();
+    }
+
+    if (agent != nullptr)
+    {
+        agent->ForceStop();
+    }
 }
 
 void Health::ReceiveDamage(const float damage)

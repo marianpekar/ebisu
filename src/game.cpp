@@ -232,9 +232,14 @@ void Game::LoadComponents(const json& component, const std::shared_ptr<Entity>& 
         const int idle_anim_end_frame = component["IdleAnimationEndFrame"];
         const float idle_anim_frame_time = component["IdleAnimationFrameTime"];
         
+        const int death_anim_start_frame = component["DeathAnimationStartFrame"];
+        const int death_anim_end_frame = component["DeathAnimationEndFrame"];
+        const float death_anim_frame_time = component["DeathAnimationFrameTime"];
+        
         game_entity->AddComponent<CharacterAnimator>(animator,
             move_anim_start_frame, move_anim_end_frame, move_anim_frame_time,
-            idle_anim_start_frame, idle_anim_end_frame, idle_anim_frame_time);
+            idle_anim_start_frame, idle_anim_end_frame, idle_anim_frame_time,
+            death_anim_start_frame, death_anim_end_frame, death_anim_frame_time);
     }
     if (component_type == "MainCamera")
     {

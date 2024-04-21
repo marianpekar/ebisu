@@ -103,7 +103,10 @@
                     "IdleToMoveAnimationThreshold": 100,
                     "MoveAnimationFrameTime": 50,
                     "MoveAnimationStartFrame": 5,
-                    "MoveAnimationEndFrame": 15
+                    "MoveAnimationEndFrame": 15,
+                    "DeathAnimationFrameTime": 50,
+                    "DeathAnimationStartFrame": 16,
+                    "DeathAnimationEndFrame": 24
                 },
                 {
                     "Type": "PlayerController",
@@ -117,7 +120,7 @@
                     "ProjectileSpriteSheetFilePath": "images/spritesheets/test_8dir_movement_animation_spritesheet_512x512.png",
                     "ProjectileWidth": 64,
                     "ProjectileHeight": 64,
-                    "ProjectileSpeed": 150,
+                    "ProjectileSpeed": 400,
                     "ProjectileLifeTime": 5000,
                     "PoolSize": 10,
                     "EmitDelay": 200,
@@ -187,30 +190,30 @@
             [
                 {
                     "Type":"Agent",
-                    "TargetEntityId": 159456,
+                    "TargetEntityId": 159753,
                     "Speed": 1000,
                     "StoppingDistance": 128
                 },
                 { 
                     "Type": "MapCollider",
-                    "Width": 22,
-                    "Height": 46,
-                    "OffsetX": 23,
-                    "OffsetY": 11
+                    "Width": 50,
+                    "Height": 90,
+                    "OffsetX": 39,
+                    "OffsetY": 22
                 },
                 { 
                     "Type": "BoxCollider",
                     "IsTrigger": false,
-                    "Width": 22,
-                    "Height": 46,
-                    "OffsetX": 23,
-                    "OffsetY": 11
+                    "Width": 50,
+                    "Height": 90,
+                    "OffsetX": 39,
+                    "OffsetY": 22
                 },
                 {
                     "Type": "SpriteSheet",
-                    "FilePath": "images/spritesheets/red_character_8dir_movement_animation_spritesheet_64_640x512.png",
-                    "Width": 64,
-                    "Height": 64
+                    "FilePath": "images/spritesheets/barbarian_spritesheet_128_3200x1024.png",
+                    "Width": 128,
+                    "Height": 128
                 },
                 {
                     "Type": "Rigidbody",
@@ -219,17 +222,21 @@
                 },
                 {
                     "Type": "Transform",
-                    "X": 192.0,
+                    "X": 64.0,
                     "Y": 640.0
                 },
                 {
                     "Type": "CharacterAnimator",
-                    "IdleAnimationFrameTime": 600,
+                    "IdleAnimationFrameTime": 200,
                     "IdleAnimationStartFrame": 0,
-                    "IdleAnimationEndFrame": 1,
+                    "IdleAnimationEndFrame": 4,
+                    "IdleToMoveAnimationThreshold": 100,
                     "MoveAnimationFrameTime": 50,
-                    "MoveAnimationStartFrame": 2,
-                    "MoveAnimationEndFrame": 9
+                    "MoveAnimationStartFrame": 5,
+                    "MoveAnimationEndFrame": 15,
+                    "DeathAnimationFrameTime": 50,
+                    "DeathAnimationStartFrame": 16,
+                    "DeathAnimationEndFrame": 24
                 },
                 {
                     "Type": "ProjectileAcceptor"
