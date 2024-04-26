@@ -16,6 +16,8 @@ public:
     void ReceiveAid(float aid);
     void Setup() override;
     void Die() const;
+    float GetHealth() const { return health; }
+    void SetHealth(const float& val) { health = val; }
     
     static void OnProjectileHit(const std::shared_ptr<Entity>& owner_entity, void* user_data);
 };

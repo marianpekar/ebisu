@@ -16,7 +16,7 @@ void Animator::Setup()
 
 void Animator::Update(float delta_time)
 {
-    if (active_anim_id == no_id)
+    if (active_anim_id == no_id || !animations[active_anim_id]->is_running)
         return;
 
     const Uint32 current_time = SDL_GetTicks();
@@ -91,4 +91,15 @@ void Animator::StopImmediately()
     animations[active_anim_id]->current_frame = animations[active_anim_id]->start_frame;
     sprite_sheet->SelectSprite(animations[active_anim_id]->row, animations[active_anim_id]->start_frame);
     active_anim_id = -1;
+}
+
+void Animator::PlayLastFrame() const
+{
+    animations[active_anim_id]->is_running = false;
+    sprite_sheet->SelectSprite(animations[active_anim_id]->row, animations[active_anim_id]->end_frame);
+}
+
+void Animator::SetCurrentAnimation(const size_t& id)
+{
+    active_anim_id = id;
 }

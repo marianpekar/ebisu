@@ -14,9 +14,17 @@ void CharacterAnimator::Setup()
     animator->Play(current_idle_animation_id);
 }
 
-void CharacterAnimator::PlayDeadAnimation() {
+void CharacterAnimator::PlayDeadAnimation()
+{
     is_dead = true;
     animator->Play(current_death_animation_id);
+}
+
+void CharacterAnimator::PlayDeadAnimationLastFrame()
+{
+    is_dead = true;
+    animator->SetCurrentAnimation(current_death_animation_id);
+    animator->PlayLastFrame();
 }
 
 void CharacterAnimator::Update(float delta_time)

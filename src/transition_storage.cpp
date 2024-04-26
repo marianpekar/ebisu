@@ -1,6 +1,8 @@
 #include "transition_storage.h"
 
 #include "ECS/entity_pool.h"
+#include "ECS/Components/character_animator.h"
+#include "ECS/Components/health.h"
 
 void TransitionStorage::SetCurrentMapPath(const std::string& map_path)
 {
@@ -47,12 +49,23 @@ void TransitionStorage::SaveTransitionData(const std::shared_ptr<EntityPool>& en
         if (entity.second->IsPersistent())
             continue;
         
+        std::shared_ptr<TransitionData> transition_data = std::make_shared<TransitionData>();
+
         std::shared_ptr<Transform> transform = entity.second->GetComponent<Transform>();
-        if (transform != nullptr)
+        transition_data->position = Vector2 { transform->GetPosition().x, transform->GetPosition().y };
+
+        std::shared_ptr<Health> health = entity.second->GetComponent<Health>();
+        if (health != nullptr)
         {
-            std::shared_ptr<TransitionData> transition_data = std::make_shared<TransitionData>();
-            transition_data->position = Vector2{ transform->GetPosition().x, transform->GetPosition().y };
-            AddTransitionData(entity.first, transition_data);
+            transition_data->health = health->GetHealth();
         }
+
+        std::shared_ptr<CharacterAnimator> character_animator = entity.second->GetComponent<CharacterAnimator>();
+        if (character_animator != nullptr)
+        {
+            transition_data->current_death_anim_id = character_animator->GetCurrentDeathAnimId();
+        }
+
+        AddTransitionData(entity.first, transition_data);
     }
 }

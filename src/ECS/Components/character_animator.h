@@ -80,4 +80,7 @@ public:
     void Update(float delta_time) override;
 
     void PlayDeadAnimation();
+    void PlayDeadAnimationLastFrame();
+    const size_t& GetCurrentDeathAnimId() const { return current_death_animation_id; }
+    void SetCurrentDeathAnimId(const size_t& id) { current_death_animation_id = id; }
 };

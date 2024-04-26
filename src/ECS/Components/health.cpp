@@ -16,6 +16,21 @@ void Health::Setup()
 
     character_animator = owner->GetComponent<CharacterAnimator>();
     agent = owner->GetComponent<Agent>();
+    
+    if (health <= 0.0f)
+    {
+        if (character_animator != nullptr)
+        {
+            character_animator->PlayDeadAnimationLastFrame();
+        }
+
+        if (agent != nullptr)
+        {
+            agent->ForceStop();
+        }
+    }
+    
+
 }
 
 void Health::OnProjectileHit(const std::shared_ptr<Entity>& owner_entity, void* user_data)

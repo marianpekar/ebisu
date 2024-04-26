@@ -11,6 +11,8 @@ class EntityPool;
 struct TransitionData
 {
     Vector2 position;
+    float health;
+    size_t current_death_anim_id;
 };
 
 class TransitionStorage

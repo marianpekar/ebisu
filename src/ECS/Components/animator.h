@@ -37,4 +37,6 @@ public:
     void Play(size_t id);
     void Stop() const;
     void StopImmediately();
+    void PlayLastFrame() const;
+    void SetCurrentAnimation(const size_t& id);
 };

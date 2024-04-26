@@ -3,7 +3,9 @@
 #include <unordered_map>
 #include <memory>
 #include "entity.h"
+#include "Components/health.h"
 #include "Components/transform.h"
+#include "Components/character_animator.h"
 
 class EntityPool
 {
@@ -69,10 +71,21 @@ public:
     {
         for (const auto& entity : entities)
         {
-            if (std::shared_ptr<TransitionData> transition_data;
-                transition_storage->TryGetTransitionData(entity.first, transition_data))
+            if (std::shared_ptr<TransitionData> transition_data; transition_storage->TryGetTransitionData(entity.first, transition_data))
             {
                 entity.second->GetComponent<Transform>()->SetPosition(transition_data->position.x, transition_data->position.y);
+
+                std::shared_ptr<Health> health = entity.second->GetComponent<Health>();
+                if (health != nullptr)
+                {
+                    health->SetHealth(transition_data->health);
+                }
+
+                std::shared_ptr<CharacterAnimator> character_animator = entity.second->GetComponent<CharacterAnimator>();
+                if (character_animator != nullptr)
+                {
+                    character_animator->SetCurrentDeathAnimId(transition_data->current_death_anim_id);
+                }
             }
         }
     }
