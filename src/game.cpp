@@ -287,6 +287,10 @@ void Game::LoadComponents(const json& component, const std::shared_ptr<Entity>& 
 void Game::Update(const float delta_time) const
 {
     component_manager->Update(delta_time);
+}
+
+void Game::FixedUpdate() const
+{
     collision_solver->Update();
 }
 

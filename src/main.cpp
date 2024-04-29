@@ -47,11 +47,14 @@ int main(int argc, char*[])
             continue;
         }
 
-        accumulated_time += 0.001f * static_cast<float>(frame_ticks);
+        const float delta_time = 0.001f * static_cast<float>(frame_ticks);
+        game.Update(delta_time);
+
+        accumulated_time += delta_time;
 
         while (accumulated_time >= fixed_delta_time)
         {
-            game.Update(fixed_delta_time);
+            game.FixedUpdate();
             accumulated_time -= fixed_delta_time;
         }
 

@@ -14,6 +14,7 @@ public:
         const std::string& map_path, const std::string& assets_root_path, const std::string& project_root_path);
     void InitializeGameLogicEssentials(int screen_width, int screen_height);
     void Update(float delta_time) const;
+    void FixedUpdate() const;
     void Render() const;
     const bool& IsRunning() const { return is_running; }
     void Quit();
