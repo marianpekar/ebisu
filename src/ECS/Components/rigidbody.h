@@ -17,7 +17,7 @@ public:
     void ResetForces();
     const Vector2& GetForce() const { return force; }
     void Setup() override;
-    void Update(float delta_time) override;
+    void FixedUpdate(float delta_time) override;
     void SetMass(const float& mass);
     void SetDrag(const float& drag);
 };

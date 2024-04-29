@@ -12,6 +12,7 @@ public:
     virtual ~Component() = default;
     virtual void Setup() {}
     virtual void Update(float delta_time) {}
+    virtual void FixedUpdate(float fixed_delta_time) {}
     virtual void Render() {}
     virtual void Reset() {}
     bool GetIsPersistent() const { return is_persistent; }

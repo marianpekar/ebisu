@@ -51,6 +51,17 @@ void ComponentManager::Update(const float delta_time) const
     }
 }
 
+void ComponentManager::FixedUpdate(float fixed_delta_time)
+{
+    for (auto& component : components)
+    {
+        if (!component->owner->IsActive())
+            continue;
+        
+        component->FixedUpdate(fixed_delta_time);
+    }
+}
+
 void ComponentManager::Render() const
 {
     for (auto& component : components)

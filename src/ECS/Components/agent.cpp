@@ -36,7 +36,7 @@ void Agent::Update(float delta_time)
     }
     
     current_direction = (current_path[1] - current_path[0]).Normalized();
-    rigidbody->AddForce(current_direction * speed);
+    rigidbody->AddForce(current_direction * (speed * delta_time));
 
     if (character_animator != nullptr)
     {

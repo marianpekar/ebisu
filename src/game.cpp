@@ -289,9 +289,10 @@ void Game::Update(const float delta_time) const
     component_manager->Update(delta_time);
 }
 
-void Game::FixedUpdate() const
+void Game::FixedUpdate(const float fixed_delta_time) const
 {
     collision_solver->Update();
+    component_manager->FixedUpdate(fixed_delta_time);
 }
 
 void Game::Render() const

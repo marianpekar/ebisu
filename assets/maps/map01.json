@@ -110,7 +110,7 @@
                 },
                 {
                     "Type": "PlayerController",
-                    "Speed": 1500
+                    "Speed": 100000
                 },
                 {
                     "Type": "MainCamera"
@@ -191,7 +191,7 @@
                 {
                     "Type":"Agent",
                     "TargetEntityId": 159753,
-                    "Speed": 1000,
+                    "Speed": 100000,
                     "StoppingDistance": 128
                 },
                 { 

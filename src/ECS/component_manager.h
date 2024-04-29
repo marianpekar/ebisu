@@ -11,6 +11,7 @@ public:
     ~ComponentManager();
     void Setup() const;
     void Update(float delta_time) const;
+    void FixedUpdate(float fixed_delta_time);
     void Render() const;
     void AddComponent(const std::shared_ptr<Component>& component);
     void RemoveAllButPersistent();

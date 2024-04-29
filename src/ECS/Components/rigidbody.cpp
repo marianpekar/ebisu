@@ -9,7 +9,7 @@ void Rigidbody::Setup()
     map_collider = owner->GetComponent<MapCollider>();
 }
 
-void Rigidbody::Update(float delta_time)
+void Rigidbody::FixedUpdate(float delta_time)
 {
     const Vector2 current_pos = transform->GetPosition();
     const Vector2 prev_pos = current_pos;

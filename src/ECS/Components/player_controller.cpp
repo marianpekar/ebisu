@@ -86,7 +86,7 @@ void PlayerController::Update(float delta_time)
 
     move_dir.Normalize();
 
-    const Vector2 move_force = move_dir * move_speed;
+    const Vector2 move_force = move_dir * (move_speed * delta_time);
     rigidbody->AddForce(move_force);
 
     if (character_animator != nullptr)

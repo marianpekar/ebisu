@@ -30,7 +30,6 @@ int main(int argc, char*[])
     config_map.reset();
     
     constexpr Uint32 target_fps = 60;
-    constexpr Uint32 frame_time = 1000 / target_fps;
     constexpr float fixed_delta_time = 1.0f / target_fps;
 
     Uint32 previous_ticks = SDL_GetTicks();
@@ -41,12 +40,6 @@ int main(int argc, char*[])
         const Uint32 current_ticks = SDL_GetTicks();
         const Uint32 frame_ticks = current_ticks - previous_ticks;
 
-        if (frame_ticks < frame_time)
-        {
-            SDL_Delay(frame_time - frame_ticks);
-            continue;
-        }
-
         const float delta_time = 0.001f * static_cast<float>(frame_ticks);
         game.Update(delta_time);
 
@@ -54,7 +47,7 @@ int main(int argc, char*[])
 
         while (accumulated_time >= fixed_delta_time)
         {
-            game.FixedUpdate();
+            game.FixedUpdate(fixed_delta_time);
             accumulated_time -= fixed_delta_time;
         }
 
