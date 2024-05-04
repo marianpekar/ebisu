@@ -83,7 +83,8 @@
                     "Type": "SpriteSheet",
                     "FilePath": "images/spritesheets/barbarian_spritesheet_128_3200x1024.png",
                     "Width": 128,
-                    "Height": 128
+                    "Height": 128,
+                    "ZIndex": 1
                 },
                 {
                     "Type": "Rigidbody",
@@ -155,7 +156,8 @@
                     "Type": "SpriteSheet",
                     "FilePath": "images/spritesheets/test_4_frames_transparent_spritesheet_64x256.png",
                     "Width": 64,
-                    "Height": 64
+                    "Height": 64,
+                    "ZIndex":0
                 },
                 {
                     "Type": "Rigidbody",
@@ -213,7 +215,8 @@
                     "Type": "SpriteSheet",
                     "FilePath": "images/spritesheets/barbarian_spritesheet_128_3200x1024.png",
                     "Width": 128,
-                    "Height": 128
+                    "Height": 128,
+                    "ZIndex": 0
                 },
                 {
                     "Type": "Rigidbody",
@@ -271,7 +274,8 @@
                     "Type": "SpriteSheet",
                     "FilePath": "images/white_64x64.png",
                     "Width": 64,
-                    "Height": 64
+                    "Height": 64,
+                    "ZIndex":0
                 },
                 {
                     "Type": "Transform",

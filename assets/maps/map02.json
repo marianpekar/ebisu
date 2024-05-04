@@ -62,7 +62,8 @@
                     "Type": "SpriteSheet",
                     "FilePath": "images/spritesheets/test_4_frames_transparent_spritesheet_64x256.png",
                     "Width": 64,
-                    "Height": 64
+                    "Height": 64,
+                    "ZIndex":0
                 },
                 {
                     "Type": "Rigidbody",
@@ -108,8 +109,7 @@
                     "FilePath": "images/white_64x64.png",
                     "Width": 64,
                     "Height": 64,
-                    "OffsetX": 0,
-                    "OffsetY": 0
+                    "ZIndex":0
                 },
                 {
                     "Type": "Transform",

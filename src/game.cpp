@@ -42,7 +42,7 @@ bool Game::Initialize(const std::string& title, const int screen_width, const in
         std::cout << "[Game] Failed to load level" << '\n';
         return false;
     }
-
+    
     component_manager->Setup();
     
     is_running = true;
@@ -167,8 +167,9 @@ void Game::LoadComponents(const json& component, const std::shared_ptr<Entity>& 
     {
         int width = component["Width"];
         int height = component["Height"];
+        int z_index = component["ZIndex"];
         std::string file_path = component["FilePath"];
-        game_entity->AddComponent<SpriteSheet>(std::format("{}/{}", assets_path, file_path), width, height);
+        game_entity->AddComponent<SpriteSheet>(std::format("{}/{}", assets_path, file_path), width, height, z_index);
     }
     if (component_type == "Rigidbody")
     {

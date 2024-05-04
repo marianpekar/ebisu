@@ -1,11 +1,33 @@
 #include "component_manager.h"
 
+#include <algorithm>
+#include <iostream>
+
 #include "entity.h"
 #include "Components/component.h"
+#include "Components/sprite_sheet.h"
 
 void ComponentManager::AddComponent(const std::shared_ptr<Component>& component)
 {
     components.emplace_back(component);
+}
+
+void ComponentManager::SortComponents()
+{
+    std::sort(components.begin(), components.end(),
+        [](const std::shared_ptr<Component>& a, const std::shared_ptr<Component>& b) {
+        std::string typeA = typeid(*a).name();
+        std::string typeB = typeid(*b).name();
+
+        if(typeA == typeB && typeA == typeid(SpriteSheet).name()) {
+            std::shared_ptr<SpriteSheet> spriteA = std::dynamic_pointer_cast<SpriteSheet>(a);
+            std::shared_ptr<SpriteSheet> spriteB = std::dynamic_pointer_cast<SpriteSheet>(b);
+
+            return spriteA->GetZIndex() < spriteB->GetZIndex();
+        }
+
+        return typeA < typeB;
+    });
 }
 
 void ComponentManager::RemoveAllButPersistent()
@@ -32,8 +54,10 @@ void ComponentManager::ResetComponents() const
     }
 }
 
-void ComponentManager::Setup() const
+void ComponentManager::Setup()
 {
+    SortComponents();
+    
     for (auto& component : components)
     {
         component->Setup();
