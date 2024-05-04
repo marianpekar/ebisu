@@ -1,7 +1,6 @@
 #include "component_manager.h"
 
 #include <algorithm>
-#include <iostream>
 
 #include "entity.h"
 #include "Components/component.h"
