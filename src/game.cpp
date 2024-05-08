@@ -6,6 +6,7 @@
 #include "map.h"
 #include "transition_storage.h"
 #include "renderer.h"
+#include "mixer.h"
 #include "texture_loader.h"
 #include "ECS/collision_solver.h"
 #include "ECS/component_manager.h"
@@ -13,6 +14,7 @@
 #include "ECS/entity_pool.h"
 #include "ECS/Components/agent.h"
 #include "ECS/Components/animator.h"
+#include "ECS/Components/audio_source.h"
 #include "ECS/Components/character_animator.h"
 #include "ECS/Components/box_collider.h"
 #include "ECS/Components/map_collider.h"
@@ -35,6 +37,9 @@ bool Game::Initialize(const std::string& title, const int screen_width, const in
     if (!Renderer::Initialize(title, screen_width, screen_height, scale_x, scale_x, fullscreen))
         return false;
 
+    if (!Mixer::Initialize())
+        return false;
+    
     InitializeGameLogicEssentials(screen_width, screen_height);
     
     if (!LoadLevel(map_path))
@@ -283,6 +288,13 @@ void Game::LoadComponents(const json& component, const std::shared_ptr<Entity>& 
         const float on_projectile_hit = component["OnProjectileHit"];
         game_entity->AddComponent<DamageReceptor>(on_projectile_hit);
     }
+    if (component_type == "AudioSource")
+    {
+        std::string filepath = component["FilePath"];
+        const int loops = component["Loops"];
+        const bool play_on_start = component["PlayOnStart"];
+        game_entity->AddComponent<AudioSource>(std::format("{}/{}", assets_path, filepath), loops, play_on_start);
+    }
 }
 
 void Game::Update(const float delta_time) const
@@ -321,5 +333,6 @@ Game::~Game()
     is_running = false;
     TextureLoader::ClearTextureCache();
     Renderer::Destroy();
+    Mixer::Destroy();
     SDL_Quit();
 }

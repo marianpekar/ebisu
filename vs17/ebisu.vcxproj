@@ -44,8 +44,8 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <IncludePath>$(ProjectDir)..\libs\SDL2\include;$(ProjectDir)..\libs\SDL2_image\include;$(ProjectDir)..\libs\HeaderOnly;$(IncludePath)</IncludePath>
-    <LibraryPath>$(ProjectDir)..\libs\SDL2\lib\x64;$(ProjectDir)..\libs\SDL2_image\lib\x64;$(LibraryPath)</LibraryPath>
+    <IncludePath>$(ProjectDir)..\libs\SDL2\include;$(ProjectDir)..\libs\SDL2_image\include;$(ProjectDir)..\libs\SDL2_mixer\include;$(ProjectDir)..\libs\HeaderOnly;$(IncludePath)</IncludePath>
+    <LibraryPath>$(ProjectDir)..\libs\SDL2\lib\x64;$(ProjectDir)..\libs\SDL2_image\lib\x64;$(ProjectDir)..\libs\SDL2_mixer\lib\x64;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <IncludePath>$(ProjectDir)..\libs\SDL2\include;$(ProjectDir)..\libs\SDL2_image\include;$(ProjectDir)..\libs\HeaderOnly;$(IncludePath)</IncludePath>
@@ -62,11 +62,12 @@
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>SDL2.lib;SDL2main.lib;SDL2_image.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>SDL2.lib;SDL2main.lib;SDL2_image.lib;SDL2_mixer.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
       <Command>xcopy /y $(ProjectDir)..\libs\SDL2\lib\x64\SDL2.dll $(TargetDir)
-      xcopy /y $(ProjectDir)..\libs\SDL2_image\lib\x64\SDL2_image.dll $(TargetDir)</Command>
+      xcopy /y $(ProjectDir)..\libs\SDL2_image\lib\x64\SDL2_image.dll $(TargetDir)
+      xcopy /y $(ProjectDir)..\libs\SDL2_mixer\lib\x64\SDL2_mixer.dll $(TargetDir)</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -88,7 +89,8 @@
     </Link>
     <PostBuildEvent>
       <Command>xcopy /y $(ProjectDir)..\libs\SDL2\lib\x64\SDL2.dll $(TargetDir)
-      xcopy /y $(ProjectDir)..\libs\SDL2_image\lib\x64\SDL2_image.dll $(TargetDir)</Command>
+      xcopy /y $(ProjectDir)..\libs\SDL2_image\lib\x64\SDL2_image.dll $(TargetDir) 
+      xcopy /y $(ProjectDir)..\libs\SDL2_mixer\lib\x64\SDL2_mixer.dll $(TargetDir)</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
@@ -96,6 +98,7 @@
     <ClCompile Include="..\src\ECS\collision_solver.cpp" />
     <ClCompile Include="..\src\ECS\Components\agent.cpp" />
     <ClCompile Include="..\src\ECS\Components\animator.cpp" />
+    <ClCompile Include="..\src\ECS\Components\audio_source.cpp" />
     <ClCompile Include="..\src\ECS\Components\box_collider.cpp" />
     <ClCompile Include="..\src\ECS\Components\camera.cpp" />
     <ClCompile Include="..\src\ECS\Components\character_animator.cpp" />
@@ -114,6 +117,7 @@
     <ClCompile Include="..\src\game.cpp" />
     <ClCompile Include="..\src\main.cpp" />
     <ClCompile Include="..\src\map.cpp" />
+    <ClCompile Include="..\src\mixer.cpp" />
     <ClCompile Include="..\src\quadtree.cpp" />
     <ClCompile Include="..\src\renderer.cpp" />
     <ClCompile Include="..\src\texture_loader.cpp" />
@@ -122,6 +126,7 @@
     <ClInclude Include="..\src\ECS\collision_solver.h" />
     <ClInclude Include="..\src\ECS\Components\agent.h" />
     <ClInclude Include="..\src\ECS\Components\animator.h" />
+    <ClInclude Include="..\src\ECS\Components\audio_source.h" />
     <ClInclude Include="..\src\ECS\Components\box_collider.h" />
     <ClInclude Include="..\src\ECS\Components\camera.h" />
     <ClInclude Include="..\src\ECS\Components\character_animator.h" />
@@ -147,6 +152,7 @@
     <ClInclude Include="..\src\heap.h" />
     <ClInclude Include="..\src\map.h" />
     <ClInclude Include="..\src\Math\vector2.h" />
+    <ClInclude Include="..\src\mixer.h" />
     <ClInclude Include="..\src\path_node.h" />
     <ClInclude Include="..\src\quadtree.h" />
     <ClInclude Include="..\src\renderer.h" />

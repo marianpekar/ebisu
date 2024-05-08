@@ -127,6 +127,12 @@
                     "EmitDelay": 200,
                     "ProjectileAnimationFrameTime": 100,
                     "ProjectileAnimationFrames": 6
+                },
+                {
+                    "Type": "AudioSource",
+                    "FilePath": "audio/melee_sound_1.wav",
+                    "Loops": -1,
+                    "PlayOnStart": true
                 }
             ]
        },
