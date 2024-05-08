@@ -25,6 +25,11 @@ void Mixer::PlayAudio(const std::string& filepath, const int loops)
     Mix_PlayChannel(-1, sound_cache.at(filepath), loops);
 }
 
+void Mixer::StopAllAudio()
+{
+    Mix_HaltChannel(-1);
+}
+
 void Mixer::LoadAudio(const std::string& filepath)
 {
     if (sound_cache.contains(filepath))

@@ -84,6 +84,7 @@ bool Game::LoadLevel(const std::string& map_path)
 
 void Game::ChangeLevel(const std::string& next_map_path)
 {
+    Mixer::StopAllAudio();
     transition_storage->SaveTransitionData(entity_pool);
     entity_pool->RemoveAllButPersistent();
     component_manager->RemoveAllButPersistent();

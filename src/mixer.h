@@ -11,5 +11,6 @@ public:
     static bool Initialize();
     static void LoadAudio(const std::string& filepath);
     static void PlayAudio(const std::string& filepath, int loops = 0);
+    static void StopAllAudio();
     static void Destroy();
 };
