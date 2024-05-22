@@ -55,8 +55,20 @@ public:
     std::shared_ptr<T> GetComponent()
     {
         if (const auto it = component_map.find(typeid(T)); it != component_map.end())
-        {
             return std::dynamic_pointer_cast<T>(it->second);
+
+        return nullptr;
+    }
+
+    template <typename T>
+    std::shared_ptr<T> GetComponent(int id)
+    {
+        for (const auto& [_, component] : component_map)
+        {
+            std::shared_ptr<T> typed_component = std::dynamic_pointer_cast<T>(component);
+
+            if (typed_component != nullptr && typed_component->GetId() == id)
+                return typed_component;
         }
 
         return nullptr;

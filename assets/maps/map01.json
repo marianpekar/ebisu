@@ -126,13 +126,15 @@
                     "PoolSize": 10,
                     "EmitDelay": 200,
                     "ProjectileAnimationFrameTime": 100,
-                    "ProjectileAnimationFrames": 6
+                    "ProjectileAnimationFrames": 6,
+                    "EmitSoundAudioSourceId": 333 
                 },
                 {
+                    "Id": 333, 
                     "Type": "AudioSource",
                     "FilePath": "audio/melee_sound_1.wav",
-                    "Loops": -1,
-                    "PlayOnStart": true
+                    "Loops": 0,
+                    "PlayOnStart": false
                 }
             ]
        },

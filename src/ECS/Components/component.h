@@ -6,6 +6,8 @@ class Component
 {
 private:
     bool is_persistent = false;
+protected:
+    int id = -1;
 public:
     std::shared_ptr<class Entity> owner;
     Component() = default;
@@ -17,4 +19,5 @@ public:
     virtual void Reset() {}
     bool GetIsPersistent() const { return is_persistent; }
     void SetIsPersistent(const bool persistent) { is_persistent = persistent; }
+    int GetId() const { return id; }
 };

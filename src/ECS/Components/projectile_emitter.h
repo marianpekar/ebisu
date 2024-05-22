@@ -4,6 +4,7 @@
 #include <string>
 #include <memory>
 
+#include "audio_source.h"
 #include "component.h"
 #include "player_controller.h"
 #include "../collision_solver.h"
@@ -34,6 +35,9 @@ private:
     int animation_frames;
     uint32_t last_time = 0;
 
+    int emit_sound_audio_source_id;
+    std::shared_ptr<AudioSource> emit_sound_audio_source;
+    
     static int GetDirectionIndex(const Vector2& direction);
 
 public:
@@ -42,11 +46,13 @@ public:
                       const float proj_speed, const uint32_t proj_life_time_ms,
                       const size_t pool_size, const uint32_t emit_delay_ms,
                       const std::shared_ptr<Map>& map, const std::shared_ptr<CollisionSolver>& collision_solver,
-                      const uint32_t animation_frame_time, const int animation_frames)
+                      const uint32_t animation_frame_time, const int animation_frames,
+                      const int emit_sound_audio_source_id)
         : collision_solver(collision_solver), proj_life_time_ms(proj_life_time_ms), proj_speed(proj_speed),
           pool_size(pool_size), emit_delay_ms(emit_delay_ms), proj_width(proj_width),
           proj_height(proj_height), proj_sprite_sheet_filepath(std::move(proj_sprite_sheet_filepath)), map(map),
-          animation_frame_time(animation_frame_time), animation_frames(animation_frames)
+          animation_frame_time(animation_frame_time), animation_frames(animation_frames),
+          emit_sound_audio_source_id(emit_sound_audio_source_id)
     {
         projectile_pool = std::make_shared<ProjectilePool>();
     }

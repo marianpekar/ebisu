@@ -14,6 +14,8 @@ void ProjectileEmitter::Setup()
     proj_sprite_sheet = TextureLoader::LoadTexture(proj_sprite_sheet_filepath, Renderer::GetRenderer(), _, _);
 
     projectile_pool->Add(pool_size, proj_height, proj_width, animation_frames, collision_solver);
+
+    emit_sound_audio_source = owner->GetComponent<AudioSource>(emit_sound_audio_source_id);
 }
 
 void ProjectileEmitter::Update(float delta_time)
@@ -82,6 +84,8 @@ void ProjectileEmitter::Emit(const Vector2& direction)
 
     projectile_pool->GetActiveProjectiles().emplace_back(proj);
 
+    emit_sound_audio_source->Play();
+    
     last_emit_time = SDL_GetTicks();
 }
 

@@ -270,9 +270,10 @@ void Game::LoadComponents(const json& component, const std::shared_ptr<Entity>& 
         const uint32_t emit_delay_ms = component["EmitDelay"];
         const uint32_t animation_frame_time = component["ProjectileAnimationFrameTime"];
         const uint32_t animation_frames = component["ProjectileAnimationFrames"];
+        const int emit_sound_audio_source_id = component["EmitSoundAudioSourceId"];
         game_entity->AddComponent<ProjectileEmitter>(std::format("{}/{}", assets_path, proj_sprite_sheet_filepath),
             proj_width, proj_height, proj_speed, proj_life_time_ms, pool_size, emit_delay_ms, map, collision_solver,
-            animation_frame_time, animation_frames);
+            animation_frame_time, animation_frames, emit_sound_audio_source_id);
     }
     if (component_type == "ProjectileAcceptor")
     {
@@ -291,10 +292,11 @@ void Game::LoadComponents(const json& component, const std::shared_ptr<Entity>& 
     }
     if (component_type == "AudioSource")
     {
+        const int id = component["Id"];
         std::string filepath = component["FilePath"];
         const int loops = component["Loops"];
         const bool play_on_start = component["PlayOnStart"];
-        game_entity->AddComponent<AudioSource>(std::format("{}/{}", assets_path, filepath), loops, play_on_start);
+        game_entity->AddComponent<AudioSource>(id, std::format("{}/{}", assets_path, filepath), loops, play_on_start);
     }
 }
 
