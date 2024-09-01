@@ -9,15 +9,17 @@
 #include "map_collider.h"
 #include "rigidbody.h"
 
-BoxCollider::BoxCollider(const float width, const float height, const float offset_x, const float offset_y,
-    const bool is_trigger_val, const std::shared_ptr<CollisionSolver>& collision_solver) :
-    position(Vector2(0, 0)),
-    width(width), height(height),
-    half_width(width * 0.5f), half_height(height * 0.5f),
-    offset_x(offset_x), offset_y(offset_y),
-    collision_solver(collision_solver)
+BoxCollider::BoxCollider(const float width_val, const float height_val, const float offset_x_val, const float offset_y_val,
+    const bool is_trigger_val, const std::shared_ptr<CollisionSolver>& collision_solver) : collision_solver(collision_solver)
 {
+    position = Vector2::Zero();
     is_trigger = is_trigger_val;
+    width = width_val;
+    height = height_val;
+    half_width = width_val / 2;
+    half_height = height_val / 2;
+    offset_x = offset_x_val;
+    offset_y = offset_y_val;
 }
 
 void BoxCollider::Setup()

@@ -2,18 +2,19 @@
 #include "player_controller.h"
 #include "projectile_acceptor.h"
 
-Projectile::Projectile(const int width, const int height, const int frames)
-    : width(width), height(height),
-      half_width(width / 2), half_height(height / 2),
-      frames(frames)
+Projectile::Projectile(const int width_val, const int height_val, const int frames) : frames(frames)
 {
     dst_rect = new SDL_Rect();
     src_rect = new SDL_Rect();
     src_rect->x = 0;
     src_rect->y = 0;
-    src_rect->w = width;
-    src_rect->h = height;
-    is_trigger = false;
+    src_rect->w = width_val;
+    src_rect->h = height_val;
+    is_trigger = true;
+    width = width_val;
+    height = height_val;
+    half_width = width_val / 2;
+    half_height = height_val / 2;
 }
 
 void Projectile::NextFrame()
