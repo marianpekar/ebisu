@@ -35,8 +35,8 @@ public:
     
     void Reset();
     
-    void SetPosition(const float x, const float y) { position.x = x, position.y = y; }
-    void SetDirection(const float x, const float y) { direction.x = x, direction.y = y; }
+    void SetPosition(const float x, const float y) { position.x = x; position.y = y; }
+    void SetDirection(const float x, const float y) { direction.x = x; direction.y = y; }
     const Vector2& GetDirection() const { return direction; }
     
     const float& GetSpeed() const { return speed; }
@@ -62,4 +62,3 @@ public:
     
     void Collide(const std::shared_ptr<Collider>& other, const Vector2& overlap, bool one_is_trigger) override;
 };
-
