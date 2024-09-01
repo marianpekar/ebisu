@@ -18,7 +18,6 @@ private:
     float speed = 0;
     uint32_t destroy_time = 0;
 
-    bool is_trigger = true;
     bool is_active = false;
 public:
     SDL_Rect* dst_rect = nullptr;

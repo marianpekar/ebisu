@@ -23,6 +23,8 @@ public:
     typedef void (*CollisionCallback)(const std::shared_ptr<Collider>&, void*);
     CollisionCallback on_collision = nullptr;
     void* collision_user_data = nullptr;
+
+    bool is_trigger = false;
     
     virtual void Collide(const std::shared_ptr<Collider>& other, const Vector2& overlap, bool one_is_trigger) = 0;
 };

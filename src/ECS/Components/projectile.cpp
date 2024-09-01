@@ -13,6 +13,7 @@ Projectile::Projectile(const int width, const int height, const int frames)
     src_rect->y = 0;
     src_rect->w = width;
     src_rect->h = height;
+    is_trigger = false;
 }
 
 void Projectile::NextFrame()

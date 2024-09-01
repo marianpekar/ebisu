@@ -10,14 +10,14 @@
 #include "rigidbody.h"
 
 BoxCollider::BoxCollider(const float width, const float height, const float offset_x, const float offset_y,
-    const bool is_trigger, const std::shared_ptr<CollisionSolver>& collision_solver) :
+    const bool is_trigger_val, const std::shared_ptr<CollisionSolver>& collision_solver) :
     position(Vector2(0, 0)),
     width(width), height(height),
     half_width(width * 0.5f), half_height(height * 0.5f),
     offset_x(offset_x), offset_y(offset_y),
-    is_trigger(is_trigger),
     collision_solver(collision_solver)
 {
+    is_trigger = is_trigger_val;
 }
 
 void BoxCollider::Setup()
